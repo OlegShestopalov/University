@@ -1,0 +1,1 @@
+insert into university (name, address, type) values ('NURE', 'Nauki Avenue, 14, Kharkiv, 61166, Ukraine', 'national');

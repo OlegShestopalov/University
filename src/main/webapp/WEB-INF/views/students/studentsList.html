@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" >
+
+<head>
+    <meta charset="UTF-8">
+    <title>All students in university</title>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+          integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"
+            integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV"
+            crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"
+            integrity="sha384-LtrjvnR4Twt/qOuYxE721u19sVFLVSA4hf/rRt6PrZTmiPltdZcI7q7PXQBYTKyf"
+            crossorigin="anonymous"></script>
+
+</head>
+<body>
+<div th:switch="${students}">
+    <h2 th:case="null">No students found!</h2>
+    <div th:case="*">
+        <h2>Users</h2>
+        <table class="table table-bordered table-hover">
+            <thead>
+            <tr>
+                <th>Group</th>-->
+                <th>Name</th>
+                <th>Surname</th>
+                <th>Sex</th>
+                <th>Age</th>
+                <th>Email</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="student : ${students}">
+                <td th:text="${student.id}"></td>
+                <td th:text="${student.name}"></td>
+                <td th:text="${student.surname}"></td>
+                <td th:text="${student.sex}"></td>
+                <td th:text="${student.age}"></td>
+                <td th:text="${student.email}"></td>
+                <a th:href="@{/children/{id}(id=${student.getId()})}" th:text="${student.getName()}">user</a>
+                <td><a th:href="@{/children/{id}(id=${student.id})}">Edit</a></td>
+                <td><a th:href="@{/children/{id}(id=${student.id})}">Delete</a></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <p><a href="/children/new">Create new student</a></p>
+</div>
+
+
+
+<!--<div th:each="student : ${students}">-->
+<!--    <a th:href="@{/children/{id}(id=${student.getId()})}" th:text="${student.getName()}">user</a>-->
+<!--</div>-->
+
+<!--<br/>-->
+
+<!--<hr/>-->
+
+<!--<a href="/children/new">Create new student</a>-->
+<!--<table class="table table-bordered table-hover">-->
+<!--    <thred>-->
+<!--        <tr>-->
+<!--            <th>Group</th>-->
+<!--            <th>Name</th>-->
+<!--            <th>Surname</th>-->
+<!--            <th>Sex</th>-->
+<!--            <th>Age</th>-->
+<!--            <th>Email</th>-->
+<!--        </tr>-->
+<!--    </thred>-->
+<!--    <tbody>-->
+<!--    <tr>-->
+<!--        <td>"${students.getGroup}"</td>-->
+<!--        <td>"${students.getNAme}"</td>-->
+<!--        <td>"${students.getSurname}"</td>-->
+<!--        <td>"${students.getSex}"</td>-->
+<!--        <td>"${students.getAge}"</td>-->
+<!--        <td>"${students.getEmail}"</td>-->
+<!--    </tr>-->
+<!--    </tbody>-->
+<!--</table>-->
+
+</body>
+</html>
