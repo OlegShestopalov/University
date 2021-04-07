@@ -1,16 +1,20 @@
 package ua.com.foxminded.config;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.ViewResolverRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.thymeleaf.spring5.SpringTemplateEngine;
 import org.thymeleaf.spring5.templateresolver.SpringResourceTemplateResolver;
 import org.thymeleaf.spring5.view.ThymeleafViewResolver;
+
+import javax.sql.DataSource;
 
 @Configuration
 @ComponentScan("ua.com.foxminded")
@@ -46,5 +50,25 @@ public class SpringConfig implements WebMvcConfigurer {
         ThymeleafViewResolver resolver = new ThymeleafViewResolver();
         resolver.setTemplateEngine(templateEngine());
         registry.viewResolver(resolver);
+    }
+
+    private final String URL = "url";
+    private final String USER = "user";
+    private final String DRIVER = "driver";
+    private final String PASSWORD = "password";
+
+    @Bean
+    public DataSource dataSource() {
+        DataSourceBuilder dataSourceBuilder = DataSourceBuilder.create();
+        dataSourceBuilder.url(URL);
+        dataSourceBuilder.username(USER);
+        dataSourceBuilder.password(PASSWORD);
+        dataSourceBuilder.driverClassName(DRIVER);
+        return dataSourceBuilder.build();
+    }
+
+    @Bean
+    public JdbcTemplate jdbcTemplate() {
+        return new JdbcTemplate(dataSource());
     }
 }

@@ -9,6 +9,7 @@ import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 import ua.com.foxminded.dao.TeacherDAO;
+import ua.com.foxminded.dao.mapper.TeacherMapper;
 import ua.com.foxminded.domain.entity.Teacher;
 import ua.com.foxminded.exception.QueryNotExecuteException;
 
@@ -91,17 +92,18 @@ public class TeacherDAOImpl implements TeacherDAO {
     public List<Teacher> findAllTeachers() {
         LOGGER.debug("findAllTeachers()");
         String SQL = "SELECT * FROM teacher";
-        List<Teacher> teachers;
-        try {
-            teachers = jdbcTemplate.query(SQL, new BeanPropertyRowMapper<>(Teacher.class));
-        } catch (DataAccessException e) {
-            String message = "Unable to get teachers";
-            throw new QueryNotExecuteException(message, e);
-        }
-        for (Teacher teacher : teachers) {
-            LOGGER.debug("Teacher successfully found. Teacher details: {}", teacher);
-        }
-        return teachers;
+        return jdbcTemplate.query(SQL, new TeacherMapper());
+//        List<Teacher> teachers;
+//        try {
+//            teachers = jdbcTemplate.query(SQL, new TeacherMapper());
+//        } catch (DataAccessException e) {
+//            String message = "Unable to get teachers";
+//            throw new QueryNotExecuteException(message, e);
+//        }
+//        for (Teacher teacher : teachers) {
+//            LOGGER.debug("Teacher successfully found. Teacher details: {}", teacher);
+//        }
+//        return teachers;
     }
 
     @Override
