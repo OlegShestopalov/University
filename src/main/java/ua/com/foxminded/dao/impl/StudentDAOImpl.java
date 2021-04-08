@@ -10,6 +10,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 import ua.com.foxminded.dao.StudentDAO;
 import ua.com.foxminded.dao.mapper.StudentMapper;
+import ua.com.foxminded.domain.entity.Group;
 import ua.com.foxminded.domain.entity.Student;
 import ua.com.foxminded.exception.QueryNotExecuteException;
 
@@ -72,7 +73,9 @@ public class StudentDAOImpl implements StudentDAO {
     @Override
     public List<Student> findAllStudents() {
         LOGGER.debug("findAllStudents()");
-        String SQL = "SELECT * FROM student";
+        String SQL = "SELECT s.id, g.id as group_id, s.name, s.surname, s.sex, s.age, s.email\n" +
+                "FROM student s\n" +
+                "INNER JOIN group1 g on g.id = s.group_id";
         List<Student> students;
         try {
             students = jdbcTemplate.query(SQL, new StudentMapper());
@@ -108,10 +111,10 @@ public class StudentDAOImpl implements StudentDAO {
     @Override
     public Student findByName(final String name, final String surname) {
         LOGGER.debug("findByName() [{}], [{}]", name, surname);
-        String SQL = "SELECT * FROM student WHERE name=?, surname=?";
+        String SQL = "SELECT * FROM student WHERE name=?";
         Student student = new Student();
         try {
-            student = jdbcTemplate.queryForObject(SQL, new BeanPropertyRowMapper<>(Student.class), name, surname);
+            student = jdbcTemplate.queryForObject(SQL, new BeanPropertyRowMapper<>(Student.class), name);
         } catch (EmptyResultDataAccessException e) {
             LOGGER.error(student.toString());
             String message = format("Student with name '%s' and surname '%s' not found", name, surname);

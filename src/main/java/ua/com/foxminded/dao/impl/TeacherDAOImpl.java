@@ -92,18 +92,18 @@ public class TeacherDAOImpl implements TeacherDAO {
     public List<Teacher> findAllTeachers() {
         LOGGER.debug("findAllTeachers()");
         String SQL = "SELECT * FROM teacher";
-        return jdbcTemplate.query(SQL, new TeacherMapper());
-//        List<Teacher> teachers;
-//        try {
-//            teachers = jdbcTemplate.query(SQL, new TeacherMapper());
-//        } catch (DataAccessException e) {
-//            String message = "Unable to get teachers";
-//            throw new QueryNotExecuteException(message, e);
-//        }
-//        for (Teacher teacher : teachers) {
-//            LOGGER.debug("Teacher successfully found. Teacher details: {}", teacher);
-//        }
-//        return teachers;
+//        return jdbcTemplate.query(SQL, new TeacherMapper());
+        List<Teacher> teachers;
+        try {
+            teachers = jdbcTemplate.query(SQL, new BeanPropertyRowMapper<>(Teacher.class));
+        } catch (DataAccessException e) {
+            String message = "Unable to get teachers";
+            throw new QueryNotExecuteException(message, e);
+        }
+        for (Teacher teacher : teachers) {
+            LOGGER.debug("Teacher successfully found. Teacher details: {}", teacher);
+        }
+        return teachers;
     }
 
     @Override

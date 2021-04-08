@@ -1,22 +1,9 @@
 package ua.com.foxminded.domain.entity;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
-
-@Entity
-@Table(name = "audience")
 public class Audience {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column(name = "number")
     private int number;
-    @Column(name = "desk")
     private int desk;
 
     public Audience() {

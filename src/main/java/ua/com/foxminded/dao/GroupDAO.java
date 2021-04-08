@@ -14,5 +14,7 @@ public interface GroupDAO {
 
     public List<Group> findGroups();
 
+    Group findById(final Long id);
+
     public List<Group> findAllGroupsInFaculty(final Long id);
 }

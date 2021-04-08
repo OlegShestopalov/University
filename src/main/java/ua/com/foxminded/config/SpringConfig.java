@@ -52,18 +52,18 @@ public class SpringConfig implements WebMvcConfigurer {
         registry.viewResolver(resolver);
     }
 
-    private final String URL = "url";
-    private final String USER = "user";
-    private final String DRIVER = "driver";
-    private final String PASSWORD = "password";
+//    private final String URL = "url";
+//    private final String USER = "user";
+//    private final String DRIVER = "driver";
+//    private final String PASSWORD = "password";
 
     @Bean
     public DataSource dataSource() {
         DataSourceBuilder dataSourceBuilder = DataSourceBuilder.create();
-        dataSourceBuilder.url(URL);
-        dataSourceBuilder.username(USER);
-        dataSourceBuilder.password(PASSWORD);
-        dataSourceBuilder.driverClassName(DRIVER);
+        dataSourceBuilder.driverClassName("org.postgresql.Driver");
+        dataSourceBuilder.url("jdbc:postgresql://localhost:5432/university");
+        dataSourceBuilder.username("postgres");
+        dataSourceBuilder.password("1234");
         return dataSourceBuilder.build();
     }
 

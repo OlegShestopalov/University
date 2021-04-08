@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org" >
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>Show student</title>
@@ -16,8 +16,10 @@
             crossorigin="anonymous"></script>
 </head>
 <body>
-    <p th:text="${student.getName()}">value</p>
-    <p th:text="${student.getId()}">value</p>
+<p th:text="${student.getId()}">value</p>
+<p th:text="${student.getName()}">value</p>
+<p th:text="${student.getSurname()}">value</p>
+<p th:text="${student.getEmail()}">value</p>
 
 <a th:href="@{/children/{id}/edit(id=${student.getId()})}">Edit</a>
 

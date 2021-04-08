@@ -13,7 +13,7 @@
 //
 //@Configuration
 //@ComponentScan("ua.com.foxminded")
-//@PropertySource("classpath:application.properties")
+//@PropertySource("classpath:spring.properties")
 //public class AppConfig {
 //
 ////    private final Environment environment;

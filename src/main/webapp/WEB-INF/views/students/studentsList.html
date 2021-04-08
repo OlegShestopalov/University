@@ -21,11 +21,12 @@
 <div th:switch="${students}">
     <h2 th:case="null">No students found!</h2>
     <div th:case="*">
-        <h2>Users</h2>
+        <h2>Students</h2>
         <table class="table table-bordered table-hover">
             <thead>
             <tr>
-                <th>Group</th>-->
+                <th>Id</th>
+                <th>Group</th>
                 <th>Name</th>
                 <th>Surname</th>
                 <th>Sex</th>
@@ -36,12 +37,12 @@
             <tbody>
             <tr th:each="student : ${students}">
                 <td th:text="${student.id}"></td>
+                <td th:text="${student.group}"></td>
                 <td th:text="${student.name}"></td>
                 <td th:text="${student.surname}"></td>
                 <td th:text="${student.sex}"></td>
                 <td th:text="${student.age}"></td>
                 <td th:text="${student.email}"></td>
-                <a th:href="@{/children/{id}(id=${student.getId()})}" th:text="${student.getName()}">user</a>
                 <td><a th:href="@{/children/{id}(id=${student.id})}">Edit</a></td>
                 <td><a th:href="@{/children/{id}(id=${student.id})}">Delete</a></td>
             </tr>

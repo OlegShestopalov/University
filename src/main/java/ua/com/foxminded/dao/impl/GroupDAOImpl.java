@@ -86,6 +86,14 @@ public class GroupDAOImpl implements GroupDAO {
     }
 
     @Override
+    public Group findById(Long id) {
+        LOGGER.debug("findById()");
+        String SQL = "SELECT * FROM group1 WHERE id=?";
+        return null;
+//        return jdbcTemplate.query(SQL, new BeanPropertyRowMapper<>(Group.class), id);
+    }
+
+    @Override
     public List<Group> findAllGroupsInFaculty(final Long id) {
         LOGGER.debug("findAllGroupsInFaculty()");
         String SQL = "SELECT group1.name FROM group1 WHERE faculty_id=?";
