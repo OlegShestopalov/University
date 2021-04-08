@@ -1,6 +1,7 @@
 package ua.com.foxminded.dao.mapper;
 
 import org.springframework.jdbc.core.RowMapper;
+import ua.com.foxminded.domain.entity.Group;
 import ua.com.foxminded.domain.entity.Student;
 
 import java.sql.ResultSet;
@@ -13,7 +14,7 @@ public class StudentMapper implements RowMapper<Student> {
         Student student = new Student();
 
         student.setId(resultSet.getLong("id"));
-        student.setGroup(resultSet.getLong("group"));
+        student.setGroup(resultSet.getLong("group_id"));
         student.setName(resultSet.getString("name"));
         student.setSurname(resultSet.getString("surname"));
         student.setSex(resultSet.getString("sex"));
