@@ -1,4 +1,4 @@
-package ua.com.foxminded.domain.service;//package ua.com.foxminded.domain.service;
+//package ua.com.foxminded.domain.service;
 //
 //import org.springframework.boot.ApplicationArguments;
 //

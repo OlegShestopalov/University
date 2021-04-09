@@ -3,7 +3,7 @@ package ua.com.foxminded.domain.entity;
 public class Student {
 
     private Long id;
-    private Long group;
+    private Group group;
     private String name;
     private String surname;
     private String sex;
@@ -21,7 +21,7 @@ public class Student {
         this.email = email;
     }
 
-    public Student(Long group, String name, String surname, String sex, int age, String email) {
+    public Student(Group group, String name, String surname, String sex, int age, String email) {
         this.group = group;
         this.name = name;
         this.surname = surname;
@@ -30,7 +30,7 @@ public class Student {
         this.email = email;
     }
 
-    public Student(Long id, Long group, String name, String surname, String sex, int age, String email) {
+    public Student(Long id, Group group, String name, String surname, String sex, int age, String email) {
         this.id = id;
         this.group = group;
         this.name = name;
@@ -48,11 +48,11 @@ public class Student {
         this.id = id;
     }
 
-    public Long getGroup() {
+    public Group getGroup() {
         return group;
     }
 
-    public void setGroup(Long group) {
+    public void setGroup(Group group) {
         this.group = group;
     }
 
