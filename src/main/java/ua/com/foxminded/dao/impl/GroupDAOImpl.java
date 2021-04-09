@@ -9,6 +9,7 @@ import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 import ua.com.foxminded.dao.GroupDAO;
+import ua.com.foxminded.dao.mapper.GroupMapper;
 import ua.com.foxminded.domain.entity.Group;
 import ua.com.foxminded.exception.QueryNotExecuteException;
 
@@ -22,11 +23,13 @@ import static java.lang.String.format;
 public class GroupDAOImpl implements GroupDAO {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(GroupDAOImpl.class);
+    private final GroupMapper groupMapper;
     private final JdbcTemplate jdbcTemplate;
 
     @Autowired
-    public GroupDAOImpl(JdbcTemplate jdbcTemplate) {
+    public GroupDAOImpl(JdbcTemplate jdbcTemplate, GroupMapper groupMapper) {
         this.jdbcTemplate = jdbcTemplate;
+        this.groupMapper = groupMapper;
     }
 
     @Override
@@ -89,8 +92,7 @@ public class GroupDAOImpl implements GroupDAO {
     public Group findById(Long id) {
         LOGGER.debug("findById()");
         String SQL = "SELECT * FROM group1 WHERE id=?";
-        return null;
-//        return jdbcTemplate.query(SQL, new BeanPropertyRowMapper<>(Group.class), id);
+        return jdbcTemplate.queryForObject(SQL, new Object[]{id}, groupMapper);
     }
 
     @Override

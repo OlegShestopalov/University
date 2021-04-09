@@ -10,7 +10,6 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 import ua.com.foxminded.dao.StudentDAO;
 import ua.com.foxminded.dao.mapper.StudentMapper;
-import ua.com.foxminded.domain.entity.Group;
 import ua.com.foxminded.domain.entity.Student;
 import ua.com.foxminded.exception.QueryNotExecuteException;
 
@@ -24,11 +23,13 @@ import static java.lang.String.format;
 public class StudentDAOImpl implements StudentDAO {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(StudentDAOImpl.class);
+    private final StudentMapper studentMapper;
     private final JdbcTemplate jdbcTemplate;
 
     @Autowired
-    public StudentDAOImpl(JdbcTemplate jdbcTemplate) {
+    public StudentDAOImpl(JdbcTemplate jdbcTemplate, StudentMapper studentMapper) {
         this.jdbcTemplate = jdbcTemplate;
+        this.studentMapper = studentMapper;
     }
 
     @Override
@@ -73,12 +74,10 @@ public class StudentDAOImpl implements StudentDAO {
     @Override
     public List<Student> findAllStudents() {
         LOGGER.debug("findAllStudents()");
-        String SQL = "SELECT s.id, g.id as group_id, s.name, s.surname, s.sex, s.age, s.email\n" +
-                "FROM student s\n" +
-                "INNER JOIN group1 g on g.id = s.group_id";
+        String SQL = "SELECT * FROM student";
         List<Student> students;
         try {
-            students = jdbcTemplate.query(SQL, new StudentMapper());
+            students = jdbcTemplate.query(SQL, studentMapper);
         } catch (DataAccessException e) {
             String message = "Unable to get students";
             throw new QueryNotExecuteException(message, e);
