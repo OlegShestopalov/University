@@ -7,18 +7,18 @@ import org.springframework.web.bind.annotation.GetMapping;
 import ua.com.foxminded.domain.service.TeacherService;
 
 @Controller
-public class TeacherController {
+public class TeachersController {
 
     private final TeacherService teacherService;
 
     @Autowired
-    public TeacherController(TeacherService teacherService) {
+    public TeachersController(TeacherService teacherService) {
         this.teacherService = teacherService;
     }
 
     @GetMapping("/teachers")
-    public String getAllTeachers(Model model) {
+    public String showAllTeachers(Model model) {
         model.addAttribute("teachers", teacherService.findAll());
-        return "teachers/allTeachers";
+        return "teachers/menu";
     }
 }
