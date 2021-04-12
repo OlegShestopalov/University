@@ -21,6 +21,9 @@ public class DayDAOImpl implements DayDAO {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(DayDAOImpl.class);
     private final JdbcTemplate jdbcTemplate;
+    private static final String INSERT_DAY = "INSERT INTO day1 VALUES (?)";
+    private static final String DELETE_DAY = "DELETE FROM day1 WHERE id=?";
+    private static final String SELECT_DAYS = "SELECT day FROM day1 WHERE ?<=id<=?";
 
     public DayDAOImpl(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
@@ -28,43 +31,41 @@ public class DayDAOImpl implements DayDAO {
 
     @Override
     public void add(final Day day) {
-        LOGGER.debug("add() [{}]", day);
-        String SQL = "INSERT INTO day1 VALUES ?";
+        LOGGER.debug("Running addDay method. Day details: {}", day);
         try {
-            jdbcTemplate.update(SQL, day.getDay());
+            jdbcTemplate.update(INSERT_DAY, day.getDay());
         } catch (DataAccessException e) {
-            String message = format("Unable to add Day '%s'", day);
+            String message = format("Unable to add Day='%s'", day);
             throw new QueryNotExecuteException(message, e);
         }
-        LOGGER.debug("Day successfully saved. Day details: {}", day.getDay());
+        LOGGER.debug("Day was successfully saved. Day details: {}", day.getDay());
     }
 
     @Override
     public void removeDay(final Long id) {
-        LOGGER.debug("remove() [{}]", id);
-        String SQL = "DELETE FROM day1 WHERE id=?";
+        LOGGER.debug("Deleting day with ID={}", id);
         try {
-            jdbcTemplate.update(SQL, id);
+            jdbcTemplate.update(DELETE_DAY, id);
         } catch (EmptyResultDataAccessException e) {
-            String message = format("Day with ID '%s' not found.", id);
+            String message = format("Day with ID='%s' not found.", id);
             throw new EntityNotFoundException(message);
         }
-        LOGGER.info("Day successfully deleted. Day details: {}", id);
+        LOGGER.info("Day was successfully deleted. Day details: {}", id);
     }
 
     @Override
     public List<Day> findTerm(Long startId, Long stopId) {
-        LOGGER.debug("findTerm()");
-        String SQL = "SELECT day FROM day1 WHERE ?<=id<=?";
+        LOGGER.debug("Running a method to find a period of days");
+        List<Day> days;
         try {
-            List<Day> days = jdbcTemplate.query(SQL, new Object[]{startId, stopId}, new BeanPropertyRowMapper<>(Day.class));
+            days = jdbcTemplate.query(SELECT_DAYS, new Object[]{startId, stopId}, new BeanPropertyRowMapper<>(Day.class));
             for (Day day : days) {
                 LOGGER.debug("Days list {}", day);
             }
-            return days;
         } catch (DataAccessException e) {
-            String message = format("Days with startId '%s' or stopId '%s' not found", startId, stopId);
+            String message = format("Days with startID='%s' or stopID='%s' not found", startId, stopId);
             throw new QueryNotExecuteException(message, e);
         }
+        return days;
     }
 }

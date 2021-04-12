@@ -12,7 +12,7 @@ public interface TeacherDAO {
 
     public void update(final Long id, final Teacher teacher);
 
-    public Teacher findTeacher(final Long id);
+    public Teacher findTeacherById(final Long id);
 
     public List<Teacher> findAllTeachers();
 

@@ -22,6 +22,19 @@ public class FacultyDAOImpl implements FacultyDAO {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(FacultyDAOImpl.class);
     private final JdbcTemplate jdbcTemplate;
+    private static final String INSERT_FACULTY = "INSERT INTO faculty VALUES (?)";
+    private static final String DELETE_FACULTY = "DELETE FROM faculty WHERE id=?";
+    private static final String UPDATE_FACULTY = "UPDATE faculty SET name=? WHERE id=?";
+    private static final String FIND_FACULTY_BY_ID = "SELECT * FROM faculty WHERE id=?";
+    private static final String FIND_ALL_FACULTIES = "SELECT * FROM faculty";
+    private static final String FIND_FACULTIES_BY_SUBJECT_ID = "SELECT faculty.name FROM faculty " +
+            "INNER JOIN subject_faculty ON faculty.id=subject_faculty.faculty_id " +
+            "INNER JOIN subject ON subject.id=subject_faculty.subject_id " +
+            "WHERE subject.id=?";
+    private static final String FIND_FACULTIES_BY_TEACHER_ID = "SELECT faculty.name FROM faculty " +
+            "INNER JOIN teacher_faculty ON faculty.id=teacher_faculty.faculty_id " +
+            "INNER JOIN teacher ON teacher.id=teacher_faculty.teacher_id " +
+            "WHERE teacher.id=?";
 
     public FacultyDAOImpl(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
@@ -29,124 +42,105 @@ public class FacultyDAOImpl implements FacultyDAO {
 
     @Override
     public void add(final Faculty faculty) {
-        LOGGER.debug("add() [{}]", faculty);
-        String SQL = "INSERT INTO faculty VALUES (?)";
+        LOGGER.debug("Running a method for add faculty. Faculty details: {}", faculty);
         try {
-            jdbcTemplate.update(SQL, faculty.getName());
+            jdbcTemplate.update(INSERT_FACULTY, faculty.getName());
         } catch (DataAccessException e) {
-            String message = format("Couldn't add Faculty '%s'", faculty);
+            String message = format("Couldn't add Faculty='%s'", faculty);
             throw new QueryNotExecuteException(message, e);
         }
-        LOGGER.debug("Faculty successfully saved. Faculty details: {}", faculty.getId());
+        LOGGER.debug("Faculty was successfully saved. Faculty details: {}", faculty.getId());
     }
 
     @Override
     public void removeFaculty(final Long id) {
-        LOGGER.debug("remove() [{}]", id);
-        String SQL = "DELETE FROM faculty WHERE id=?";
+        LOGGER.debug("Deleting a faculty with ID={}", id);
         try {
-            jdbcTemplate.update(SQL, id);
+            jdbcTemplate.update(DELETE_FACULTY, id);
         } catch (EmptyResultDataAccessException e) {
-            String message = format("Faculty with ID '%s' not found.", id);
+            String message = format("Faculty with ID='%s' not found", id);
             throw new EntityNotFoundException(message);
         }
-        LOGGER.info("Faculty successfully deleted. Faculty details: {}", id);
+        LOGGER.info("Faculty was successfully deleted. Faculty details: {}", id);
     }
 
     @Override
     public void update(final Long id, final Faculty faculty) {
-        LOGGER.debug("update() [{}]", id);
-        String SQL = "UPDATE faculty SET name=? WHERE id=?";
+        LOGGER.debug("Changing a faculty with ID={}", id);
         try {
-            jdbcTemplate.update(SQL, id);
+            jdbcTemplate.update(UPDATE_FACULTY, id);
         } catch (EmptyResultDataAccessException e) {
-            String message = format("Faculty with ID '%s' not found.", id);
+            String message = format("Faculty with ID='%s' not found", id);
             throw new EntityNotFoundException(message);
         }
-        LOGGER.info("Faculty successfully updated. Faculty details: {}", faculty);
+        LOGGER.info("Faculty was successfully updated. Faculty details: {}", faculty);
     }
 
     @Override
-    public Faculty findFaculty(final Long id) {
-        LOGGER.debug("find() [{}]", id);
-        String SQL = "SELECT * FROM faculty WHERE id=?";
+    public Faculty findFacultyById(final Long id) {
+        LOGGER.debug("Running a method to find faculty by ID={}", id);
         Faculty faculty = new Faculty();
         try {
-            faculty = jdbcTemplate.queryForObject(SQL, new Object[]{id}, new BeanPropertyRowMapper<>(Faculty.class));
+            faculty = jdbcTemplate.queryForObject(FIND_FACULTY_BY_ID, new Object[]{id}, new BeanPropertyRowMapper<>(Faculty.class));
         } catch (EmptyResultDataAccessException e) {
             LOGGER.error(faculty.toString());
-            String message = format("Faculty with id '%s' not found", id);
+            String message = format("Faculty with ID='%s' not found", id);
             throw new EntityNotFoundException(message);
         } catch (DataAccessException e) {
-            String message = format("Unable to get Faculty with ID '%s'", id);
+            String message = format("Unable to get Faculty with ID='%s'", id);
             throw new QueryNotExecuteException(message, e);
         }
-        LOGGER.info("Faculty found. Faculty details: {}", id);
+        LOGGER.info("Faculty was found. Faculty details: {}", id);
         return faculty;
     }
 
     @Override
     public List<Faculty> findAllFaculties() {
-        LOGGER.debug("findAllFaculties()");
-        String SQL = "SELECT * FROM faculty";
+        LOGGER.debug("Running a method to find all faculties");
         List<Faculty> faculties;
         try {
-            faculties = jdbcTemplate.query(SQL, new BeanPropertyRowMapper<>(Faculty.class));
+            faculties = jdbcTemplate.query(FIND_ALL_FACULTIES, new BeanPropertyRowMapper<>(Faculty.class));
         } catch (DataAccessException e) {
             String message = "Unable to get faculties";
             throw new QueryNotExecuteException(message, e);
         }
-        for (Faculty faculty : faculties) {
-            LOGGER.info("Faculty successfully found. Faculty details: {}", faculty);
-        }
+        LOGGER.info("Faculties were successfully found");
         return faculties;
     }
 
     @Override
     public List<Faculty> findAllFacultiesBySubjectId(final Long id) {
-        LOGGER.debug("findAllFacultiesBySubjectId() [{}]", id);
-        String SQL = "SELECT faculty.name FROM faculty " +
-                "INNER JOIN subject_faculty ON faculty.id=subject_faculty.faculty_id " +
-                "INNER JOIN subject ON subject.id=subject_faculty.subject_id " +
-                "WHERE subject.id=?";
+        LOGGER.debug("Running a method to find all faculties by subject ID={}", id);
         List<Faculty> faculties = new ArrayList<>();
         try {
-            faculties = jdbcTemplate.query(SQL, new Object[]{id}, new BeanPropertyRowMapper<>(Faculty.class));
+            faculties = jdbcTemplate.query(FIND_FACULTIES_BY_SUBJECT_ID, new Object[]{id}, new BeanPropertyRowMapper<>(Faculty.class));
         } catch (EmptyResultDataAccessException e) {
             LOGGER.error(faculties.toString());
-            String message = format("Faculty by subjectId '%s' not found", id);
+            String message = format("Faculty by subject ID='%s' not found", id);
             throw new EntityNotFoundException(message);
         } catch (DataAccessException e) {
-            String message = format("Unable to get Faculty by subjectId '%s'", id);
+            String message = format("Unable to get Faculty by subject ID='%s'", id);
             throw new QueryNotExecuteException(message, e);
         }
-        for (Faculty faculty : faculties) {
-            LOGGER.debug("List of faculties studying the subject {}", faculty);
-        }
+        LOGGER.debug("Faculties were successfully found by subject ID={}", id);
         return faculties;
     }
 
     @Override
     public List<Faculty> findAllFacultiesByTeacherId(final Long id) {
-        LOGGER.debug("findAllFacultiesByTeacherId() [{}]", id);
-        String SQL = "SELECT faculty.name FROM faculty " +
-                "INNER JOIN teacher_faculty ON faculty.id=teacher_faculty.faculty_id " +
-                "INNER JOIN teacher ON teacher.id=teacher_faculty.teacher_id " +
-                "WHERE teacher.id=?";
+        LOGGER.debug("Running a method to find all faculties by teacher ID={}", id);
         List<Faculty> faculties = new ArrayList<>();
         try {
-            faculties = jdbcTemplate.query(SQL, new Object[]{id}, new BeanPropertyRowMapper<>(Faculty.class));
+            faculties = jdbcTemplate.query(FIND_FACULTIES_BY_TEACHER_ID, new Object[]{id}, new BeanPropertyRowMapper<>(Faculty.class));
         } catch (EmptyResultDataAccessException e) {
             LOGGER.error(faculties.toString());
-            String message = format("Faculty by teacherId '%s' not found", id);
+            String message = format("Faculty by teacher ID='%s' not found", id);
             throw new EntityNotFoundException(message);
         } catch (DataAccessException e) {
-            String message = format("Unable to get Faculty by teacherId '%s'", id);
+            String message = format("Unable to get Faculty by teacher ID='%s'", id);
             throw new QueryNotExecuteException(message, e);
         }
-        for (Faculty faculty : faculties) {
-            LOGGER.debug("List of faculties where the teacher is teaching {}", faculty);
-        }
+        LOGGER.debug("Faculties were successfully found by teacher ID={}", id);
         return faculties;
     }
 }

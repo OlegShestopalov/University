@@ -22,113 +22,111 @@ public class SchoolSubjectDAOImpl implements SchoolSubjectDAO {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(SchoolSubjectDAOImpl.class);
     private final JdbcTemplate jdbcTemplate;
+    private static final String INSERT_SUBJECT = "INSERT INTO subject VALUES(?, ?)";
+    private static final String DELETE_SUBJECT = "DELETE FROM subject WHERE id=?";
+    private static final String UPDATE_SUBJECT = "UPDATE subject SET name=?, description=? WHERE id=?";
+    private static final String FIND_SUBJECT_BY_ID = "SELECT subject.name, subject.description FROM subject WHERE id=?";
+    private static final String FIND_ALL_TEACHER_SUBJECTS = "SELECT subject.name FROM subject " +
+            "INNER JOIN teacher_subject ON subject.id=teacher_subject.subject_id " +
+            "INNER JOIN teacher ON teacher.id=teacher_subject.teacher_id " +
+            "WHERE teacher.id=?";
+    private static final String FIND_ALL_FACULTY_SUBJECTS = "SELECT subject.name FROM subject " +
+            "INNER JOIN subject_faculty ON subject.id=subject_faculty.subject_id " +
+            "INNER JOIN faculty ON faculty.id=subject_faculty.faculty_id " +
+            "WHERE faculty.id=?";
 
     public SchoolSubjectDAOImpl(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 
     @Override
-    public void add(final SchoolSubject schoolSubject) {
-        LOGGER.debug("add() [{}]", schoolSubject);
-        String SQL = "INSERT INTO subject VALUES(?, ?)";
+    public void addSubject(final SchoolSubject schoolSubject) {
+        LOGGER.debug("Running a method for add subject. Subject details: {}", schoolSubject);
         try {
-            jdbcTemplate.update(SQL, schoolSubject.getName(), schoolSubject.getDescription());
+            jdbcTemplate.update(INSERT_SUBJECT, schoolSubject.getName(), schoolSubject.getDescription());
         } catch (DataAccessException e) {
-            String message = format("Unable to add Subject '%s'", schoolSubject);
+            String message = format("Unable to add Subject='%s'", schoolSubject);
             throw new QueryNotExecuteException(message, e);
         }
-        LOGGER.debug("Subject successfully saved. Subject details: {}", schoolSubject);
+        LOGGER.debug("Subject was successfully saved. Subject details: {}", schoolSubject);
     }
 
     @Override
     public void removeSubject(final Long id) {
-        LOGGER.debug("removeSubject() [{}]", id);
-        String SQL = "DELETE FROM subject WHERE id=?";
+        LOGGER.debug("Deleting a subject with ID={}", id);
         try {
-            jdbcTemplate.update(SQL, id);
+            jdbcTemplate.update(DELETE_SUBJECT, id);
         } catch (EmptyResultDataAccessException e) {
-            String message = format("Subject with ID '%s' not found.", id);
+            String message = format("Subject with ID='%s' not found.", id);
             throw new EntityNotFoundException(message);
         }
-        LOGGER.info("Subject successfully deleted. Subject details: {}", id);
+        LOGGER.info("Subject was successfully deleted. Subject details: {}", id);
     }
 
     @Override
-    public void update(final Long id, final SchoolSubject schoolSubject) {
-        LOGGER.debug("updateSubject() [{}]", id);
-        String SQL = "UPDATE subject SET name=?, description=? WHERE id=?";
+    public void updateSubject(final Long id, final SchoolSubject schoolSubject) {
+        LOGGER.debug("Changing a subject with ID={}", id);
         try {
-            jdbcTemplate.update(SQL, schoolSubject.getName(), schoolSubject.getDescription(), id);
+            jdbcTemplate.update(UPDATE_SUBJECT, schoolSubject.getName(), schoolSubject.getDescription(), id);
         } catch (EmptyResultDataAccessException e) {
-            String message = format("Subject with ID '%s' not found.", id);
+            String message = format("Subject with ID='%s' not found.", id);
             throw new EntityNotFoundException(message);
         }
-        LOGGER.info("Subject successfully updated. Subject details: {}", schoolSubject);
+        LOGGER.info("Subject was successfully updated. Subject details: {}", schoolSubject);
     }
 
     @Override
-    public SchoolSubject findSubject(final Long id) {
-        LOGGER.debug("findSubject() [{}]", id);
-        String SQL = "SELECT subject.name, subject.description FROM subject WHERE id=?";
+    public SchoolSubject findSubjectById(final Long id) {
+        LOGGER.debug("Running a method to find subject by ID={}", id);
         SchoolSubject subject = new SchoolSubject();
         try {
-            subject = jdbcTemplate.queryForObject(SQL, new Object[]{id}, new BeanPropertyRowMapper<>(SchoolSubject.class));
+            subject = jdbcTemplate.queryForObject(FIND_SUBJECT_BY_ID, new Object[]{id}, new BeanPropertyRowMapper<>(SchoolSubject.class));
         } catch (EmptyResultDataAccessException e) {
             LOGGER.error(subject.toString());
-            String message = format("Subject with ID '%s' not found", id);
+            String message = format("Subject with ID='%s' not found", id);
             throw new EntityNotFoundException(message);
         } catch (DataAccessException e) {
-            String message = format("Unable to get Subject with Id '%s'", id);
+            String message = format("Unable to get Subject with ID='%s'", id);
             throw new QueryNotExecuteException(message, e);
         }
-        LOGGER.info("Subject successfully found. Subject details: {}", id);
+        LOGGER.info("Subject was successfully found. Subject details: {}", id);
         return subject;
     }
 
     @Override
     public List<SchoolSubject> findAllTeacherSubjects(final Long id) {
-        LOGGER.debug("findAllTeacherSubjects() [{}]", id);
-        String SQL = "SELECT subject.name FROM subject " +
-                "INNER JOIN teacher_subject ON subject.id=teacher_subject.subject_id " +
-                "INNER JOIN teacher ON teacher.id=teacher_subject.teacher_id " +
-                "WHERE teacher.id=?";
+        LOGGER.debug("Running a method to find all subjects by teacher ID={}", id);
         List<SchoolSubject> subjects = new ArrayList<>();
         try {
-            subjects = jdbcTemplate.query(SQL, new Object[]{id}, new BeanPropertyRowMapper<>(SchoolSubject.class));
+            subjects = jdbcTemplate.query(FIND_ALL_TEACHER_SUBJECTS, new Object[]{id}, new BeanPropertyRowMapper<>(SchoolSubject.class));
         } catch (EmptyResultDataAccessException e) {
             LOGGER.error(subjects.toString());
-            String message = format("Teacher's '%s' subjects not found", id);
+            String message = format("Teacher's subjects with ID='%s' not found", id);
             throw new EntityNotFoundException(message);
         } catch (DataAccessException e) {
-            String message = format("Unable to get teacher's subjects '%s'", id);
+            String message = format("Unable to get teacher's subjects with ID='%s'", id);
             throw new QueryNotExecuteException(message, e);
         }
-        for (SchoolSubject subject : subjects) {
-            LOGGER.debug("Subject successfully found. Subject details: {}", id);
-        }
+        LOGGER.debug("Subjects were successfully found. Subject details: {}", id);
         return subjects;
     }
 
     @Override
     public List<SchoolSubject> findAllFacultySubjects(final Long id) {
-        LOGGER.debug("findAllFacultySubjects() [{}]", id);
-        String SQL = "SELECT subject.name FROM subject " +
-                "INNER JOIN subject_faculty ON subject.id=subject_faculty.subject_id " +
-                "INNER JOIN faculty ON faculty.id=subject_faculty.faculty_id " +
-                "WHERE faculty.id=?";
+        LOGGER.debug("Running a method to find all subjects by faculty ID={}", id);
         List<SchoolSubject> subjects = new ArrayList<>();
         try {
-            subjects = jdbcTemplate.query(SQL, new Object[]{id}, new BeanPropertyRowMapper<>(SchoolSubject.class));
+            subjects = jdbcTemplate.query(FIND_ALL_FACULTY_SUBJECTS, new Object[]{id}, new BeanPropertyRowMapper<>(SchoolSubject.class));
         } catch (EmptyResultDataAccessException e) {
             LOGGER.error(subjects.toString());
-            String message = format("Faculty's '%s' subjects not found", id);
+            String message = format("Faculty's subjects with ID='%s' not found", id);
             throw new EntityNotFoundException(message);
         } catch (DataAccessException e) {
-            String message = format("Unable to get facculty's '%s' subjects", id);
+            String message = format("Unable to get faculty's subjects with ID='%s'", id);
             throw new QueryNotExecuteException(message, e);
         }
         for (SchoolSubject subject : subjects) {
-            LOGGER.debug("Subject successfully found. Subject details: {}", id);
+            LOGGER.debug("Subjects were successfully found. Subject details: {}", id);
         }
         return subjects;
     }

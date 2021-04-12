@@ -25,6 +25,12 @@ public class GroupDAOImpl implements GroupDAO {
     private static final Logger LOGGER = LoggerFactory.getLogger(GroupDAOImpl.class);
     private final GroupMapper groupMapper;
     private final JdbcTemplate jdbcTemplate;
+    private static final String INSERT_GROUP = "INSERT INTO group1 VALUES(?, ?, ?)";
+    private static final String DELETE_GROUP = "DELETE FROM group1 WHERE id=?";
+    private static final String UPDATE_GROUP = "UPDATE group1 SET name=?, faculty_id=?, course_id=? WHERE id=?";
+    private static final String FIND_GROUP_BY_ID = "SELECT * FROM group1 WHERE id=?";
+    private static final String FIND_ALL_GROUPS = "SELECT * FROM group1";
+    private static final String FIND_ALL_GROUPS_IN_FACULTY = "SELECT group1.name FROM group1 WHERE faculty_id=?";
 
     @Autowired
     public GroupDAOImpl(JdbcTemplate jdbcTemplate, GroupMapper groupMapper) {
@@ -34,85 +40,75 @@ public class GroupDAOImpl implements GroupDAO {
 
     @Override
     public void add(final Group group) {
-        LOGGER.debug("add() [{}]", group);
-        String SQL = "INSERT INTO group1 VALUES(?, ?, ?)";
+        LOGGER.debug("Running a method for add group. Group details: {}", group);
         try {
-            jdbcTemplate.update(SQL, group.getName(), group.getFaculty(), group.getCourse());
+            jdbcTemplate.update(INSERT_GROUP, group.getName(), group.getFaculty(), group.getCourse());
         } catch (DataAccessException e) {
-            String message = format("Unable to add Group '%s'", group);
+            String message = format("Unable to add Group='%s'", group);
             throw new QueryNotExecuteException(message, e);
         }
-        LOGGER.debug("Group successfully saved. Group details: {}", group);
+        LOGGER.debug("Group was successfully saved. Group details: {}", group);
     }
 
     @Override
     public void removeGroup(final Long id) {
-        LOGGER.debug("removeGroup() [{}]", id);
-        String SQL = "DELETE FROM group1 WHERE id=?";
+        LOGGER.debug("Deleting a group with ID={}", id);
         try {
-            jdbcTemplate.update(SQL, id);
+            jdbcTemplate.update(DELETE_GROUP, id);
         } catch (EmptyResultDataAccessException e) {
-            String message = format("Group with ID '%s' not found", id);
+            String message = format("Group with ID='%s' not found", id);
             throw new EntityNotFoundException(message);
         }
-        LOGGER.info("Group successfully deleted. Group details: {}", id);
+        LOGGER.info("Group was successfully deleted. Group details: {}", id);
     }
 
     @Override
     public void updateGroup(final Long id) {
-        LOGGER.debug("updateGroup() [{}]", id);
-        String SQL = "UPDATE group1 SET name=?, faculty_id=?, course_id=? WHERE id=?";
+        LOGGER.debug("Changing a group with ID={}", id);
         try {
-            jdbcTemplate.update(SQL, id);
+            jdbcTemplate.update(UPDATE_GROUP, id);
         } catch (EmptyResultDataAccessException e) {
-            String message = format("Group with ID '%s' not found", id);
+            String message = format("Group with ID='%s' not found", id);
             throw new EntityNotFoundException(message);
         }
-        LOGGER.info("Group successfully updated. Group details: {}", id);
-    }
-
-    @Override
-    public List<Group> findGroups() {
-        LOGGER.debug("findGroups()");
-        String SQL = "SELECT * FROM group1";
-        List<Group> groups;
-        try {
-            groups = jdbcTemplate.query(SQL, new BeanPropertyRowMapper<>(Group.class));
-        } catch (DataAccessException e) {
-            String message = "Unable to get Groups";
-            throw new QueryNotExecuteException(message, e);
-        }
-        for (Group group : groups) {
-            LOGGER.debug("Groups successfully found. Group details: {}", group);
-        }
-        return groups;
+        LOGGER.info("Group was successfully updated. Group details: {}", id);
     }
 
     @Override
     public Group findById(Long id) {
-        LOGGER.debug("findById()");
-        String SQL = "SELECT * FROM group1 WHERE id=?";
-        return jdbcTemplate.queryForObject(SQL, new Object[]{id}, groupMapper);
+        LOGGER.debug("Running a method to find group by ID={}", id);
+        return jdbcTemplate.queryForObject(FIND_GROUP_BY_ID, new Object[]{id}, groupMapper);
+    }
+
+    @Override
+    public List<Group> findGroups() {
+        LOGGER.debug("Running a method to find all groups");
+        List<Group> groups;
+        try {
+            groups = jdbcTemplate.query(FIND_ALL_GROUPS, new BeanPropertyRowMapper<>(Group.class));
+        } catch (DataAccessException e) {
+            String message = "Unable to get Groups";
+            throw new QueryNotExecuteException(message, e);
+        }
+        LOGGER.debug("Groups were successfully found");
+        return groups;
     }
 
     @Override
     public List<Group> findAllGroupsInFaculty(final Long id) {
-        LOGGER.debug("findAllGroupsInFaculty()");
-        String SQL = "SELECT group1.name FROM group1 WHERE faculty_id=?";
+        LOGGER.debug("Running a method to find all groups by faculty id={}", id);
         List<Group> groups = new ArrayList<>();
         try {
-            groups = jdbcTemplate.query(SQL, new Object[]{id}, new BeanPropertyRowMapper<>(Group.class));
+            groups = jdbcTemplate.query(FIND_ALL_GROUPS_IN_FACULTY, new Object[]{id}, new BeanPropertyRowMapper<>(Group.class));
         } catch (EmptyResultDataAccessException e) {
             LOGGER.error(groups.toString());
-            String message = format("Groups by facultyId '%s' not found", id);
+            String message = format("Groups by faculty ID='%s' not found", id);
             throw new EntityNotFoundException(message);
         } catch (DataAccessException e) {
-            String message = format("Unable to get Groups by facultyId '%s'", id);
+            String message = format("Unable to get Groups by faculty ID='%s'", id);
             throw new QueryNotExecuteException(message, e);
         }
-        for (Group group : groups) {
-            LOGGER.debug("Groups successfully found. Group details: {}", group);
-        }
+        LOGGER.debug("Groups were successfully found by faculty ID={}", id);
         return groups;
     }
 }

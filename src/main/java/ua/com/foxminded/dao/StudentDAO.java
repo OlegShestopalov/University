@@ -14,7 +14,7 @@ public interface StudentDAO {
 
     public List<Student> findAllStudents();
 
-    public Student findStudent(final Long id);
+    public Student findStudentById(final Long id);
 
     public Student findByName(final String name, final String surname);
 

@@ -18,27 +18,24 @@ public class UniversityDAOImpl implements UniversityDAO {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(UniversityDAOImpl.class);
     private final JdbcTemplate jdbcTemplate;
+    private static final String FIND_ALL_AUDIENCES = "SELECT * FROM audience";
 
     @Autowired
     public UniversityDAOImpl(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-
     @Override
     public List<Audience> findAllAudiences() {
-        LOGGER.debug("findAllAudiences()");
-        String SQL = "SELECT * FROM audience";
+        LOGGER.debug("Running a method to find all audiences");
         List<Audience> audiences;
         try {
-            audiences = jdbcTemplate.query(SQL, new BeanPropertyRowMapper<>(Audience.class));
+            audiences = jdbcTemplate.query(FIND_ALL_AUDIENCES, new BeanPropertyRowMapper<>(Audience.class));
         } catch (DataAccessException e) {
             String message = "Unable to get audiences";
             throw new QueryNotExecuteException(message, e);
         }
-        for (Audience audience : audiences) {
-            LOGGER.info("Faculty successfully found. Faculty details: {}", audience);
-        }
+        LOGGER.info("Audiences were successfully found");
         return audiences;
     }
 }

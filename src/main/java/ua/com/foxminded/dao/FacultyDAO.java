@@ -13,7 +13,7 @@ public interface FacultyDAO {
 
     void update(final Long id, final Faculty faculty);
 
-    Faculty findFaculty(final Long id);
+    Faculty findFacultyById(final Long id);
 
     List<Faculty> findAllFaculties();
 

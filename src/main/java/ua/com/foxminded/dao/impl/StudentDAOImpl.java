@@ -25,6 +25,14 @@ public class StudentDAOImpl implements StudentDAO {
     private static final Logger LOGGER = LoggerFactory.getLogger(StudentDAOImpl.class);
     private final StudentMapper studentMapper;
     private final JdbcTemplate jdbcTemplate;
+    private static final String INSERT_STUDENT = "INSERT INTO student VALUES(?, ?, ?, ?, ?)";
+    private static final String DELETE_STUDENT = "DELETE FROM student WHERE id=?";
+    private static final String UPDATE_STUDENT = "UPDATE student SET group_id=?, name=?, surname=?, sex=?, age=? WHERE id=?";
+    private static final String FIND_STUDENT_BY_ID = "SELECT * FROM student WHERE id=?";
+    private static final String FIND_ALL_STUDENTS = "SELECT * FROM student";
+    private static final String FIND_STUDENT_BY_NAME = "SELECT * FROM student WHERE name=?";
+    private static final String FIND_ALL_STUDENTS_IN_GROUP = "SELECT * FROM student WHERE group_id=?";
+    private static final String FIND_ALL_EMAIL_IN_GROUP = "SELECT email FROM student WHERE group_id=?";
 
     @Autowired
     public StudentDAOImpl(JdbcTemplate jdbcTemplate, StudentMapper studentMapper) {
@@ -34,137 +42,123 @@ public class StudentDAOImpl implements StudentDAO {
 
     @Override
     public void add(final Student student) {
-        LOGGER.debug("add() [{}]", student);
-        String SQL = "INSERT INTO student VALUES(?, ?, ?, ?, ?)";
+        LOGGER.debug("Running a method for add student. Student details: {}", student);
         try {
-            jdbcTemplate.update(SQL, student.getGroup(), student.getName(), student.getSurname(), student.getSex(), student.getAge());
+            jdbcTemplate.update(INSERT_STUDENT, student.getGroup(), student.getName(), student.getSurname(), student.getSex(), student.getAge());
         } catch (DataAccessException e) {
-            String message = format("Unable to add Student '%s'", student);
+            String message = format("Unable to add Student='%s'", student);
             throw new QueryNotExecuteException(message, e);
         }
-        LOGGER.debug("Student successfully saved. Student details: {}", student);
+        LOGGER.debug("Student was successfully saved. Student details: {}", student);
     }
 
     @Override
     public void removeStudent(final Long id) {
-        LOGGER.debug("removeStudent() [{}]", id);
-        String SQL = "DELETE FROM student WHERE id=?";
+        LOGGER.debug("Deleting a student with ID={}", id);
         try {
-            jdbcTemplate.update(SQL, id);
+            jdbcTemplate.update(DELETE_STUDENT, id);
         } catch (EmptyResultDataAccessException e) {
-            String message = format("Student with ID '%s' not found.", id);
+            String message = format("Student with ID='%s' not found", id);
             throw new EntityNotFoundException(message);
         }
-        LOGGER.info("Student successfully deleted. Student details: {}", id);
+        LOGGER.info("Student was successfully deleted. Student details: {}", id);
     }
 
     @Override
     public void update(final Long id, final Student student) {
-        LOGGER.debug("update() [{}]", id);
-        String SQL = "UPDATE student SET group_id=?, name=?, surname=?, sex=?, age=? WHERE id=?";
+        LOGGER.debug("Changing a student with ID={}", id);
         try {
-            jdbcTemplate.update(SQL, student.getGroup(), student.getName(), student.getSurname(), student.getSex(), student.getAge(), id);
+            jdbcTemplate.update(UPDATE_STUDENT, student.getGroup(), student.getName(), student.getSurname(), student.getSex(), student.getAge(), id);
         } catch (EmptyResultDataAccessException e) {
-            String message = format("Student with ID '%s' not found.", id);
+            String message = format("Student with ID='%s' not found", id);
             throw new EntityNotFoundException(message);
         }
-        LOGGER.info("Student successfully updated. Student details: {}", student);
+        LOGGER.info("Student was successfully updated. Student details: {}", student);
     }
 
     @Override
-    public List<Student> findAllStudents() {
-        LOGGER.debug("findAllStudents()");
-        String SQL = "SELECT * FROM student";
-        List<Student> students;
-        try {
-            students = jdbcTemplate.query(SQL, studentMapper);
-        } catch (DataAccessException e) {
-            String message = "Unable to get students";
-            throw new QueryNotExecuteException(message, e);
-        }
-        for (Student student : students) {
-            LOGGER.debug("Student successfully found. Student details: {}", student);
-        }
-        return students;
-    }
-
-    @Override
-    public Student findStudent(final Long id) {
-        LOGGER.debug("findStudent() [{}]", id);
-        String SQL = "SELECT * FROM student WHERE id=?";
+    public Student findStudentById(final Long id) {
+        LOGGER.debug("Running a method to find student by ID={}", id);
         Student student = new Student();
         try {
-            student = jdbcTemplate.queryForObject(SQL, new Object[]{id}, new BeanPropertyRowMapper<>(Student.class));
+            student = jdbcTemplate.queryForObject(FIND_STUDENT_BY_ID, new Object[]{id}, new BeanPropertyRowMapper<>(Student.class));
         } catch (EmptyResultDataAccessException e) {
             LOGGER.error(student.toString());
-            String message = format("Student with ID '%s' not found", id);
+            String message = format("Student with ID='%s' not found", id);
             throw new EntityNotFoundException(message);
         } catch (DataAccessException e) {
-            String message = format("Unable to get student with ID '%s'", id);
+            String message = format("Unable to get student with ID='%s'", id);
             throw new QueryNotExecuteException(message, e);
         }
-        LOGGER.info("Student successfully found. Student details: {}", id);
+        LOGGER.info("Student was successfully found. Student details: {}", id);
         return student;
     }
 
     @Override
-    public Student findByName(final String name, final String surname) {
-        LOGGER.debug("findByName() [{}], [{}]", name, surname);
-        String SQL = "SELECT * FROM student WHERE name=?";
-        Student student = new Student();
+    public List<Student> findAllStudents() {
+        LOGGER.debug("Running a method to find all students");
+        List<Student> students;
         try {
-            student = jdbcTemplate.queryForObject(SQL, new BeanPropertyRowMapper<>(Student.class), name);
-        } catch (EmptyResultDataAccessException e) {
-            LOGGER.error(student.toString());
-            String message = format("Student with name '%s' and surname '%s' not found", name, surname);
-            throw new EntityNotFoundException(message);
+            students = jdbcTemplate.query(FIND_ALL_STUDENTS, studentMapper);
         } catch (DataAccessException e) {
-            String message = format("Unable to get student with name '%s' and surname '%s'", name, surname);
+            String message = "Unable to get students";
             throw new QueryNotExecuteException(message, e);
         }
-        LOGGER.info("Student successfully found by name. Student details: {}", student);
+        LOGGER.debug("Students were successfully found");
+        return students;
+    }
+
+    @Override
+    public Student findByName(final String name, final String surname) {
+        LOGGER.debug("Running a method to find student by name={}", name);
+        Student student = new Student();
+        try {
+            student = jdbcTemplate.queryForObject(FIND_STUDENT_BY_NAME, new BeanPropertyRowMapper<>(Student.class), name);
+        } catch (EmptyResultDataAccessException e) {
+            LOGGER.error(student.toString());
+            String message = format("Student with name='%s' not found", name);
+            throw new EntityNotFoundException(message);
+        } catch (DataAccessException e) {
+            String message = format("Unable to get student with name='%s'", name);
+            throw new QueryNotExecuteException(message, e);
+        }
+        LOGGER.info("Student was successfully found by name. Student details: {}", student);
         return student;
     }
 
     @Override
     public List<Student> findAllStudentsInGroup(final Long id) {
-        LOGGER.debug("findAllStudentsInGroup() [{}]", id);
-        String SQL = "SELECT * FROM student WHERE group_id=?";
+        LOGGER.debug("Running a method to find all students by group ID={}", id);
         List<Student> students = new ArrayList<>();
         try {
-            students = jdbcTemplate.query(SQL, new Object[]{id}, new BeanPropertyRowMapper<>(Student.class));
+            students = jdbcTemplate.query(FIND_ALL_STUDENTS_IN_GROUP, new Object[]{id}, new BeanPropertyRowMapper<>(Student.class));
         } catch (EmptyResultDataAccessException e) {
             LOGGER.error(students.toString());
-            String message = format("Students with ID '%s' not found", id);
+            String message = format("Students with ID='%s' not found", id);
             throw new EntityNotFoundException(message);
         } catch (DataAccessException e) {
-            String message = format("Unable to get students with ID '%s'", id);
+            String message = format("Unable to get students with ID='%s'", id);
             throw new QueryNotExecuteException(message, e);
         }
-        for (Student student : students) {
-            LOGGER.debug("Student successfully found in the group. Student details: {}", student);
-        }
+        LOGGER.debug("Students were successfully found by group ID={}", id);
         return students;
     }
 
     @Override
     public List<Student> findAllEmailsInGroup(final Long id) {
-        LOGGER.debug("findAllEmailsInGroup() [{}]", id);
-        String SQL = "SELECT email FROM student WHERE group_id=?";
+        LOGGER.debug("Running a method to find all emails by group ID={}", id);
         List<Student> students = new ArrayList<>();
         try {
-            students = jdbcTemplate.query(SQL, new Object[]{id}, new BeanPropertyRowMapper<>(Student.class));
+            students = jdbcTemplate.query(FIND_ALL_EMAIL_IN_GROUP, new Object[]{id}, new BeanPropertyRowMapper<>(Student.class));
         } catch (EmptyResultDataAccessException e) {
             LOGGER.error(students.toString());
-            String message = format("Students with ID '%s' not found", id);
+            String message = format("Students with ID='%s' not found", id);
             throw new EntityNotFoundException(message);
         } catch (DataAccessException e) {
-            String message = format("Unable to get students with ID '%s'", id);
+            String message = format("Unable to get students with ID='%s'", id);
             throw new QueryNotExecuteException(message, e);
         }
-        for (Student student : students) {
-            LOGGER.debug("Email successfully found. Student details: {}", student.getEmail());
-        }
+        LOGGER.debug("Emails were successfully found by group ID={}", id);
         return students;
     }
 }
