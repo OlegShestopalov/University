@@ -1,12 +1,17 @@
 package ua.com.foxminded.dao.mapper;
 
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.stereotype.Component;
 import ua.com.foxminded.domain.entity.Teacher;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+@Component
 public class TeacherMapper implements RowMapper<Teacher> {
+
+    public TeacherMapper() {
+    }
 
     @Override
     public Teacher mapRow(ResultSet resultSet, int i) throws SQLException {

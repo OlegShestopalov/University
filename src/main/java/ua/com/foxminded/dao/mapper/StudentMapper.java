@@ -17,7 +17,6 @@ public class StudentMapper implements RowMapper<Student> {
     private GroupDAO groupDAO;
 
     public StudentMapper() {
-
     }
 
     @Override
