@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-
 <head>
   <meta charset="UTF-8">
   <title>All students in university</title>
@@ -21,7 +20,9 @@
 
 </head>
 <body>
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+
+<!--Navigation-->
+<nav class="sticky-top navbar navbar-expand-lg navbar-dark bg-dark">
   <div class="container-fluid">
     <a class="navbar-brand" href="#">University</a>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup"
@@ -31,15 +32,20 @@
     <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
       <div class="navbar-nav">
         <a class="nav-link" href="/home">Home</a>
-        <a class="nav-link" href="/faculties">Faculties</a>
-        <a class="nav-link" href="/teachers">Teachers</a>
-        <a class="nav-link active" aria-current="page" href="/students">Students</a>
+        <a class="nav-link" href="/faculties/menu">Faculties</a>
+        <a class="nav-link" href="/teachers/menu">Teachers</a>
+        <a class="nav-link active" aria-current="page" href="/students/menu">Students</a>
       </div>
     </div>
   </div>
 </nav>
 
-<div th:switch="${students}">
+<div class="p-1">
+<a class="btn btn-outline-dark" href="/students/allStudents" role="button">All students</a>
+<a class="btn btn-outline-dark" href="/students/new" role="button">New student</a>
+</div>
+
+<div class="p-5" th:switch="${students}">
   <h2 th:case="null">No students found!</h2>
   <div th:case="*">
     <h2>Students</h2>
@@ -47,62 +53,30 @@
       <thead>
       <tr>
         <th>Id</th>
-        <th>Group</th>
+<!--        <th>Group</th>-->
         <th>Name</th>
         <th>Surname</th>
-        <th>Sex</th>
-        <th>Age</th>
-        <th>Email</th>
+<!--        <th>Sex</th>-->
+<!--        <th>Age</th>-->
+<!--        <th>Email</th>-->
+        <th>Show</th>
       </tr>
       </thead>
       <tbody>
       <tr th:each="student : ${students}">
         <td th:text="${student.id}"></td>
-        <td th:text="${student.group}"></td>
+<!--        <td th:text="${student.group.getName()}"></td>-->
         <td th:text="${student.name}"></td>
         <td th:text="${student.surname}"></td>
-        <td th:text="${student.sex}"></td>
-        <td th:text="${student.age}"></td>
-        <td th:text="${student.email}"></td>
-        <!--                <td><a th:href="@{/children/{id}(id=${student.id})}">Edit</a></td>-->
-        <!--                <td><a th:href="@{/children/{id}(id=${student.id})}">Delete</a></td>-->
+<!--        <td th:text="${student.sex}"></td>-->
+<!--        <td th:text="${student.age}"></td>-->
+<!--        <td th:text="${student.email}"></td>-->
+        <td><a class="btn btn-outline-dark btn-" th:href="@{/students/{id}(id=${student.getId()})}">Info</a></td>
       </tr>
       </tbody>
     </table>
   </div>
-  <!--    <p><a href="/children/new">Create new student</a></p>-->
 </div>
 
-<!--<div th:each="student : ${students}">-->
-<!--    <a th:href="@{/children/{id}(id=${student.getId()})}" th:text="${student.getName()}">user</a>-->
-<!--</div>-->
-
-<!--<br/>-->
-
-<!--<hr/>-->
-
-<!--<a href="/children/new">Create new student</a>-->
-<!--<table class="table table-bordered table-hover">-->
-<!--    <thred>-->
-<!--        <tr>-->
-<!--            <th>Group</th>-->
-<!--            <th>Name</th>-->
-<!--            <th>Surname</th>-->
-<!--            <th>Sex</th>-->
-<!--            <th>Age</th>-->
-<!--            <th>Email</th>-->
-<!--        </tr>-->
-<!--    </thred>-->
-<!--    <tbody>-->
-<!--    <tr>-->
-<!--        <td>"${students.getGroup}"</td>-->
-<!--        <td>"${students.getNAme}"</td>-->
-<!--        <td>"${students.getSurname}"</td>-->
-<!--        <td>"${students.getSex}"</td>-->
-<!--        <td>"${students.getAge}"</td>-->
-<!--        <td>"${students.getEmail}"</td>-->
-<!--    </tr>-->
-<!--    </tbody>-->
-<!--</table>-->
 </body>
 </html>
