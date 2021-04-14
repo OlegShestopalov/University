@@ -43,7 +43,7 @@ public class StudentServiceImpl implements StudentService {
 
     @Override
     public Student find(Long id) {
-        return studentDAO.findStudent(id);
+        return studentDAO.findStudentById(id);
     }
 
     @Override

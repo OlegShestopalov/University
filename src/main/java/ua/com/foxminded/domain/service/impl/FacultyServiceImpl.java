@@ -51,7 +51,7 @@ public class FacultyServiceImpl implements FacultyService {
 
     @Override
     public Faculty find(Long id) {
-        return facultyDAO.findFaculty(id);
+        return facultyDAO.findFacultyById(id);
     }
 
     @Override

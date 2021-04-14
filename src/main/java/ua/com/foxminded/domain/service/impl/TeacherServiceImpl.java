@@ -38,7 +38,7 @@ public class TeacherServiceImpl implements TeacherService {
 
     @Override
     public Teacher find(Long id) {
-        return teacherDAO.findTeacher(id);
+        return teacherDAO.findTeacherById(id);
     }
 
     @Override
