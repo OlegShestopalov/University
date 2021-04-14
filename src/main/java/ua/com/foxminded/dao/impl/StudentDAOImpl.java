@@ -23,13 +23,13 @@ import static java.lang.String.format;
 public class StudentDAOImpl implements StudentDAO {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(StudentDAOImpl.class);
-    private final StudentMapper studentMapper;
     private final JdbcTemplate jdbcTemplate;
-    private static final String INSERT_STUDENT = "INSERT INTO student VALUES(?, ?, ?, ?, ?)";
+    private final StudentMapper studentMapper;
+    private static final String INSERT_STUDENT = "INSERT INTO student VALUES(?, ?, ?, ?, ?, ?, ?)";
     private static final String DELETE_STUDENT = "DELETE FROM student WHERE id=?";
-    private static final String UPDATE_STUDENT = "UPDATE student SET group_id=?, name=?, surname=?, sex=?, age=? WHERE id=?";
+    private static final String UPDATE_STUDENT = "UPDATE student SET group_id=?, name=?, surname=?, sex=?, age=?, email=? WHERE id=?";
     private static final String FIND_STUDENT_BY_ID = "SELECT * FROM student WHERE id=?";
-    private static final String FIND_ALL_STUDENTS = "SELECT * FROM student";
+    private static final String FIND_ALL_STUDENTS = "SELECT * FROM student ORDER BY id";
     private static final String FIND_STUDENT_BY_NAME = "SELECT * FROM student WHERE name=?";
     private static final String FIND_ALL_STUDENTS_IN_GROUP = "SELECT * FROM student WHERE group_id=?";
     private static final String FIND_ALL_EMAIL_IN_GROUP = "SELECT email FROM student WHERE group_id=?";
@@ -44,7 +44,7 @@ public class StudentDAOImpl implements StudentDAO {
     public void add(final Student student) {
         LOGGER.debug("Running a method for add student. Student details: {}", student);
         try {
-            jdbcTemplate.update(INSERT_STUDENT, student.getGroup(), student.getName(), student.getSurname(), student.getSex(), student.getAge());
+            jdbcTemplate.update(INSERT_STUDENT, student.getId(), student.getGroup().getId(), student.getName(), student.getSurname(), student.getSex(), student.getAge(), student.getEmail());
         } catch (DataAccessException e) {
             String message = format("Unable to add Student='%s'", student);
             throw new QueryNotExecuteException(message, e);
@@ -68,7 +68,7 @@ public class StudentDAOImpl implements StudentDAO {
     public void update(final Long id, final Student student) {
         LOGGER.debug("Changing a student with ID={}", id);
         try {
-            jdbcTemplate.update(UPDATE_STUDENT, student.getGroup(), student.getName(), student.getSurname(), student.getSex(), student.getAge(), id);
+            jdbcTemplate.update(UPDATE_STUDENT, student.getGroup().getId(), student.getName(), student.getSurname(), student.getSex(), student.getAge(), student.getEmail(), id);
         } catch (EmptyResultDataAccessException e) {
             String message = format("Student with ID='%s' not found", id);
             throw new EntityNotFoundException(message);
@@ -81,7 +81,7 @@ public class StudentDAOImpl implements StudentDAO {
         LOGGER.debug("Running a method to find student by ID={}", id);
         Student student = new Student();
         try {
-            student = jdbcTemplate.queryForObject(FIND_STUDENT_BY_ID, new Object[]{id}, new BeanPropertyRowMapper<>(Student.class));
+            student = jdbcTemplate.queryForObject(FIND_STUDENT_BY_ID, studentMapper, id);
         } catch (EmptyResultDataAccessException e) {
             LOGGER.error(student.toString());
             String message = format("Student with ID='%s' not found", id);

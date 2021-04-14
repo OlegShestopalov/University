@@ -9,6 +9,7 @@ import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 import ua.com.foxminded.dao.TeacherDAO;
+import ua.com.foxminded.dao.mapper.TeacherMapper;
 import ua.com.foxminded.domain.entity.Teacher;
 import ua.com.foxminded.exception.QueryNotExecuteException;
 
@@ -23,11 +24,12 @@ public class TeacherDAOImpl implements TeacherDAO {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(TeacherDAOImpl.class);
     private final JdbcTemplate jdbcTemplate;
-    private static final String INSERT_TEACHER = "INSERT INTO teacher VALUES (?, ?)";
+    private final TeacherMapper teacherMapper;
+    private static final String INSERT_TEACHER = "INSERT INTO teacher VALUES (?, ?, ?, ?)";
     private static final String DELETE_TEACHER = "DELETE FROM teacher WHERE id=?";
-    private static final String UPDATE_TEACHER = "UPDATE teacher SET name=?, surname=? WHERE id=?";
+    private static final String UPDATE_TEACHER = "UPDATE teacher SET name=?, surname=?, email=? WHERE id=?";
     private static final String FIND_TEACHER_BY_ID = "SELECT * FROM teacher WHERE id=?";
-    private static final String FIND_ALL_TEACHERS = "SELECT * FROM teacher";
+    private static final String FIND_ALL_TEACHERS = "SELECT * FROM teacher ORDER BY id";
     private static final String FIND_TEACHERS_EMAILS = "SELECT email FROM teacher";
     private static final String FIND_ALL_TEACHERS_BY_SUBJECT_ID = "SELECT teacher.name, teacher.surname FROM teacher " +
             "INNER JOIN teacher_subject ON teacher.id=teacher_subject.teacher_id " +
@@ -39,7 +41,8 @@ public class TeacherDAOImpl implements TeacherDAO {
             "WHERE faculty.id=?";
 
     @Autowired
-    public TeacherDAOImpl(JdbcTemplate jdbcTemplate) {
+    public TeacherDAOImpl(JdbcTemplate jdbcTemplate, TeacherMapper teacherMapper) {
+        this.teacherMapper = teacherMapper;
         this.jdbcTemplate = jdbcTemplate;
     }
 
@@ -47,7 +50,7 @@ public class TeacherDAOImpl implements TeacherDAO {
     public void add(final Teacher teacher) {
         LOGGER.debug("Running a method for add teacher. Teacher details: {}", teacher);
         try {
-            jdbcTemplate.update(INSERT_TEACHER, teacher.getName(), teacher.getSurname());
+            jdbcTemplate.update(INSERT_TEACHER, teacher.getId(), teacher.getName(), teacher.getSurname(), teacher.getEmail());
         } catch (DataAccessException e) {
             String message = format("Unable to add Teacher '%s'", teacher);
             throw new QueryNotExecuteException(message, e);
@@ -71,7 +74,7 @@ public class TeacherDAOImpl implements TeacherDAO {
     public void update(final Long id, final Teacher teacher) {
         LOGGER.debug("Changing a teacher with ID={}", id);
         try {
-            jdbcTemplate.update(UPDATE_TEACHER, teacher.getName(), teacher.getSurname(), id);
+            jdbcTemplate.update(UPDATE_TEACHER, teacher.getName(), teacher.getSurname(), teacher.getEmail(), id);
         } catch (EmptyResultDataAccessException e) {
             String message = format("Faculty with ID='%s' not found", id);
             throw new EntityNotFoundException(message);
@@ -84,7 +87,7 @@ public class TeacherDAOImpl implements TeacherDAO {
         LOGGER.debug("Running a method to find teacher by ID={}", id);
         Teacher teacher = new Teacher();
         try {
-            teacher = jdbcTemplate.queryForObject(FIND_TEACHER_BY_ID, new Object[]{id}, new BeanPropertyRowMapper<>(Teacher.class));
+            teacher = jdbcTemplate.queryForObject(FIND_TEACHER_BY_ID, teacherMapper, id);
         } catch (EmptyResultDataAccessException e) {
             LOGGER.error(teacher.toString());
             String message = format("Teacher with ID='%s' not found", id);
@@ -102,7 +105,7 @@ public class TeacherDAOImpl implements TeacherDAO {
         LOGGER.debug("Running a method to find all teachers");
         List<Teacher> teachers;
         try {
-            teachers = jdbcTemplate.query(FIND_ALL_TEACHERS, new BeanPropertyRowMapper<>(Teacher.class));
+            teachers = jdbcTemplate.query(FIND_ALL_TEACHERS, teacherMapper);
         } catch (DataAccessException e) {
             String message = "Unable to get teachers";
             throw new QueryNotExecuteException(message, e);

@@ -8,6 +8,7 @@ import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 import ua.com.foxminded.dao.FacultyDAO;
+import ua.com.foxminded.dao.mapper.FacultyMapper;
 import ua.com.foxminded.domain.entity.Faculty;
 import ua.com.foxminded.exception.QueryNotExecuteException;
 
@@ -21,12 +22,13 @@ import static java.lang.String.format;
 public class FacultyDAOImpl implements FacultyDAO {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(FacultyDAOImpl.class);
+    private final FacultyMapper facultyMapper;
     private final JdbcTemplate jdbcTemplate;
-    private static final String INSERT_FACULTY = "INSERT INTO faculty VALUES (?)";
+    private static final String INSERT_FACULTY = "INSERT INTO faculty VALUES (?, ?)";
     private static final String DELETE_FACULTY = "DELETE FROM faculty WHERE id=?";
     private static final String UPDATE_FACULTY = "UPDATE faculty SET name=? WHERE id=?";
     private static final String FIND_FACULTY_BY_ID = "SELECT * FROM faculty WHERE id=?";
-    private static final String FIND_ALL_FACULTIES = "SELECT * FROM faculty";
+    private static final String FIND_ALL_FACULTIES = "SELECT * FROM faculty ORDER BY id";
     private static final String FIND_FACULTIES_BY_SUBJECT_ID = "SELECT faculty.name FROM faculty " +
             "INNER JOIN subject_faculty ON faculty.id=subject_faculty.faculty_id " +
             "INNER JOIN subject ON subject.id=subject_faculty.subject_id " +
@@ -36,7 +38,8 @@ public class FacultyDAOImpl implements FacultyDAO {
             "INNER JOIN teacher ON teacher.id=teacher_faculty.teacher_id " +
             "WHERE teacher.id=?";
 
-    public FacultyDAOImpl(JdbcTemplate jdbcTemplate) {
+    public FacultyDAOImpl(FacultyMapper facultyMapper, JdbcTemplate jdbcTemplate) {
+        this.facultyMapper = facultyMapper;
         this.jdbcTemplate = jdbcTemplate;
     }
 
@@ -44,7 +47,7 @@ public class FacultyDAOImpl implements FacultyDAO {
     public void add(final Faculty faculty) {
         LOGGER.debug("Running a method for add faculty. Faculty details: {}", faculty);
         try {
-            jdbcTemplate.update(INSERT_FACULTY, faculty.getName());
+            jdbcTemplate.update(INSERT_FACULTY, faculty.getId(), faculty.getName());
         } catch (DataAccessException e) {
             String message = format("Couldn't add Faculty='%s'", faculty);
             throw new QueryNotExecuteException(message, e);
@@ -68,7 +71,7 @@ public class FacultyDAOImpl implements FacultyDAO {
     public void update(final Long id, final Faculty faculty) {
         LOGGER.debug("Changing a faculty with ID={}", id);
         try {
-            jdbcTemplate.update(UPDATE_FACULTY, id);
+            jdbcTemplate.update(UPDATE_FACULTY, faculty.getName(), id);
         } catch (EmptyResultDataAccessException e) {
             String message = format("Faculty with ID='%s' not found", id);
             throw new EntityNotFoundException(message);
@@ -99,7 +102,7 @@ public class FacultyDAOImpl implements FacultyDAO {
         LOGGER.debug("Running a method to find all faculties");
         List<Faculty> faculties;
         try {
-            faculties = jdbcTemplate.query(FIND_ALL_FACULTIES, new BeanPropertyRowMapper<>(Faculty.class));
+            faculties = jdbcTemplate.query(FIND_ALL_FACULTIES, facultyMapper);
         } catch (DataAccessException e) {
             String message = "Unable to get faculties";
             throw new QueryNotExecuteException(message, e);
