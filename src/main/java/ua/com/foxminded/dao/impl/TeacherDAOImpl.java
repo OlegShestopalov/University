@@ -47,7 +47,7 @@ public class TeacherDAOImpl implements TeacherDAO {
     }
 
     @Override
-    public void add(final Teacher teacher) {
+    public void add(Teacher teacher) {
         LOGGER.debug("Running a method for add teacher. Teacher details: {}", teacher);
         try {
             jdbcTemplate.update(INSERT_TEACHER, teacher.getId(), teacher.getName(), teacher.getSurname(), teacher.getEmail());
@@ -59,7 +59,7 @@ public class TeacherDAOImpl implements TeacherDAO {
     }
 
     @Override
-    public void removeTeacher(final Long id) {
+    public void removeTeacher(Long id) {
         LOGGER.debug("Deleting a teacher with ID={}", id);
         try {
             jdbcTemplate.update(DELETE_TEACHER, id);
@@ -71,7 +71,7 @@ public class TeacherDAOImpl implements TeacherDAO {
     }
 
     @Override
-    public void update(final Long id, final Teacher teacher) {
+    public void update(Long id, Teacher teacher) {
         LOGGER.debug("Changing a teacher with ID={}", id);
         try {
             jdbcTemplate.update(UPDATE_TEACHER, teacher.getName(), teacher.getSurname(), teacher.getEmail(), id);
@@ -83,7 +83,7 @@ public class TeacherDAOImpl implements TeacherDAO {
     }
 
     @Override
-    public Teacher findTeacherById(final Long id) {
+    public Teacher findTeacherById(Long id) {
         LOGGER.debug("Running a method to find teacher by ID={}", id);
         Teacher teacher = new Teacher();
         try {
@@ -129,7 +129,7 @@ public class TeacherDAOImpl implements TeacherDAO {
     }
 
     @Override
-    public List<Teacher> findAllTeachersBySubjectId(final Long id) {
+    public List<Teacher> findAllTeachersBySubjectId(Long id) {
         LOGGER.debug("Running a method to find all teachers by subject ID={}", id);
         List<Teacher> teachers = new ArrayList<>();
         try {
@@ -147,7 +147,7 @@ public class TeacherDAOImpl implements TeacherDAO {
     }
 
     @Override
-    public List<Teacher> findAllTeachersInFaculty(final Long id) {
+    public List<Teacher> findAllTeachersInFaculty(Long id) {
         LOGGER.debug("Running a method to find all teachers by faculty ID={}", id);
         List<Teacher> teachers = new ArrayList<>();
         try {

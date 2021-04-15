@@ -44,7 +44,7 @@ public class FacultyDAOImpl implements FacultyDAO {
     }
 
     @Override
-    public void add(final Faculty faculty) {
+    public void add(Faculty faculty) {
         LOGGER.debug("Running a method for add faculty. Faculty details: {}", faculty);
         try {
             jdbcTemplate.update(INSERT_FACULTY, faculty.getId(), faculty.getName());
@@ -56,7 +56,7 @@ public class FacultyDAOImpl implements FacultyDAO {
     }
 
     @Override
-    public void removeFaculty(final Long id) {
+    public void removeFaculty(Long id) {
         LOGGER.debug("Deleting a faculty with ID={}", id);
         try {
             jdbcTemplate.update(DELETE_FACULTY, id);
@@ -68,7 +68,7 @@ public class FacultyDAOImpl implements FacultyDAO {
     }
 
     @Override
-    public void update(final Long id, final Faculty faculty) {
+    public void update(Long id, Faculty faculty) {
         LOGGER.debug("Changing a faculty with ID={}", id);
         try {
             jdbcTemplate.update(UPDATE_FACULTY, faculty.getName(), id);
@@ -80,7 +80,7 @@ public class FacultyDAOImpl implements FacultyDAO {
     }
 
     @Override
-    public Faculty findFacultyById(final Long id) {
+    public Faculty findFacultyById(Long id) {
         LOGGER.debug("Running a method to find faculty by ID={}", id);
         Faculty faculty = new Faculty();
         try {

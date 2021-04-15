@@ -41,7 +41,7 @@ public class StudentDAOImpl implements StudentDAO {
     }
 
     @Override
-    public void add(final Student student) {
+    public void add(Student student) {
         LOGGER.debug("Running a method for add student. Student details: {}", student);
         try {
             jdbcTemplate.update(INSERT_STUDENT, student.getId(), student.getGroup().getId(), student.getName(), student.getSurname(), student.getSex(), student.getAge(), student.getEmail());
@@ -53,7 +53,7 @@ public class StudentDAOImpl implements StudentDAO {
     }
 
     @Override
-    public void removeStudent(final Long id) {
+    public void removeStudent(Long id) {
         LOGGER.debug("Deleting a student with ID={}", id);
         try {
             jdbcTemplate.update(DELETE_STUDENT, id);
@@ -65,7 +65,7 @@ public class StudentDAOImpl implements StudentDAO {
     }
 
     @Override
-    public void update(final Long id, final Student student) {
+    public void update(Long id, Student student) {
         LOGGER.debug("Changing a student with ID={}", id);
         try {
             jdbcTemplate.update(UPDATE_STUDENT, student.getGroup().getId(), student.getName(), student.getSurname(), student.getSex(), student.getAge(), student.getEmail(), id);
@@ -77,7 +77,7 @@ public class StudentDAOImpl implements StudentDAO {
     }
 
     @Override
-    public Student findStudentById(final Long id) {
+    public Student findStudentById(Long id) {
         LOGGER.debug("Running a method to find student by ID={}", id);
         Student student = new Student();
         try {
@@ -109,7 +109,7 @@ public class StudentDAOImpl implements StudentDAO {
     }
 
     @Override
-    public Student findByName(final String name, final String surname) {
+    public Student findByName(String name, String surname) {
         LOGGER.debug("Running a method to find student by name={}", name);
         Student student = new Student();
         try {
@@ -127,7 +127,7 @@ public class StudentDAOImpl implements StudentDAO {
     }
 
     @Override
-    public List<Student> findAllStudentsInGroup(final Long id) {
+    public List<Student> findAllStudentsInGroup(Long id) {
         LOGGER.debug("Running a method to find all students by group ID={}", id);
         List<Student> students = new ArrayList<>();
         try {
@@ -145,7 +145,7 @@ public class StudentDAOImpl implements StudentDAO {
     }
 
     @Override
-    public List<Student> findAllEmailsInGroup(final Long id) {
+    public List<Student> findAllEmailsInGroup(Long id) {
         LOGGER.debug("Running a method to find all emails by group ID={}", id);
         List<Student> students = new ArrayList<>();
         try {

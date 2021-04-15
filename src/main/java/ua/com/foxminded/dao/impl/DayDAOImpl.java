@@ -30,7 +30,7 @@ public class DayDAOImpl implements DayDAO {
     }
 
     @Override
-    public void add(final Day day) {
+    public void add(Day day) {
         LOGGER.debug("Running addDay method. Day details: {}", day);
         try {
             jdbcTemplate.update(INSERT_DAY, day.getDay());
@@ -42,7 +42,7 @@ public class DayDAOImpl implements DayDAO {
     }
 
     @Override
-    public void removeDay(final Long id) {
+    public void removeDay(Long id) {
         LOGGER.debug("Deleting day with ID={}", id);
         try {
             jdbcTemplate.update(DELETE_DAY, id);

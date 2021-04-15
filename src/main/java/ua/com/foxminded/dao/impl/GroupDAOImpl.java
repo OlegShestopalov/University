@@ -39,7 +39,7 @@ public class GroupDAOImpl implements GroupDAO {
     }
 
     @Override
-    public void add(final Group group) {
+    public void add(Group group) {
         LOGGER.debug("Running a method for add group. Group details: {}", group);
         try {
             jdbcTemplate.update(INSERT_GROUP, group.getName(), group.getFaculty(), group.getCourse());
@@ -51,7 +51,7 @@ public class GroupDAOImpl implements GroupDAO {
     }
 
     @Override
-    public void removeGroup(final Long id) {
+    public void removeGroup(Long id) {
         LOGGER.debug("Deleting a group with ID={}", id);
         try {
             jdbcTemplate.update(DELETE_GROUP, id);
@@ -63,7 +63,7 @@ public class GroupDAOImpl implements GroupDAO {
     }
 
     @Override
-    public void updateGroup(final Long id) {
+    public void updateGroup(Long id) {
         LOGGER.debug("Changing a group with ID={}", id);
         try {
             jdbcTemplate.update(UPDATE_GROUP, id);
@@ -95,7 +95,7 @@ public class GroupDAOImpl implements GroupDAO {
     }
 
     @Override
-    public List<Group> findAllGroupsInFaculty(final Long id) {
+    public List<Group> findAllGroupsInFaculty(Long id) {
         LOGGER.debug("Running a method to find all groups by faculty id={}", id);
         List<Group> groups = new ArrayList<>();
         try {

@@ -40,7 +40,7 @@ public class SchoolSubjectDAOImpl implements SchoolSubjectDAO {
     }
 
     @Override
-    public void addSubject(final SchoolSubject schoolSubject) {
+    public void addSubject(SchoolSubject schoolSubject) {
         LOGGER.debug("Running a method for add subject. Subject details: {}", schoolSubject);
         try {
             jdbcTemplate.update(INSERT_SUBJECT, schoolSubject.getName(), schoolSubject.getDescription());
@@ -52,7 +52,7 @@ public class SchoolSubjectDAOImpl implements SchoolSubjectDAO {
     }
 
     @Override
-    public void removeSubject(final Long id) {
+    public void removeSubject(Long id) {
         LOGGER.debug("Deleting a subject with ID={}", id);
         try {
             jdbcTemplate.update(DELETE_SUBJECT, id);
@@ -64,7 +64,7 @@ public class SchoolSubjectDAOImpl implements SchoolSubjectDAO {
     }
 
     @Override
-    public void updateSubject(final Long id, final SchoolSubject schoolSubject) {
+    public void updateSubject(Long id, SchoolSubject schoolSubject) {
         LOGGER.debug("Changing a subject with ID={}", id);
         try {
             jdbcTemplate.update(UPDATE_SUBJECT, schoolSubject.getName(), schoolSubject.getDescription(), id);
@@ -76,7 +76,7 @@ public class SchoolSubjectDAOImpl implements SchoolSubjectDAO {
     }
 
     @Override
-    public SchoolSubject findSubjectById(final Long id) {
+    public SchoolSubject findSubjectById(Long id) {
         LOGGER.debug("Running a method to find subject by ID={}", id);
         SchoolSubject subject = new SchoolSubject();
         try {
@@ -94,7 +94,7 @@ public class SchoolSubjectDAOImpl implements SchoolSubjectDAO {
     }
 
     @Override
-    public List<SchoolSubject> findAllTeacherSubjects(final Long id) {
+    public List<SchoolSubject> findAllTeacherSubjects(Long id) {
         LOGGER.debug("Running a method to find all subjects by teacher ID={}", id);
         List<SchoolSubject> subjects = new ArrayList<>();
         try {
@@ -112,7 +112,7 @@ public class SchoolSubjectDAOImpl implements SchoolSubjectDAO {
     }
 
     @Override
-    public List<SchoolSubject> findAllFacultySubjects(final Long id) {
+    public List<SchoolSubject> findAllFacultySubjects(Long id) {
         LOGGER.debug("Running a method to find all subjects by faculty ID={}", id);
         List<SchoolSubject> subjects = new ArrayList<>();
         try {
