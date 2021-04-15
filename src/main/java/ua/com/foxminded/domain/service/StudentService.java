@@ -14,7 +14,7 @@ public interface StudentService {
 
     List<Student> findAll();
 
-    Student find(final Long id);
+    Student findById(final Long id);
 
     Student findByName(final String name, final String surname);
 
