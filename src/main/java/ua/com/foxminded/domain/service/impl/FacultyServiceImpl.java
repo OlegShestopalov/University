@@ -26,22 +26,13 @@ public class FacultyServiceImpl implements FacultyService {
     }
 
     @Override
-    public void calculateFacultyFullness(final Long id) {
-        List<Group> groups = groupDAO.findAllGroupsInFaculty(id);
-        int amount = 0;
-        for (Group group : groups) {
-            amount += studentDAO.findAllStudentsInGroup(group.getId()).size();
-        }
+    public void create(Faculty faculty) {
+        facultyDAO.create(faculty);
     }
 
     @Override
-    public void add(Faculty faculty) {
-        facultyDAO.add(faculty);
-    }
-
-    @Override
-    public void remove(Long id) {
-        facultyDAO.removeFaculty(id);
+    public void delete(Long id) {
+        facultyDAO.delete(id);
     }
 
     @Override
@@ -50,13 +41,22 @@ public class FacultyServiceImpl implements FacultyService {
     }
 
     @Override
-    public Faculty find(Long id) {
-        return facultyDAO.findFacultyById(id);
+    public Faculty findById(Long id) {
+        return facultyDAO.findById(id);
     }
 
     @Override
-    public List<Faculty> findAllFaculties() {
-        return facultyDAO.findAllFaculties();
+    public List<Faculty> findAll() {
+        return facultyDAO.findAll();
+    }
+
+    @Override
+    public void calculateFacultyFullness(final Long id) {
+        List<Group> groups = groupDAO.findAllGroupsInFaculty(id);
+        int amount = 0;
+        for (Group group : groups) {
+            amount += studentDAO.findAllStudentsInGroup(group.getId()).size();
+        }
     }
 
     @Override

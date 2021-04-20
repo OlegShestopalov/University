@@ -29,13 +29,13 @@ public class FacultiesController {
 
     @GetMapping("/allFaculties")
     public String showAllFaculties(Model model) {
-        model.addAttribute("faculties", facultyService.findAllFaculties());
+        model.addAttribute("faculties", facultyService.findAll());
         return "faculties/allFaculties";
     }
 
     @GetMapping("/{id}")
     public String showInfo(@PathVariable("id") Long id, Model model) {
-        model.addAttribute("faculty", facultyService.find(id));
+        model.addAttribute("faculty", facultyService.findById(id));
         return "faculties/faculty";
     }
 
@@ -46,13 +46,13 @@ public class FacultiesController {
 
     @PostMapping("/new")
     public String create(@ModelAttribute("faculty") Faculty faculty) {
-        facultyService.add(faculty);
+        facultyService.create(faculty);
         return "redirect:/faculties/allFaculties";
     }
 
     @GetMapping("/{id}/edit")
     public String edit(Model model, @PathVariable("id") Long id) {
-        model.addAttribute("faculty", facultyService.find(id));
+        model.addAttribute("faculty", facultyService.findById(id));
         return "faculties/edit";
     }
 
@@ -64,7 +64,7 @@ public class FacultiesController {
 
     @GetMapping("/{id}/delete")
     public String delete(@PathVariable("id") Long id) {
-        facultyService.remove(id);
+        facultyService.delete(id);
         return "redirect:/faculties/allFaculties";
     }
 }

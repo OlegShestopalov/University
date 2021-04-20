@@ -44,7 +44,7 @@ public class FacultyDAOImpl implements FacultyDAO {
     }
 
     @Override
-    public void add(Faculty faculty) {
+    public void create(Faculty faculty) {
         LOGGER.debug("Running a method for add faculty. Faculty details: {}", faculty);
         try {
             jdbcTemplate.update(INSERT_FACULTY, faculty.getId(), faculty.getName());
@@ -56,7 +56,7 @@ public class FacultyDAOImpl implements FacultyDAO {
     }
 
     @Override
-    public void removeFaculty(Long id) {
+    public void delete(Long id) {
         LOGGER.debug("Deleting a faculty with ID={}", id);
         try {
             jdbcTemplate.update(DELETE_FACULTY, id);
@@ -80,7 +80,21 @@ public class FacultyDAOImpl implements FacultyDAO {
     }
 
     @Override
-    public Faculty findFacultyById(Long id) {
+    public List<Faculty> findAll() {
+        LOGGER.debug("Running a method to find all faculties");
+        List<Faculty> faculties;
+        try {
+            faculties = jdbcTemplate.query(FIND_ALL_FACULTIES, facultyMapper);
+        } catch (DataAccessException e) {
+            String message = "Unable to get faculties";
+            throw new QueryNotExecuteException(message, e);
+        }
+        LOGGER.info("Faculties were successfully found");
+        return faculties;
+    }
+
+    @Override
+    public Faculty findById(Long id) {
         LOGGER.debug("Running a method to find faculty by ID={}", id);
         Faculty faculty = new Faculty();
         try {
@@ -95,20 +109,6 @@ public class FacultyDAOImpl implements FacultyDAO {
         }
         LOGGER.info("Faculty was found. Faculty details: {}", id);
         return faculty;
-    }
-
-    @Override
-    public List<Faculty> findAllFaculties() {
-        LOGGER.debug("Running a method to find all faculties");
-        List<Faculty> faculties;
-        try {
-            faculties = jdbcTemplate.query(FIND_ALL_FACULTIES, facultyMapper);
-        } catch (DataAccessException e) {
-            String message = "Unable to get faculties";
-            throw new QueryNotExecuteException(message, e);
-        }
-        LOGGER.info("Faculties were successfully found");
-        return faculties;
     }
 
     @Override
@@ -134,7 +134,7 @@ public class FacultyDAOImpl implements FacultyDAO {
         LOGGER.debug("Running a method to find all faculties by teacher ID={}", id);
         List<Faculty> faculties = new ArrayList<>();
         try {
-            faculties = jdbcTemplate.query(FIND_FACULTIES_BY_TEACHER_ID, new Object[]{id}, new BeanPropertyRowMapper<>(Faculty.class));
+            faculties = jdbcTemplate.query(FIND_FACULTIES_BY_TEACHER_ID, new Object[]{id}, facultyMapper);
         } catch (EmptyResultDataAccessException e) {
             LOGGER.error(faculties.toString());
             String message = format("Faculty by teacher ID='%s' not found", id);

@@ -47,7 +47,7 @@ public class TeacherDAOImpl implements TeacherDAO {
     }
 
     @Override
-    public void add(Teacher teacher) {
+    public void create(Teacher teacher) {
         LOGGER.debug("Running a method for add teacher. Teacher details: {}", teacher);
         try {
             jdbcTemplate.update(INSERT_TEACHER, teacher.getId(), teacher.getName(), teacher.getSurname(), teacher.getEmail());
@@ -59,7 +59,7 @@ public class TeacherDAOImpl implements TeacherDAO {
     }
 
     @Override
-    public void removeTeacher(Long id) {
+    public void delete(Long id) {
         LOGGER.debug("Deleting a teacher with ID={}", id);
         try {
             jdbcTemplate.update(DELETE_TEACHER, id);
@@ -83,7 +83,21 @@ public class TeacherDAOImpl implements TeacherDAO {
     }
 
     @Override
-    public Teacher findTeacherById(Long id) {
+    public List<Teacher> findAll() {
+        LOGGER.debug("Running a method to find all teachers");
+        List<Teacher> teachers;
+        try {
+            teachers = jdbcTemplate.query(FIND_ALL_TEACHERS, teacherMapper);
+        } catch (DataAccessException e) {
+            String message = "Unable to get teachers";
+            throw new QueryNotExecuteException(message, e);
+        }
+        LOGGER.debug("Teachers were successfully found");
+        return teachers;
+    }
+
+    @Override
+    public Teacher findById(Long id) {
         LOGGER.debug("Running a method to find teacher by ID={}", id);
         Teacher teacher = new Teacher();
         try {
@@ -98,20 +112,6 @@ public class TeacherDAOImpl implements TeacherDAO {
         }
         LOGGER.info("Teacher was successfully found. Teacher details: {}", id);
         return teacher;
-    }
-
-    @Override
-    public List<Teacher> findAllTeachers() {
-        LOGGER.debug("Running a method to find all teachers");
-        List<Teacher> teachers;
-        try {
-            teachers = jdbcTemplate.query(FIND_ALL_TEACHERS, teacherMapper);
-        } catch (DataAccessException e) {
-            String message = "Unable to get teachers";
-            throw new QueryNotExecuteException(message, e);
-        }
-        LOGGER.debug("Teachers were successfully found");
-        return teachers;
     }
 
     @Override

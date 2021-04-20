@@ -9,6 +9,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 import ua.com.foxminded.dao.SchoolSubjectDAO;
 import ua.com.foxminded.domain.entity.SchoolSubject;
+import ua.com.foxminded.domain.entity.Teacher;
 import ua.com.foxminded.exception.QueryNotExecuteException;
 
 import javax.persistence.EntityNotFoundException;
@@ -25,6 +26,7 @@ public class SchoolSubjectDAOImpl implements SchoolSubjectDAO {
     private static final String INSERT_SUBJECT = "INSERT INTO subject VALUES(?, ?)";
     private static final String DELETE_SUBJECT = "DELETE FROM subject WHERE id=?";
     private static final String UPDATE_SUBJECT = "UPDATE subject SET name=?, description=? WHERE id=?";
+    private static final String FIND_ALL_SUBJECTS = "SELECT subject.name, subject.description FROM subject";
     private static final String FIND_SUBJECT_BY_ID = "SELECT subject.name, subject.description FROM subject WHERE id=?";
     private static final String FIND_ALL_TEACHER_SUBJECTS = "SELECT subject.name FROM subject " +
             "INNER JOIN teacher_subject ON subject.id=teacher_subject.subject_id " +
@@ -40,7 +42,7 @@ public class SchoolSubjectDAOImpl implements SchoolSubjectDAO {
     }
 
     @Override
-    public void addSubject(SchoolSubject schoolSubject) {
+    public void create(SchoolSubject schoolSubject) {
         LOGGER.debug("Running a method for add subject. Subject details: {}", schoolSubject);
         try {
             jdbcTemplate.update(INSERT_SUBJECT, schoolSubject.getName(), schoolSubject.getDescription());
@@ -52,7 +54,7 @@ public class SchoolSubjectDAOImpl implements SchoolSubjectDAO {
     }
 
     @Override
-    public void removeSubject(Long id) {
+    public void delete(Long id) {
         LOGGER.debug("Deleting a subject with ID={}", id);
         try {
             jdbcTemplate.update(DELETE_SUBJECT, id);
@@ -64,7 +66,7 @@ public class SchoolSubjectDAOImpl implements SchoolSubjectDAO {
     }
 
     @Override
-    public void updateSubject(Long id, SchoolSubject schoolSubject) {
+    public void update(Long id, SchoolSubject schoolSubject) {
         LOGGER.debug("Changing a subject with ID={}", id);
         try {
             jdbcTemplate.update(UPDATE_SUBJECT, schoolSubject.getName(), schoolSubject.getDescription(), id);
@@ -76,7 +78,21 @@ public class SchoolSubjectDAOImpl implements SchoolSubjectDAO {
     }
 
     @Override
-    public SchoolSubject findSubjectById(Long id) {
+    public List<SchoolSubject> findAll() {
+        LOGGER.debug("Running a method to find all teachers");
+        List<SchoolSubject> subjects;
+        try {
+            subjects = jdbcTemplate.query(FIND_ALL_SUBJECTS, new BeanPropertyRowMapper<>(SchoolSubject.class));
+        } catch (DataAccessException e) {
+            String message = "Unable to get teachers";
+            throw new QueryNotExecuteException(message, e);
+        }
+        LOGGER.debug("Teachers were successfully found");
+        return subjects;
+    }
+
+    @Override
+    public SchoolSubject findById(Long id) {
         LOGGER.debug("Running a method to find subject by ID={}", id);
         SchoolSubject subject = new SchoolSubject();
         try {

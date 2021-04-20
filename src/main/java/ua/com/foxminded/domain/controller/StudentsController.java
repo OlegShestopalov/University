@@ -46,7 +46,7 @@ public class StudentsController {
 
     @PostMapping("/new")
     public String create(@ModelAttribute("student") Student student) {
-        studentService.add(student);
+        studentService.create(student);
         return "redirect:/students/allStudents";
     }
 
@@ -64,7 +64,7 @@ public class StudentsController {
 
     @GetMapping("/{id}/delete")
     public String delete(@PathVariable("id") Long id) {
-        studentService.remove(id);
+        studentService.delete(id);
         return "redirect:/students/allStudents";
     }
 }

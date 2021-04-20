@@ -6,9 +6,9 @@ import java.util.List;
 
 public interface StudentService {
 
-    void add(final Student student);
+    void create(final Student student);
 
-    void remove(final Long id);
+    void delete(final Long id);
 
     void update(final Long id, final Student student);
 
@@ -16,7 +16,7 @@ public interface StudentService {
 
     Student findById(final Long id);
 
-    Student findByName(final String name, final String surname);
+    Student findByName(final String name);
 
     List<Student> findStudentsInGroup(final Long id);
 

@@ -39,7 +39,7 @@ public class GroupDAOImpl implements GroupDAO {
     }
 
     @Override
-    public void add(Group group) {
+    public void create(Group group) {
         LOGGER.debug("Running a method for add group. Group details: {}", group);
         try {
             jdbcTemplate.update(INSERT_GROUP, group.getName(), group.getFaculty(), group.getCourse());
@@ -51,7 +51,7 @@ public class GroupDAOImpl implements GroupDAO {
     }
 
     @Override
-    public void removeGroup(Long id) {
+    public void delete(Long id) {
         LOGGER.debug("Deleting a group with ID={}", id);
         try {
             jdbcTemplate.update(DELETE_GROUP, id);
@@ -63,25 +63,19 @@ public class GroupDAOImpl implements GroupDAO {
     }
 
     @Override
-    public void updateGroup(Long id) {
+    public void update(Long id, Group group) {
         LOGGER.debug("Changing a group with ID={}", id);
         try {
-            jdbcTemplate.update(UPDATE_GROUP, id);
+            jdbcTemplate.update(UPDATE_GROUP,group.getName(), group.getFaculty(), group.getCourse(), id);
         } catch (EmptyResultDataAccessException e) {
             String message = format("Group with ID='%s' not found", id);
             throw new EntityNotFoundException(message);
         }
-        LOGGER.info("Group was successfully updated. Group details: {}", id);
+        LOGGER.info("Group was successfully updated. Group details: {}", group);
     }
 
     @Override
-    public Group findById(Long id) {
-        LOGGER.debug("Running a method to find group by ID={}", id);
-        return jdbcTemplate.queryForObject(FIND_GROUP_BY_ID, new Object[]{id}, groupMapper);
-    }
-
-    @Override
-    public List<Group> findGroups() {
+    public List<Group> findAll() {
         LOGGER.debug("Running a method to find all groups");
         List<Group> groups;
         try {
@@ -92,6 +86,12 @@ public class GroupDAOImpl implements GroupDAO {
         }
         LOGGER.debug("Groups were successfully found");
         return groups;
+    }
+
+    @Override
+    public Group findById(Long id) {
+        LOGGER.debug("Running a method to find group by ID={}", id);
+        return jdbcTemplate.queryForObject(FIND_GROUP_BY_ID, new Object[]{id}, groupMapper);
     }
 
     @Override

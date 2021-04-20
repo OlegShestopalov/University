@@ -35,7 +35,7 @@ public class TeachersController {
 
     @GetMapping("/{id}")
     public String showInfo(@PathVariable("id") Long id, Model model) {
-        model.addAttribute("teacher", teacherService.find(id));
+        model.addAttribute("teacher", teacherService.findById(id));
         return "teachers/teacher";
     }
 
@@ -46,13 +46,13 @@ public class TeachersController {
 
     @PostMapping("/new")
     public String create(@ModelAttribute("teacher") Teacher teacher) {
-        teacherService.add(teacher);
+        teacherService.create(teacher);
         return "redirect:/teachers/allTeachers";
     }
 
     @GetMapping("/{id}/edit")
     public String edit(Model model, @PathVariable("id") Long id) {
-        model.addAttribute("teacher", teacherService.find(id));
+        model.addAttribute("teacher", teacherService.findById(id));
         return "teachers/edit";
     }
 
@@ -64,7 +64,7 @@ public class TeachersController {
 
     @GetMapping("/{id}/delete")
     public String delete(@PathVariable("id") Long id) {
-        teacherService.remove(id);
+        teacherService.delete(id);
         return "redirect:/teachers/allTeachers";
     }
 }

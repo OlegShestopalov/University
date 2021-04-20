@@ -6,13 +6,13 @@ import java.util.List;
 
 public interface TeacherService {
 
-    void add(final Teacher teacher);
+    void create(final Teacher teacher);
 
-    void remove(final Long id);
+    void delete(final Long id);
 
     void update(final Long id, final Teacher teacher);
 
-    Teacher find(final Long id);
+    Teacher findById(final Long id);
 
     List<Teacher> findAll();
 

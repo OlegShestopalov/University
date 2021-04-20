@@ -6,17 +6,17 @@ import java.util.List;
 
 public interface FacultyService {
 
-    void calculateFacultyFullness(final Long id);
+    void create(final Faculty faculty);
 
-    void add(final Faculty faculty);
-
-    void remove(final Long id);
+    void delete(final Long id);
 
     void update(final Long id, final Faculty faculty);
 
-    Faculty find(final Long id);
+    List<Faculty> findAll();
 
-    List<Faculty> findAllFaculties();
+    Faculty findById(final Long id);
+
+    void calculateFacultyFullness(final Long id);
 
     List<Faculty> findFacultiesBySubjectId(final Long id);
 

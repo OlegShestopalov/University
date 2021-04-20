@@ -18,17 +18,18 @@ public class StudentServiceImpl implements StudentService {
     @Autowired
     public StudentServiceImpl(StudentDAO studentDAO, DayDAO dayDAO) {
         this.studentDAO = studentDAO;
+
         this.dayDAO = dayDAO;
     }
 
     @Override
-    public void add(Student student) {
-        studentDAO.add(student);
+    public void create(Student student) {
+        studentDAO.create(student);
     }
 
     @Override
-    public void remove(Long id) {
-        studentDAO.removeStudent(id);
+    public void delete(Long id) {
+        studentDAO.delete(id);
     }
 
     @Override
@@ -38,17 +39,17 @@ public class StudentServiceImpl implements StudentService {
 
     @Override
     public List<Student> findAll() {
-        return studentDAO.findAllStudents();
+        return studentDAO.findAll();
     }
 
     @Override
     public Student findById(Long id) {
-        return studentDAO.findStudentById(id);
+        return studentDAO.findById(id);
     }
 
     @Override
-    public Student findByName(String name, String surname) {
-        return studentDAO.findByName(name, surname);
+    public Student findByName(String name) {
+        return studentDAO.findByName(name);
     }
 
     @Override

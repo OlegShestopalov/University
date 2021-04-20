@@ -22,13 +22,13 @@ public class TeacherServiceImpl implements TeacherService {
     }
 
     @Override
-    public void add(Teacher teacher) {
-        teacherDAO.add(teacher);
+    public void create(Teacher teacher) {
+        teacherDAO.create(teacher);
     }
 
     @Override
-    public void remove(Long id) {
-        teacherDAO.removeTeacher(id);
+    public void delete(Long id) {
+        teacherDAO.delete(id);
     }
 
     @Override
@@ -37,13 +37,13 @@ public class TeacherServiceImpl implements TeacherService {
     }
 
     @Override
-    public Teacher find(Long id) {
-        return teacherDAO.findTeacherById(id);
+    public List<Teacher> findAll() {
+        return teacherDAO.findAll();
     }
 
     @Override
-    public List<Teacher> findAll() {
-        return teacherDAO.findAllTeachers();
+    public Teacher findById(Long id) {
+        return teacherDAO.findById(id);
     }
 
     @Override

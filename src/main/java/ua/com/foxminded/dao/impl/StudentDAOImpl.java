@@ -8,6 +8,7 @@ import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
+import ua.com.foxminded.dao.GenericDAO;
 import ua.com.foxminded.dao.StudentDAO;
 import ua.com.foxminded.dao.mapper.StudentMapper;
 import ua.com.foxminded.domain.entity.Student;
@@ -41,7 +42,7 @@ public class StudentDAOImpl implements StudentDAO {
     }
 
     @Override
-    public void add(Student student) {
+    public void create(Student student) {
         LOGGER.debug("Running a method for add student. Student details: {}", student);
         try {
             jdbcTemplate.update(INSERT_STUDENT, student.getId(), student.getGroup().getId(), student.getName(), student.getSurname(), student.getSex(), student.getAge(), student.getEmail());
@@ -53,7 +54,7 @@ public class StudentDAOImpl implements StudentDAO {
     }
 
     @Override
-    public void removeStudent(Long id) {
+    public void delete(Long id) {
         LOGGER.debug("Deleting a student with ID={}", id);
         try {
             jdbcTemplate.update(DELETE_STUDENT, id);
@@ -77,7 +78,21 @@ public class StudentDAOImpl implements StudentDAO {
     }
 
     @Override
-    public Student findStudentById(Long id) {
+    public List<Student> findAll() {
+        LOGGER.debug("Running a method to find all students");
+        List<Student> students;
+        try {
+            students = jdbcTemplate.query(FIND_ALL_STUDENTS, studentMapper);
+        } catch (DataAccessException e) {
+            String message = "Unable to get students";
+            throw new QueryNotExecuteException(message, e);
+        }
+        LOGGER.debug("Students were successfully found");
+        return students;
+    }
+
+    @Override
+    public Student findById(Long id) {
         LOGGER.debug("Running a method to find student by ID={}", id);
         Student student = new Student();
         try {
@@ -95,21 +110,7 @@ public class StudentDAOImpl implements StudentDAO {
     }
 
     @Override
-    public List<Student> findAllStudents() {
-        LOGGER.debug("Running a method to find all students");
-        List<Student> students;
-        try {
-            students = jdbcTemplate.query(FIND_ALL_STUDENTS, studentMapper);
-        } catch (DataAccessException e) {
-            String message = "Unable to get students";
-            throw new QueryNotExecuteException(message, e);
-        }
-        LOGGER.debug("Students were successfully found");
-        return students;
-    }
-
-    @Override
-    public Student findByName(String name, String surname) {
+    public Student findByName(String name) {
         LOGGER.debug("Running a method to find student by name={}", name);
         Student student = new Student();
         try {
