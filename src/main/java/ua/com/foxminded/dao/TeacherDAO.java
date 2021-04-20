@@ -4,17 +4,7 @@ import ua.com.foxminded.domain.entity.Teacher;
 
 import java.util.List;
 
-public interface TeacherDAO {
-
-    public void add(final Teacher teacher);
-
-    public void removeTeacher(final Long id);
-
-    public void update(final Long id, final Teacher teacher);
-
-    public Teacher findTeacherById(final Long id);
-
-    public List<Teacher> findAllTeachers();
+public interface TeacherDAO extends GenericDAO<Teacher> {
 
     public List<Teacher> findAllEmails();
 
