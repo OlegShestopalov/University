@@ -20,7 +20,7 @@ import javax.sql.DataSource;
 
 @Configuration
 @ComponentScan("ua.com.foxminded")
-@PropertySource(value= {"classpath:util.properties"})
+@PropertySource(value= {"classpath:database.properties"})
 @EnableWebMvc
 public class SpringConfig implements WebMvcConfigurer {
 
