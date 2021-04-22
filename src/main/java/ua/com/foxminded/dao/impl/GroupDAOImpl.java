@@ -5,7 +5,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.dao.EmptyResultDataAccessException;
-import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 import ua.com.foxminded.dao.GroupDAO;
@@ -25,12 +24,12 @@ public class GroupDAOImpl implements GroupDAO {
     private static final Logger LOGGER = LoggerFactory.getLogger(GroupDAOImpl.class);
     private final GroupMapper groupMapper;
     private final JdbcTemplate jdbcTemplate;
-    private static final String INSERT_GROUP = "INSERT INTO group1 VALUES(?, ?, ?)";
+    private static final String INSERT_GROUP = "INSERT INTO group1 VALUES(?, ?, ?, ?)";
     private static final String DELETE_GROUP = "DELETE FROM group1 WHERE id=?";
     private static final String UPDATE_GROUP = "UPDATE group1 SET name=?, faculty_id=?, course_id=? WHERE id=?";
     private static final String FIND_GROUP_BY_ID = "SELECT * FROM group1 WHERE id=?";
-    private static final String FIND_ALL_GROUPS = "SELECT * FROM group1";
-    private static final String FIND_ALL_GROUPS_IN_FACULTY = "SELECT group1.name FROM group1 WHERE faculty_id=?";
+    private static final String FIND_ALL_GROUPS = "SELECT * FROM group1 ORDER BY id";
+    private static final String FIND_ALL_GROUPS_IN_FACULTY = "SELECT * FROM group1 WHERE faculty_id=?";
 
     @Autowired
     public GroupDAOImpl(JdbcTemplate jdbcTemplate, GroupMapper groupMapper) {
@@ -42,7 +41,7 @@ public class GroupDAOImpl implements GroupDAO {
     public void create(Group group) {
         LOGGER.debug("Running a method for add group. Group details: {}", group);
         try {
-            jdbcTemplate.update(INSERT_GROUP, group.getName(), group.getFaculty(), group.getCourse());
+            jdbcTemplate.update(INSERT_GROUP, group.getId(), group.getName(), group.getFaculty().getId(), group.getCourse().getId());
         } catch (DataAccessException e) {
             String message = format("Unable to add Group='%s'", group);
             throw new QueryNotExecuteException(message, e);
@@ -66,7 +65,7 @@ public class GroupDAOImpl implements GroupDAO {
     public void update(Long id, Group group) {
         LOGGER.debug("Changing a group with ID={}", id);
         try {
-            jdbcTemplate.update(UPDATE_GROUP,group.getName(), group.getFaculty(), group.getCourse(), id);
+            jdbcTemplate.update(UPDATE_GROUP,group.getName(), group.getFaculty().getId(), group.getCourse().getId(), id);
         } catch (EmptyResultDataAccessException e) {
             String message = format("Group with ID='%s' not found", id);
             throw new EntityNotFoundException(message);
@@ -79,7 +78,7 @@ public class GroupDAOImpl implements GroupDAO {
         LOGGER.debug("Running a method to find all groups");
         List<Group> groups;
         try {
-            groups = jdbcTemplate.query(FIND_ALL_GROUPS, new BeanPropertyRowMapper<>(Group.class));
+            groups = jdbcTemplate.query(FIND_ALL_GROUPS, groupMapper);
         } catch (DataAccessException e) {
             String message = "Unable to get Groups";
             throw new QueryNotExecuteException(message, e);
@@ -99,7 +98,7 @@ public class GroupDAOImpl implements GroupDAO {
         LOGGER.debug("Running a method to find all groups by faculty id={}", id);
         List<Group> groups = new ArrayList<>();
         try {
-            groups = jdbcTemplate.query(FIND_ALL_GROUPS_IN_FACULTY, new Object[]{id}, new BeanPropertyRowMapper<>(Group.class));
+            groups = jdbcTemplate.query(FIND_ALL_GROUPS_IN_FACULTY, new Object[]{id}, groupMapper);
         } catch (EmptyResultDataAccessException e) {
             LOGGER.error(groups.toString());
             String message = format("Groups by faculty ID='%s' not found", id);

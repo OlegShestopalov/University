@@ -29,11 +29,11 @@ public class FacultyDAOImpl implements FacultyDAO {
     private static final String UPDATE_FACULTY = "UPDATE faculty SET name=? WHERE id=?";
     private static final String FIND_FACULTY_BY_ID = "SELECT * FROM faculty WHERE id=?";
     private static final String FIND_ALL_FACULTIES = "SELECT * FROM faculty ORDER BY id";
-    private static final String FIND_FACULTIES_BY_SUBJECT_ID = "SELECT faculty.name FROM faculty " +
+    private static final String FIND_FACULTIES_BY_SUBJECT_ID = "SELECT faculty.id, faculty.name FROM faculty " +
             "INNER JOIN subject_faculty ON faculty.id=subject_faculty.faculty_id " +
             "INNER JOIN subject ON subject.id=subject_faculty.subject_id " +
             "WHERE subject.id=?";
-    private static final String FIND_FACULTIES_BY_TEACHER_ID = "SELECT faculty.name FROM faculty " +
+    private static final String FIND_FACULTIES_BY_TEACHER_ID = "SELECT faculty.id, faculty.name FROM faculty " +
             "INNER JOIN teacher_faculty ON faculty.id=teacher_faculty.faculty_id " +
             "INNER JOIN teacher ON teacher.id=teacher_faculty.teacher_id " +
             "WHERE teacher.id=?";
@@ -98,7 +98,7 @@ public class FacultyDAOImpl implements FacultyDAO {
         LOGGER.debug("Running a method to find faculty by ID={}", id);
         Faculty faculty = new Faculty();
         try {
-            faculty = jdbcTemplate.queryForObject(FIND_FACULTY_BY_ID, new Object[]{id}, new BeanPropertyRowMapper<>(Faculty.class));
+            faculty = jdbcTemplate.queryForObject(FIND_FACULTY_BY_ID, facultyMapper, id);
         } catch (EmptyResultDataAccessException e) {
             LOGGER.error(faculty.toString());
             String message = format("Faculty with ID='%s' not found", id);
@@ -116,7 +116,7 @@ public class FacultyDAOImpl implements FacultyDAO {
         LOGGER.debug("Running a method to find all faculties by subject ID={}", id);
         List<Faculty> faculties = new ArrayList<>();
         try {
-            faculties = jdbcTemplate.query(FIND_FACULTIES_BY_SUBJECT_ID, new Object[]{id}, new BeanPropertyRowMapper<>(Faculty.class));
+            faculties = jdbcTemplate.query(FIND_FACULTIES_BY_SUBJECT_ID, facultyMapper, id);
         } catch (EmptyResultDataAccessException e) {
             LOGGER.error(faculties.toString());
             String message = format("Faculty by subject ID='%s' not found", id);
@@ -134,7 +134,7 @@ public class FacultyDAOImpl implements FacultyDAO {
         LOGGER.debug("Running a method to find all faculties by teacher ID={}", id);
         List<Faculty> faculties = new ArrayList<>();
         try {
-            faculties = jdbcTemplate.query(FIND_FACULTIES_BY_TEACHER_ID, new Object[]{id}, facultyMapper);
+            faculties = jdbcTemplate.query(FIND_FACULTIES_BY_TEACHER_ID, facultyMapper, id);
         } catch (EmptyResultDataAccessException e) {
             LOGGER.error(faculties.toString());
             String message = format("Faculty by teacher ID='%s' not found", id);

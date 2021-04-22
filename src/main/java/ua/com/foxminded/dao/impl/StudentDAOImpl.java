@@ -8,7 +8,6 @@ import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
-import ua.com.foxminded.dao.GenericDAO;
 import ua.com.foxminded.dao.StudentDAO;
 import ua.com.foxminded.dao.mapper.StudentMapper;
 import ua.com.foxminded.domain.entity.Student;

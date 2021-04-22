@@ -5,7 +5,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.dao.EmptyResultDataAccessException;
-import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 import ua.com.foxminded.dao.TeacherDAO;
@@ -30,12 +29,13 @@ public class TeacherDAOImpl implements TeacherDAO {
     private static final String UPDATE_TEACHER = "UPDATE teacher SET name=?, surname=?, email=? WHERE id=?";
     private static final String FIND_TEACHER_BY_ID = "SELECT * FROM teacher WHERE id=?";
     private static final String FIND_ALL_TEACHERS = "SELECT * FROM teacher ORDER BY id";
-    private static final String FIND_TEACHERS_EMAILS = "SELECT email FROM teacher";
-    private static final String FIND_ALL_TEACHERS_BY_SUBJECT_ID = "SELECT teacher.name, teacher.surname FROM teacher " +
+    private static final String FIND_ALL_TEACHERS_BY_SUBJECT_ID = "SELECT teacher.id, teacher.name, teacher.surname, teacher.email " +
+            "FROM teacher " +
             "INNER JOIN teacher_subject ON teacher.id=teacher_subject.teacher_id " +
             "INNER JOIN subject ON subject.id=teacher_subject.subject_id " +
             "WHERE subject.id=?";
-    private static final String FIND_ALL_TEACHERS_IN_FACULTY = "SELECT teacher.name, teacher.surname FROM teacher " +
+    private static final String FIND_ALL_TEACHERS_IN_FACULTY = "SELECT teacher.id, teacher.name, teacher.surname, teacher.email " +
+            "FROM teacher " +
             "INNER JOIN teacher_faculty ON teacher.id=teacher_faculty.teacher_id " +
             "INNER JOIN faculty ON faculty.id=teacher_faculty.faculty_id " +
             "WHERE faculty.id=?";
@@ -115,25 +115,11 @@ public class TeacherDAOImpl implements TeacherDAO {
     }
 
     @Override
-    public List<Teacher> findAllEmails() {
-        LOGGER.debug("Running a method to find teachers emails");
-        List<Teacher> teachers;
-        try {
-            teachers = jdbcTemplate.query(FIND_TEACHERS_EMAILS, new BeanPropertyRowMapper<>(Teacher.class));
-        } catch (DataAccessException e) {
-            String message = "Unable to get teachers emails";
-            throw new QueryNotExecuteException(message, e);
-        }
-        LOGGER.debug("Emails were successfully found");
-        return teachers;
-    }
-
-    @Override
     public List<Teacher> findAllTeachersBySubjectId(Long id) {
         LOGGER.debug("Running a method to find all teachers by subject ID={}", id);
         List<Teacher> teachers = new ArrayList<>();
         try {
-            teachers = jdbcTemplate.query(FIND_ALL_TEACHERS_BY_SUBJECT_ID, new Object[]{id}, new BeanPropertyRowMapper<>(Teacher.class));
+            teachers = jdbcTemplate.query(FIND_ALL_TEACHERS_BY_SUBJECT_ID, teacherMapper, id);
         } catch (EmptyResultDataAccessException e) {
             LOGGER.error(teachers.toString());
             String message = format("Teachers by subject ID='%s' not found", id);
@@ -151,7 +137,7 @@ public class TeacherDAOImpl implements TeacherDAO {
         LOGGER.debug("Running a method to find all teachers by faculty ID={}", id);
         List<Teacher> teachers = new ArrayList<>();
         try {
-            teachers = jdbcTemplate.query(FIND_ALL_TEACHERS_IN_FACULTY, new Object[]{id}, new BeanPropertyRowMapper<>(Teacher.class));
+            teachers = jdbcTemplate.query(FIND_ALL_TEACHERS_IN_FACULTY, teacherMapper, id);
         } catch (EmptyResultDataAccessException e) {
             LOGGER.error(teachers.toString());
             String message = format("Teachers by faculty ID='%s' not found", id);
