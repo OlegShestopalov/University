@@ -1,22 +1,24 @@
 package ua.com.foxminded.domain.entity;
 
+import java.util.Objects;
+
 public class Group {
 
     private Long id;
     private String name;
-    private int faculty;
-    private int course;
+    private Faculty faculty;
+    private Course course;
 
     public Group() {
     }
 
-    public Group(String name, int faculty, int course) {
+    public Group(String name, Faculty faculty, Course course) {
         this.name = name;
         this.faculty = faculty;
         this.course = course;
     }
 
-    public Group(Long id, String name, int faculty, int course) {
+    public Group(Long id, String name, Faculty faculty, Course course) {
         this.id = id;
         this.name = name;
         this.faculty = faculty;
@@ -39,20 +41,33 @@ public class Group {
         this.name = name;
     }
 
-    public int getFaculty() {
+    public Faculty getFaculty() {
         return faculty;
     }
 
-    public void setFaculty(int faculty) {
+    public void setFaculty(Faculty faculty) {
         this.faculty = faculty;
     }
 
-    public int getCourse() {
+    public Course getCourse() {
         return course;
     }
 
-    public void setCourse(int course) {
+    public void setCourse(Course course) {
         this.course = course;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Group group = (Group) o;
+        return id.equals(group.id) && name.equals(group.name) && faculty.equals(group.faculty) && course.equals(group.course);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, name, faculty, course);
     }
 
     @Override

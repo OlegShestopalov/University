@@ -2,21 +2,24 @@ package ua.com.foxminded.domain.entity;
 
 import java.util.Objects;
 
-public class Course {
+public class Subject {
 
     private Long id;
     private String name;
+    private String description;
 
-    public Course() {
+    public Subject() {
     }
 
-    public Course(String name) {
+    public Subject(String name, String description) {
         this.name = name;
+        this.description = description;
     }
 
-    public Course(Long id, String name) {
+    public Subject(Long id, String name, String description) {
         this.id = id;
         this.name = name;
+        this.description = description;
     }
 
     public Long getId() {
@@ -35,24 +38,33 @@ public class Course {
         this.name = name;
     }
 
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Course course = (Course) o;
-        return id.equals(course.id) && name.equals(course.name);
+        Subject subject = (Subject) o;
+        return id.equals(subject.id) && name.equals(subject.name) && description.equals(subject.description);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name);
+        return Objects.hash(id, name, description);
     }
 
     @Override
     public String toString() {
-        return "Course{" +
+        return "SchoolSubject{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
+                ", description='" + description + '\'' +
                 '}';
     }
 }

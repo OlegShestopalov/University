@@ -1,23 +1,20 @@
 package ua.com.foxminded.domain.entity;
 
-public class SchoolSubject {
+public class Class {
 
     private Long id;
     private String name;
-    private String description;
 
-    public SchoolSubject() {
+    public Class() {
     }
 
-    public SchoolSubject(String name, String description) {
+    public Class(String name) {
         this.name = name;
-        this.description = description;
     }
 
-    public SchoolSubject(Long id, String name, String description) {
+    public Class(Long id, String name) {
         this.id = id;
         this.name = name;
-        this.description = description;
     }
 
     public Long getId() {
@@ -36,20 +33,11 @@ public class SchoolSubject {
         this.name = name;
     }
 
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
     @Override
     public String toString() {
-        return "SchoolSubject{" +
+        return "Couple{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
-                ", description='" + description + '\'' +
                 '}';
     }
 }
