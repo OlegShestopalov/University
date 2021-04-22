@@ -1,6 +1,6 @@
-insert into couple (name) values ('first');
-insert into couple (name) values ('second');
-insert into couple (name) values ('third');
-insert into couple (name) values ('fourth');
-insert into couple (name) values ('fifth');
-insert into couple (name) values ('sixth');
+insert into class (name) values ('first');
+insert into class (name) values ('second');
+insert into class (name) values ('third');
+insert into class (name) values ('fourth');
+insert into class (name) values ('fifth');
+insert into class (name) values ('sixth');
