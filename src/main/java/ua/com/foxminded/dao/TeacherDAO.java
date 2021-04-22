@@ -6,8 +6,6 @@ import java.util.List;
 
 public interface TeacherDAO extends GenericDAO<Teacher> {
 
-    public List<Teacher> findAllEmails();
-
     public List<Teacher> findAllTeachersBySubjectId(final Long id);
 
     public List<Teacher> findAllTeachersInFaculty(final Long id);
