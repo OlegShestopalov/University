@@ -47,11 +47,6 @@ public class TeacherServiceImpl implements TeacherService {
     }
 
     @Override
-    public List<Teacher> findEmails() {
-        return teacherDAO.findAllEmails();
-    }
-
-    @Override
     public List<Teacher> findTeachersBySubject(Long id) {
         return teacherDAO.findAllTeachersBySubjectId(id);
     }

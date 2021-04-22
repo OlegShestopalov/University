@@ -16,8 +16,6 @@ public interface TeacherService {
 
     List<Teacher> findAll();
 
-    List<Teacher> findEmails();
-
     List<Teacher> findTeachersBySubject(final Long id);
 
     List<Teacher> findTeachersInFaculty(final Long id);

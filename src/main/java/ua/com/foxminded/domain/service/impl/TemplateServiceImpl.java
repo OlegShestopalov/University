@@ -34,7 +34,7 @@ package ua.com.foxminded.domain.service.impl;//package ua.com.foxminded.domain.s
 //
 //        Map model = new HashMap();
 //        for (int i = 0; i < 0; i++) {
-//            model.put("scheduleItem.couple", 0000);
+//            model.put("scheduleItem.class", 0000);
 //            model.put("scheduleItem.schoolSubject", 0000);
 //            model.put("scheduleItem.audience", 0000);
 //            model.put("scheduleItem.day", 0000);
