@@ -4,7 +4,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
 import ua.com.foxminded.dao.GroupDAO;
-import ua.com.foxminded.domain.entity.Group;
 import ua.com.foxminded.domain.entity.Student;
 
 import java.sql.ResultSet;
@@ -13,10 +12,11 @@ import java.sql.SQLException;
 @Component
 public class StudentMapper implements RowMapper<Student> {
 
-    @Autowired
-    private GroupDAO groupDAO;
+    private final GroupDAO groupDAO;
 
-    public StudentMapper() {
+    @Autowired
+    public StudentMapper(GroupDAO groupDAO) {
+        this.groupDAO = groupDAO;
     }
 
     @Override

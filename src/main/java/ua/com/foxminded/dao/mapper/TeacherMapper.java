@@ -10,9 +10,6 @@ import java.sql.SQLException;
 @Component
 public class TeacherMapper implements RowMapper<Teacher> {
 
-    public TeacherMapper() {
-    }
-
     @Override
     public Teacher mapRow(ResultSet resultSet, int i) throws SQLException {
         Teacher teacher = new Teacher();
