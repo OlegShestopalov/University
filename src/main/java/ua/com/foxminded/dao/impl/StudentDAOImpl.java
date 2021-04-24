@@ -32,7 +32,7 @@ public class StudentDAOImpl implements StudentDAO {
     private static final String FIND_ALL_STUDENTS = "SELECT * FROM student ORDER BY id";
     private static final String FIND_STUDENT_BY_NAME = "SELECT * FROM student WHERE name=?";
     private static final String FIND_ALL_STUDENTS_IN_GROUP = "SELECT * FROM student WHERE group_id=?";
-    private static final String FIND_ALL_EMAIL_IN_GROUP = "SELECT email FROM student WHERE group_id=?";
+    private static final String FIND_ALL_EMAIL_IN_GROUP = "SELECT * FROM student WHERE group_id=?";
 
     @Autowired
     public StudentDAOImpl(JdbcTemplate jdbcTemplate, StudentMapper studentMapper) {
@@ -131,7 +131,7 @@ public class StudentDAOImpl implements StudentDAO {
         LOGGER.debug("Running a method to find all students by group ID={}", id);
         List<Student> students = new ArrayList<>();
         try {
-            students = jdbcTemplate.query(FIND_ALL_STUDENTS_IN_GROUP, new Object[]{id}, new BeanPropertyRowMapper<>(Student.class));
+            students = jdbcTemplate.query(FIND_ALL_STUDENTS_IN_GROUP, studentMapper, id);
         } catch (EmptyResultDataAccessException e) {
             LOGGER.error(students.toString());
             String message = format("Students with ID='%s' not found", id);
@@ -149,7 +149,7 @@ public class StudentDAOImpl implements StudentDAO {
         LOGGER.debug("Running a method to find all emails by group ID={}", id);
         List<Student> students = new ArrayList<>();
         try {
-            students = jdbcTemplate.query(FIND_ALL_EMAIL_IN_GROUP, new Object[]{id}, new BeanPropertyRowMapper<>(Student.class));
+            students = jdbcTemplate.query(FIND_ALL_EMAIL_IN_GROUP, studentMapper, id);
         } catch (EmptyResultDataAccessException e) {
             LOGGER.error(students.toString());
             String message = format("Students with ID='%s' not found", id);

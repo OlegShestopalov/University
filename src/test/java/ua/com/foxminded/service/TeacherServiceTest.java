@@ -82,10 +82,30 @@ public class TeacherServiceTest {
 
     @Test
     void findTeachersBySubject() {
-//        List<Teacher> teachers = new ArrayList<>();
-//        when(teacherDAO.findAllTeachersBySubjectId(anyLong())).thenReturn(teachers);
+        Teacher one = new Teacher(1L, "teacher1", "teacher1", "teacher1@gmail.com");
+        Teacher two = new Teacher(2L, "teacher2", "teacher2", "teacher2@gmail.com");
+        Teacher three = new Teacher(3L, "teacher3", "teacher3", "teacher3@gmail.com");
 
+        when(teacherDAO.findAllTeachersBySubjectId(anyLong())).thenReturn(Stream.of(one, two, three).collect(Collectors.toList()));
 
+        assertEquals(3, teacherService.findTeachersBySubject(anyLong()).size());
+        assertEquals(one, teacherService.findTeachersBySubject(anyLong()).get(0));
+        assertEquals(two, teacherService.findTeachersBySubject(anyLong()).get(1));
+        verifyNoMoreInteractions(teacherDAO);
     }
 
+    @Test
+    void findTeachersInFaculty() {
+        Teacher one = new Teacher(1L, "teacher1", "teacher1", "teacher1@gmail.com");
+        Teacher two = new Teacher(2L, "teacher2", "teacher2", "teacher2@gmail.com");
+        Teacher three = new Teacher(3L, "teacher3", "teacher3", "teacher3@gmail.com");
+
+        when(teacherDAO.findAllTeachersInFaculty(anyLong())).thenReturn(Stream.of(one, two, three).collect(Collectors.toList()));
+
+        assertEquals(3, teacherService.findTeachersInFaculty(anyLong()).size());
+        assertEquals(one, teacherService.findTeachersInFaculty(anyLong()).get(0));
+        assertEquals(two, teacherService.findTeachersInFaculty(anyLong()).get(1));
+        assertEquals(three, teacherService.findTeachersInFaculty(anyLong()).get(2));
+        verifyNoMoreInteractions(teacherDAO);
+    }
 }

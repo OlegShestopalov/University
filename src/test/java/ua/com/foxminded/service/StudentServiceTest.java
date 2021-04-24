@@ -94,4 +94,34 @@ public class StudentServiceTest {
         assertEquals("test@gmail.com", studentService.findByName("test").getEmail());
         verifyNoMoreInteractions(studentDAO);
     }
+
+    @Test
+    void findStudentsInGroup() {
+        Student one = new Student(1L, group, "test", "test", "Male", 20, "test@gmail.com");
+        Student two = new Student(1L, group, "test", "test", "Male", 20, "test@gmail.com");
+        Student three = new Student(1L, group, "test", "test", "Male", 20, "test@gmail.com");
+
+        when(studentDAO.findAllStudentsInGroup(anyLong())).thenReturn(Stream.of(one, two, three).collect(Collectors.toList()));
+
+        assertEquals(3, studentService.findStudentsInGroup(anyLong()).size());
+        assertEquals(one, studentService.findStudentsInGroup(anyLong()).get(0));
+        assertEquals(two, studentService.findStudentsInGroup(anyLong()).get(1));
+        assertEquals(three, studentService.findStudentsInGroup(anyLong()).get(2));
+        verifyNoMoreInteractions(studentDAO);
+    }
+
+    @Test
+    void findEmailsInGroup() {
+        Student one = new Student(1L, group, "test", "test", "Male", 20, "test1@gmail.com");
+        Student two = new Student(1L, group, "test", "test", "Male", 20, "test2@gmail.com");
+        Student three = new Student(1L, group, "test", "test", "Male", 20, "test3@gmail.com");
+
+        when(studentDAO.findAllEmailsInGroup(anyLong())).thenReturn(Stream.of(one, two, three).collect(Collectors.toList()));
+
+        assertEquals(3, studentService.findEmailsInGroup(anyLong()).size());
+        assertEquals(one.getEmail(), studentService.findEmailsInGroup(anyLong()).get(0).getEmail());
+        assertEquals(two.getEmail(), studentService.findEmailsInGroup(anyLong()).get(1).getEmail());
+        assertEquals(three.getEmail(), studentService.findEmailsInGroup(anyLong()).get(2).getEmail());
+        verifyNoMoreInteractions(studentDAO);
+    }
 }
