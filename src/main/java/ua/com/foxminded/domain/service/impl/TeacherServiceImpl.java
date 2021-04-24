@@ -13,12 +13,10 @@ import java.util.List;
 public class TeacherServiceImpl implements TeacherService {
 
     private final TeacherDAO teacherDAO;
-    private final DayDAO dayDAO;
 
     @Autowired
-    public TeacherServiceImpl(TeacherDAO teacherDAO, DayDAO dayDAO) {
+    public TeacherServiceImpl(TeacherDAO teacherDAO) {
         this.teacherDAO = teacherDAO;
-        this.dayDAO = dayDAO;
     }
 
     @Override

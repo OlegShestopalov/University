@@ -18,14 +18,4 @@ public class DispatcherServletInitializer extends AbstractAnnotationConfigDispat
     protected String[] getServletMappings() {
         return new String[] {"/"};
     }
-
-//    @Override
-//    public void onStartup(ServletContext servletContext)
-//            throws ServletException {
-//        super.onStartup(servletContext);
-//        ServletRegistration.Dynamic servlet = servletContext.addServlet(
-//                "h2-console", new WebServlet());
-//        servlet.setLoadOnStartup(2);
-//        servlet.addMapping("/console/*");
-//    }
 }

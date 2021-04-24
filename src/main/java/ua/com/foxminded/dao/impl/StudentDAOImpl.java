@@ -113,7 +113,7 @@ public class StudentDAOImpl implements StudentDAO {
         LOGGER.debug("Running a method to find student by name={}", name);
         Student student = new Student();
         try {
-            student = jdbcTemplate.queryForObject(FIND_STUDENT_BY_NAME, new BeanPropertyRowMapper<>(Student.class), name);
+            student = jdbcTemplate.queryForObject(FIND_STUDENT_BY_NAME, studentMapper, name);
         } catch (EmptyResultDataAccessException e) {
             LOGGER.error(student.toString());
             String message = format("Student with name='%s' not found", name);
