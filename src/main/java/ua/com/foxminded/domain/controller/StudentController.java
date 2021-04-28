@@ -13,12 +13,12 @@ import ua.com.foxminded.domain.service.StudentService;
 
 @Controller
 @RequestMapping("/students")
-public class StudentsController {
+public class StudentController {
 
     private final StudentService studentService;
 
     @Autowired
-    public StudentsController(StudentService studentService) {
+    public StudentController(StudentService studentService) {
         this.studentService = studentService;
     }
 

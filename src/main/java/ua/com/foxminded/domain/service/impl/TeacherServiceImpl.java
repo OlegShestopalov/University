@@ -2,7 +2,6 @@ package ua.com.foxminded.domain.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import ua.com.foxminded.dao.DayDAO;
 import ua.com.foxminded.dao.TeacherDAO;
 import ua.com.foxminded.domain.entity.Teacher;
 import ua.com.foxminded.domain.service.TeacherService;
