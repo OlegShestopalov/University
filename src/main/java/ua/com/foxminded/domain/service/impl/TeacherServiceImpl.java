@@ -2,7 +2,6 @@ package ua.com.foxminded.domain.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import ua.com.foxminded.dao.DayDAO;
 import ua.com.foxminded.dao.TeacherDAO;
 import ua.com.foxminded.domain.entity.Teacher;
 import ua.com.foxminded.domain.service.TeacherService;
@@ -13,12 +12,10 @@ import java.util.List;
 public class TeacherServiceImpl implements TeacherService {
 
     private final TeacherDAO teacherDAO;
-    private final DayDAO dayDAO;
 
     @Autowired
-    public TeacherServiceImpl(TeacherDAO teacherDAO, DayDAO dayDAO) {
+    public TeacherServiceImpl(TeacherDAO teacherDAO) {
         this.teacherDAO = teacherDAO;
-        this.dayDAO = dayDAO;
     }
 
     @Override

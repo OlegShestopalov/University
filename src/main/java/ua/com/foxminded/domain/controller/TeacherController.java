@@ -13,12 +13,12 @@ import ua.com.foxminded.domain.service.TeacherService;
 
 @Controller
 @RequestMapping("/teachers")
-public class TeachersController {
+public class TeacherController {
 
     private final TeacherService teacherService;
 
     @Autowired
-    public TeachersController(TeacherService teacherService) {
+    public TeacherController(TeacherService teacherService) {
         this.teacherService = teacherService;
     }
 
@@ -27,7 +27,7 @@ public class TeachersController {
         return "teachers/menu";
     }
 
-    @GetMapping("allTeachers")
+    @GetMapping("/allTeachers")
     public String showAllTeachers(Model model) {
         model.addAttribute("teachers", teacherService.findAll());
         return "teachers/allTeachers";
@@ -40,7 +40,7 @@ public class TeachersController {
     }
 
     @GetMapping("/new")
-    public String newStudent(@ModelAttribute("teacher") Teacher teacher) {
+    public String newTeacher(@ModelAttribute("teacher") Teacher teacher) {
         return "teachers/new";
     }
 
