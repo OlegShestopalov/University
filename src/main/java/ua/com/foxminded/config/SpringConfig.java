@@ -7,6 +7,8 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.PropertySource;
+import org.springframework.core.env.Environment;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jndi.JndiTemplate;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
@@ -18,18 +20,22 @@ import org.thymeleaf.spring5.view.ThymeleafViewResolver;
 
 import javax.naming.NamingException;
 import javax.sql.DataSource;
+import java.util.Objects;
 
 @Configuration
 @ComponentScan("ua.com.foxminded")
+@PropertySource("classpath:jndi.properties")
 @EnableWebMvc
 public class SpringConfig implements WebMvcConfigurer {
 
     private final ApplicationContext applicationContext;
+    private final Environment environment;
     private static final Logger LOGGER = LoggerFactory.getLogger(SpringConfig.class);
 
     @Autowired
-    public SpringConfig(ApplicationContext applicationContext) {
+    public SpringConfig(ApplicationContext applicationContext, Environment environment) {
         this.applicationContext = applicationContext;
+        this.environment = environment;
     }
 
     @Bean
@@ -57,19 +63,12 @@ public class SpringConfig implements WebMvcConfigurer {
     }
 
     @Bean
-    DataSource dataSource() {
-        DataSource dataSource = null;
-        JndiTemplate jndi = new JndiTemplate();
-        try {
-            dataSource = jndi.lookup("java:comp/env/jdbc/university", DataSource.class);
-        } catch (NamingException e) {
-            LOGGER.error("NamingException for java:comp/env/jdbc/university", e);
-        }
-        return dataSource;
+    public DataSource dataSource() throws NamingException {
+        return (DataSource) new JndiTemplate().lookup(Objects.requireNonNull(environment.getProperty("jdbc.url")));
     }
 
     @Bean
-    public JdbcTemplate jdbcTemplate() {
+    public JdbcTemplate jdbcTemplate() throws NamingException {
         return new JdbcTemplate(dataSource());
     }
 }
