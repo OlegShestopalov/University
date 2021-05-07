@@ -37,7 +37,7 @@ public class FacultyServiceImpl implements FacultyService {
 
     @Override
     public void update(Long id, Faculty faculty) {
-        facultyDAO.update(id, faculty);
+        facultyDAO.update(faculty);
     }
 
     @Override

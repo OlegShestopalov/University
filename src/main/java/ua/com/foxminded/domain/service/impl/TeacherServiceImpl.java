@@ -30,7 +30,7 @@ public class TeacherServiceImpl implements TeacherService {
 
     @Override
     public void update(Long id, Teacher teacher) {
-        teacherDAO.update(id, teacher);
+        teacherDAO.update(teacher);
     }
 
     @Override
