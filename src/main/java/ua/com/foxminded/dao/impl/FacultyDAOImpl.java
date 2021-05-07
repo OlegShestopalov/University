@@ -1,148 +1,79 @@
 package ua.com.foxminded.dao.impl;
 
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.dao.DataAccessException;
-import org.springframework.dao.EmptyResultDataAccessException;
-import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 import ua.com.foxminded.dao.FacultyDAO;
-import ua.com.foxminded.dao.mapper.FacultyMapper;
 import ua.com.foxminded.domain.entity.Faculty;
-import ua.com.foxminded.exception.QueryNotExecuteException;
 
-import javax.persistence.EntityNotFoundException;
-import java.util.ArrayList;
 import java.util.List;
 
-import static java.lang.String.format;
-
 @Repository
+@Transactional
 public class FacultyDAOImpl implements FacultyDAO {
 
+    private final SessionFactory sessionFactory;
     private static final Logger LOGGER = LoggerFactory.getLogger(FacultyDAOImpl.class);
-    private final FacultyMapper facultyMapper;
-    private final JdbcTemplate jdbcTemplate;
-    private static final String INSERT_FACULTY = "INSERT INTO faculty VALUES (?, ?)";
-    private static final String DELETE_FACULTY = "DELETE FROM faculty WHERE id=?";
-    private static final String UPDATE_FACULTY = "UPDATE faculty SET name=? WHERE id=?";
-    private static final String FIND_FACULTY_BY_ID = "SELECT * FROM faculty WHERE id=?";
-    private static final String FIND_ALL_FACULTIES = "SELECT * FROM faculty ORDER BY id";
-    private static final String FIND_FACULTIES_BY_SUBJECT_ID = "SELECT faculty.id, faculty.name FROM faculty " +
-            "INNER JOIN subject_faculty ON faculty.id=subject_faculty.faculty_id " +
-            "INNER JOIN subject ON subject.id=subject_faculty.subject_id " +
-            "WHERE subject.id=?";
-    private static final String FIND_FACULTIES_BY_TEACHER_ID = "SELECT faculty.id, faculty.name FROM faculty " +
-            "INNER JOIN teacher_faculty ON faculty.id=teacher_faculty.faculty_id " +
-            "INNER JOIN teacher ON teacher.id=teacher_faculty.teacher_id " +
-            "WHERE teacher.id=?";
 
-    public FacultyDAOImpl(FacultyMapper facultyMapper, JdbcTemplate jdbcTemplate) {
-        this.facultyMapper = facultyMapper;
-        this.jdbcTemplate = jdbcTemplate;
+    @Autowired
+    public FacultyDAOImpl(SessionFactory sessionFactory) {
+        this.sessionFactory = sessionFactory;
+    }
+
+    @Override
+    public List<Faculty> findAllFacultiesBySubjectId(Long id) {
+        return null;
+    }
+
+    @Override
+    public List<Faculty> findAllFacultiesByTeacherId(Long id) {
+        return null;
     }
 
     @Override
     public void create(Faculty faculty) {
-        LOGGER.debug("Running a method for add faculty. Faculty details: {}", faculty);
-        try {
-            jdbcTemplate.update(INSERT_FACULTY, faculty.getId(), faculty.getName());
-        } catch (DataAccessException e) {
-            String message = format("Couldn't add Faculty='%s'", faculty);
-            throw new QueryNotExecuteException(message, e);
-        }
-        LOGGER.debug("Faculty was successfully saved. Faculty details: {}", faculty.getId());
+        Session session = this.sessionFactory.getCurrentSession();
+        session.persist(faculty);
+        LOGGER.info("Faculty was successfully saved. Faculty details: {}", faculty);
     }
 
     @Override
     public void delete(Long id) {
-        LOGGER.debug("Deleting a faculty with ID={}", id);
-        try {
-            jdbcTemplate.update(DELETE_FACULTY, id);
-        } catch (EmptyResultDataAccessException e) {
-            String message = format("Faculty with ID='%s' not found", id);
-            throw new EntityNotFoundException(message);
+        Session session = this.sessionFactory.getCurrentSession();
+        Faculty faculty = (Faculty) session.load(Faculty.class, id);
+        if (faculty != null) {
+            session.delete(faculty);
         }
-        LOGGER.info("Faculty was successfully deleted. Faculty details: {}", id);
+        LOGGER.info("Faculty was successfully deleted. Faculty details: {}", faculty);
     }
 
     @Override
-    public void update(Long id, Faculty faculty) {
-        LOGGER.debug("Changing a faculty with ID={}", id);
-        try {
-            jdbcTemplate.update(UPDATE_FACULTY, faculty.getName(), id);
-        } catch (EmptyResultDataAccessException e) {
-            String message = format("Faculty with ID='%s' not found", id);
-            throw new EntityNotFoundException(message);
-        }
+    public void update(Faculty faculty) {
+        Session session = this.sessionFactory.getCurrentSession();
+        session.update(faculty);
         LOGGER.info("Faculty was successfully updated. Faculty details: {}", faculty);
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public List<Faculty> findAll() {
-        LOGGER.debug("Running a method to find all faculties");
-        List<Faculty> faculties;
-        try {
-            faculties = jdbcTemplate.query(FIND_ALL_FACULTIES, facultyMapper);
-        } catch (DataAccessException e) {
-            String message = "Unable to get faculties";
-            throw new QueryNotExecuteException(message, e);
-        }
+        Session session = this.sessionFactory.getCurrentSession();
+        List<Faculty> faculties = session.createQuery("from Faculty").list();
         LOGGER.info("Faculties were successfully found");
+
         return faculties;
     }
 
     @Override
     public Faculty findById(Long id) {
-        LOGGER.debug("Running a method to find faculty by ID={}", id);
-        Faculty faculty = new Faculty();
-        try {
-            faculty = jdbcTemplate.queryForObject(FIND_FACULTY_BY_ID, facultyMapper, id);
-        } catch (EmptyResultDataAccessException e) {
-            LOGGER.error(faculty.toString());
-            String message = format("Faculty with ID='%s' not found", id);
-            throw new EntityNotFoundException(message);
-        } catch (DataAccessException e) {
-            String message = format("Unable to get Faculty with ID='%s'", id);
-            throw new QueryNotExecuteException(message, e);
-        }
-        LOGGER.info("Faculty was found. Faculty details: {}", id);
+        Session session = this.sessionFactory.getCurrentSession();
+        Faculty faculty = (Faculty) session.load(Faculty.class, id);
+        LOGGER.info("Faculty was successfully found. Faculty details: {}", faculty);
+
         return faculty;
-    }
-
-    @Override
-    public List<Faculty> findAllFacultiesBySubjectId(final Long id) {
-        LOGGER.debug("Running a method to find all faculties by subject ID={}", id);
-        List<Faculty> faculties = new ArrayList<>();
-        try {
-            faculties = jdbcTemplate.query(FIND_FACULTIES_BY_SUBJECT_ID, facultyMapper, id);
-        } catch (EmptyResultDataAccessException e) {
-            LOGGER.error(faculties.toString());
-            String message = format("Faculty by subject ID='%s' not found", id);
-            throw new EntityNotFoundException(message);
-        } catch (DataAccessException e) {
-            String message = format("Unable to get Faculty by subject ID='%s'", id);
-            throw new QueryNotExecuteException(message, e);
-        }
-        LOGGER.debug("Faculties were successfully found by subject ID={}", id);
-        return faculties;
-    }
-
-    @Override
-    public List<Faculty> findAllFacultiesByTeacherId(final Long id) {
-        LOGGER.debug("Running a method to find all faculties by teacher ID={}", id);
-        List<Faculty> faculties = new ArrayList<>();
-        try {
-            faculties = jdbcTemplate.query(FIND_FACULTIES_BY_TEACHER_ID, facultyMapper, id);
-        } catch (EmptyResultDataAccessException e) {
-            LOGGER.error(faculties.toString());
-            String message = format("Faculty by teacher ID='%s' not found", id);
-            throw new EntityNotFoundException(message);
-        } catch (DataAccessException e) {
-            String message = format("Unable to get Faculty by teacher ID='%s'", id);
-            throw new QueryNotExecuteException(message, e);
-        }
-        LOGGER.debug("Faculties were successfully found by teacher ID={}", id);
-        return faculties;
     }
 }
