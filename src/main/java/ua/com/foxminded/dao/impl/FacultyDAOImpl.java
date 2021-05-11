@@ -36,33 +36,45 @@ public class FacultyDAOImpl implements FacultyDAO {
 
     @Override
     public void create(Faculty faculty) {
-        Session session = this.sessionFactory.getCurrentSession();
+        Session session = this.sessionFactory.openSession();
+        session.beginTransaction();
         session.persist(faculty);
+        session.getTransaction().commit();
+        session.close();
         LOGGER.info("Faculty was successfully saved. Faculty details: {}", faculty);
     }
 
     @Override
     public void delete(Long id) {
-        Session session = this.sessionFactory.getCurrentSession();
+        Session session = this.sessionFactory.openSession();
+        session.beginTransaction();
         Faculty faculty = (Faculty) session.load(Faculty.class, id);
         if (faculty != null) {
             session.delete(faculty);
         }
+        session.getTransaction().commit();
+        session.close();
         LOGGER.info("Faculty was successfully deleted. Faculty details: {}", faculty);
     }
 
     @Override
     public void update(Faculty faculty) {
-        Session session = this.sessionFactory.getCurrentSession();
+        Session session = this.sessionFactory.openSession();
+        session.beginTransaction();
         session.update(faculty);
+        session.getTransaction().commit();
+        session.close();
         LOGGER.info("Faculty was successfully updated. Faculty details: {}", faculty);
     }
 
     @SuppressWarnings("unchecked")
     @Override
     public List<Faculty> findAll() {
-        Session session = this.sessionFactory.getCurrentSession();
+        Session session = this.sessionFactory.openSession();
+        session.beginTransaction();
         List<Faculty> faculties = session.createQuery("from Faculty").list();
+        session.getTransaction().commit();
+        session.close();
         LOGGER.info("Faculties were successfully found");
 
         return faculties;
@@ -70,8 +82,10 @@ public class FacultyDAOImpl implements FacultyDAO {
 
     @Override
     public Faculty findById(Long id) {
-        Session session = this.sessionFactory.getCurrentSession();
+        Session session = this.sessionFactory.openSession();
+        session.beginTransaction();
         Faculty faculty = (Faculty) session.load(Faculty.class, id);
+        session.getTransaction().commit();
         LOGGER.info("Faculty was successfully found. Faculty details: {}", faculty);
 
         return faculty;

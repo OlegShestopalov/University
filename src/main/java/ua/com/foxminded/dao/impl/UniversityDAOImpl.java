@@ -26,8 +26,11 @@ public class UniversityDAOImpl implements UniversityDAO {
     @SuppressWarnings("unchecked")
     @Override
     public List<Audience> findAllAudiences() {
-        Session session = this.sessionFactory.getCurrentSession();
+        Session session = this.sessionFactory.openSession();
+        session.beginTransaction();
         List<Audience> audiences = session.createQuery("from Audience").list();
+        session.getTransaction().commit();
+        session.close();
         LOGGER.info("Audiences were successfully found");
 
         return audiences;

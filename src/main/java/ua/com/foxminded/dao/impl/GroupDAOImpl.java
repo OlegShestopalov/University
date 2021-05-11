@@ -26,33 +26,45 @@ public class GroupDAOImpl implements GroupDAO {
 
     @Override
     public void create(Group group) {
-        Session session = this.sessionFactory.getCurrentSession();
+        Session session = this.sessionFactory.openSession();
+        session.beginTransaction();
         session.persist(group);
+        session.getTransaction().commit();
+        session.close();
         LOGGER.info("Group was successfully saved. Group details: {}", group);
     }
 
     @Override
     public void delete(Long id) {
-        Session session = this.sessionFactory.getCurrentSession();
+        Session session = this.sessionFactory.openSession();
+        session.beginTransaction();
         Group group = (Group) session.load(Group.class, id);
         if (group != null) {
             session.delete(group);
         }
+        session.getTransaction().commit();
+        session.close();
         LOGGER.info("Group was successfully deleted. Group details: {}", group);
     }
 
     @Override
     public void update(Group group) {
-        Session session = this.sessionFactory.getCurrentSession();
+        Session session = this.sessionFactory.openSession();
+        session.beginTransaction();
         session.update(group);
+        session.getTransaction().commit();
+        session.close();
         LOGGER.info("Group was successfully updated. Group details: {}", group);
     }
 
     @SuppressWarnings("unchecked")
     @Override
     public List<Group> findAll() {
-        Session session = this.sessionFactory.getCurrentSession();
+        Session session = this.sessionFactory.openSession();
+        session.beginTransaction();
         List<Group> groups = session.createQuery("from Group").list();
+        session.getTransaction().commit();
+        session.close();
         LOGGER.info("Groups were successfully found");
 
         return groups;
@@ -60,8 +72,10 @@ public class GroupDAOImpl implements GroupDAO {
 
     @Override
     public Group findById(Long id) {
-        Session session = this.sessionFactory.getCurrentSession();
+        Session session = this.sessionFactory.openSession();
+        session.beginTransaction();
         Group group = (Group) session.load(Group.class, id);
+        session.getTransaction().commit();
         LOGGER.info("Group was successfully found. Group details: {}", group);
 
         return group;

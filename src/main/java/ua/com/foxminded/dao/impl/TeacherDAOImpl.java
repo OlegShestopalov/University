@@ -26,42 +26,57 @@ public class TeacherDAOImpl implements TeacherDAO {
 
     @Override
     public void create(Teacher teacher) {
-        Session session = this.sessionFactory.getCurrentSession();
+        Session session = this.sessionFactory.openSession();
+        session.beginTransaction();
         session.persist(teacher);
+        session.getTransaction().commit();
+        session.close();
         LOGGER.info("Teacher was successfully saved. Teacher details: {}", teacher);
     }
 
     @Override
     public void delete(Long id) {
-        Session session = this.sessionFactory.getCurrentSession();
+        Session session = this.sessionFactory.openSession();
+        session.beginTransaction();
         Teacher teacher = (Teacher) session.load(Teacher.class, id);
         if (teacher != null) {
             session.delete(teacher);
         }
+        session.getTransaction().commit();
+        session.close();
         LOGGER.info("Teacher was successfully deleted. Teacher details: {}", teacher);
     }
 
     @Override
     public void update(Teacher teacher) {
-        Session session = this.sessionFactory.getCurrentSession();
+        Session session = this.sessionFactory.openSession();
+        session.beginTransaction();
         session.update(teacher);
+        session.getTransaction().commit();
+        session.close();
         LOGGER.info("Teacher was successfully updated. Teacher details: {}", teacher);
     }
 
     @SuppressWarnings("unchecked")
     @Override
     public List<Teacher> findAll() {
-        Session session = this.sessionFactory.getCurrentSession();
+        Session session = this.sessionFactory.openSession();
+        session.beginTransaction();
         List<Teacher> teachers = session.createQuery("from Teacher").list();
+        session.getTransaction().commit();
+        session.close();
         LOGGER.info("Teachers were successfully found");
+
 
         return teachers;
     }
 
     @Override
     public Teacher findById(Long id) {
-        Session session = this.sessionFactory.getCurrentSession();
+        Session session = this.sessionFactory.openSession();
+        session.beginTransaction();
         Teacher teacher = (Teacher) session.load(Teacher.class, id);
+        session.getTransaction().commit();
         LOGGER.info("Teacher was successfully found. Teacher details: {}", teacher);
 
         return teacher;
