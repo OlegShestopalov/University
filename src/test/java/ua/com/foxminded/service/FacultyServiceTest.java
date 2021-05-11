@@ -52,7 +52,7 @@ public class FacultyServiceTest {
 
         facultyService.update(1L, faculty);
 
-        verify(facultyDAO, times(1)).update(1L, faculty);
+        verify(facultyDAO, times(1)).update(faculty);
         verifyNoMoreInteractions(facultyDAO);
     }
 

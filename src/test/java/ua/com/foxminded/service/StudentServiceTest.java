@@ -8,7 +8,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import ua.com.foxminded.dao.StudentDAO;
 import ua.com.foxminded.domain.entity.Group;
 import ua.com.foxminded.domain.entity.Student;
-import ua.com.foxminded.domain.entity.Teacher;
 import ua.com.foxminded.domain.service.impl.StudentServiceImpl;
 
 import java.util.stream.Collectors;
@@ -56,7 +55,7 @@ public class StudentServiceTest {
 
         studentService.update(1L, student);
 
-        verify(studentDAO, times(1)).update(1L, student);
+        verify(studentDAO, times(1)).update(student);
         verifyNoMoreInteractions(studentDAO);
     }
 

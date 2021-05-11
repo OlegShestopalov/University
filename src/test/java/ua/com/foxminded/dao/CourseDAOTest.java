@@ -3,10 +3,13 @@ package ua.com.foxminded.dao;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.context.support.AnnotationConfigContextLoader;
+import org.springframework.transaction.annotation.Transactional;
 import ua.com.foxminded.config.SpringConfig;
 import ua.com.foxminded.domain.entity.Course;
 
@@ -17,6 +20,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes = SpringConfig.class, loader = AnnotationConfigContextLoader.class)
 @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = {"/scripts/schema.sql", "/scripts/data.sql"})
+@ActiveProfiles("test")
 public class CourseDAOTest {
 
     private final CourseDAO courseDAO;
@@ -28,7 +32,7 @@ public class CourseDAOTest {
 
     @Test
     void createCourse() {
-        Course course = new Course(7L, "TEST");
+        Course course = new Course( "TEST");
         courseDAO.create(course);
         Course createdCourse = courseDAO.findById(course.getId());
 
@@ -45,13 +49,13 @@ public class CourseDAOTest {
 
     @Test
     void updateCourse() {
-        Course courseToBeUpdated = courseDAO.findById(1L);
         Course newCourse = new Course(1L, "UpdatedCourse");
 
-        courseDAO.update(courseToBeUpdated.getId(), newCourse);
+        courseDAO.update(newCourse);
         Course updatedCourse = courseDAO.findById(1L);
 
-        assertEquals(newCourse, updatedCourse);
+        assertEquals(newCourse.getId(), updatedCourse.getId());
+        assertEquals(newCourse.getName(), updatedCourse.getName());
     }
 
     @Test

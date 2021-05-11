@@ -3,6 +3,7 @@ package ua.com.foxminded.dao;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
@@ -18,6 +19,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes = SpringConfig.class, loader = AnnotationConfigContextLoader.class)
 @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = {"/scripts/schema.sql", "/scripts/data.sql"})
+@ActiveProfiles("test")
 public class DayDAOTest {
 
     private final DayDAO dayDAO;
@@ -29,7 +31,7 @@ public class DayDAOTest {
 
     @Test
     void createDay() {
-        Day day = new Day(4L, LocalDate.parse("2020-09-04"));
+        Day day = new Day(LocalDate.parse("2020-09-04"));
         dayDAO.create(day);
         Day createdDay = dayDAO.findById(day.getId());
 
@@ -46,13 +48,12 @@ public class DayDAOTest {
 
     @Test
     void updateDay() {
-        Day dayToBeUpdated = dayDAO.findById(1L);
         Day newDay = new Day(1L, LocalDate.parse("2020-09-04"));
 
-        dayDAO.update(dayToBeUpdated.getId(), newDay);
+        dayDAO.update(newDay);
         Day updatedDay = dayDAO.findById(1L);
 
-        assertEquals(newDay, updatedDay);
+        assertEquals(newDay.getDay(), updatedDay.getDay());
     }
 
     @Test

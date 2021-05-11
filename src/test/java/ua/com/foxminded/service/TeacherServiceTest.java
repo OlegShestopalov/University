@@ -52,7 +52,7 @@ public class TeacherServiceTest {
 
         teacherService.update(1L, teacher);
 
-        verify(teacherDAO, times(1)).update(1L, teacher);
+        verify(teacherDAO, times(1)).update(teacher);
         verifyNoMoreInteractions(teacherDAO);
     }
 
