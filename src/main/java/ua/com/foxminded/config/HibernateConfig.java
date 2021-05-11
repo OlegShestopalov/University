@@ -55,6 +55,7 @@ public class HibernateConfig {
         Properties properties = new Properties();
         properties.setProperty("hibernate.hbm2ddl", "update");
         properties.setProperty("hibernate.dialect", "org.hibernate.dialect.PostgreSQLDialect");
+        properties.setProperty("hibernate.current_session_context_class", "thread");
 
         return properties;
     }
