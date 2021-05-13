@@ -6,20 +6,19 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
-import ua.com.foxminded.dao.UniversityDAO;
+import ua.com.foxminded.dao.UniversityRepository;
 import ua.com.foxminded.domain.entity.Audience;
-import ua.com.foxminded.domain.entity.Group;
 
 import java.util.List;
 
 @Repository
-public class UniversityDAOImpl implements UniversityDAO {
+public class UniversityRepositoryImpl implements UniversityRepository {
 
     private final SessionFactory sessionFactory;
-    private static final Logger LOGGER = LoggerFactory.getLogger(UniversityDAOImpl.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(UniversityRepositoryImpl.class);
 
     @Autowired
-    public UniversityDAOImpl(SessionFactory sessionFactory) {
+    public UniversityRepositoryImpl(SessionFactory sessionFactory) {
         this.sessionFactory = sessionFactory;
     }
 

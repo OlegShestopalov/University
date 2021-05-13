@@ -7,20 +7,20 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
-import ua.com.foxminded.dao.DayDAO;
+import ua.com.foxminded.dao.DayRepository;
 import ua.com.foxminded.domain.entity.Day;
 
 import java.util.List;
 
 @Repository
 @Transactional
-public class DayDAOImpl implements DayDAO {
+public class DayRepositoryImpl implements DayRepository {
 
     private final SessionFactory sessionFactory;
-    private static final Logger LOGGER = LoggerFactory.getLogger(DayDAOImpl.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(DayRepositoryImpl.class);
 
     @Autowired
-    public DayDAOImpl(SessionFactory sessionFactory) {
+    public DayRepositoryImpl(SessionFactory sessionFactory) {
         this.sessionFactory = sessionFactory;
     }
 

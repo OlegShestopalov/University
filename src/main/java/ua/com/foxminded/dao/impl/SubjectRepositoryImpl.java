@@ -7,78 +7,87 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
-import ua.com.foxminded.dao.CourseDAO;
-import ua.com.foxminded.domain.entity.Course;
+import ua.com.foxminded.dao.SubjectRepository;
+import ua.com.foxminded.domain.entity.Subject;
 
 import java.util.List;
 
 @Repository
 @Transactional
-public class CourseDAOImpl implements CourseDAO {
+public class SubjectRepositoryImpl implements SubjectRepository {
 
     private final SessionFactory sessionFactory;
-    private static final Logger LOGGER = LoggerFactory.getLogger(CourseDAOImpl.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(SubjectRepositoryImpl.class);
 
     @Autowired
-    public CourseDAOImpl(SessionFactory sessionFactory) {
+    public SubjectRepositoryImpl(SessionFactory sessionFactory) {
         this.sessionFactory = sessionFactory;
     }
 
     @Override
-    public void create(Course course) {
+    public void create(Subject subject) {
         Session session = this.sessionFactory.openSession();
         session.beginTransaction();
-        session.persist(course);
+        session.persist(subject);
         session.getTransaction().commit();
         session.close();
-        LOGGER.info("Course was successfully saved. Course details: {}", course);
+        LOGGER.info("Subject was successfully saved. Subject details: {}", subject);
     }
 
     @Override
     public void delete(Long id) {
         Session session = this.sessionFactory.openSession();
         session.beginTransaction();
-        Course course = (Course) session.load(Course.class, id);
-        if (course != null) {
-            session.delete(course);
+        Subject subject = (Subject) session.load(Subject.class, id);
+        if (subject != null) {
+            session.delete(subject);
         }
         session.getTransaction().commit();
         session.close();
-        LOGGER.info("Course was successfully deleted. Course details: {}", course);
+        LOGGER.info("Subject was successfully deleted. Subject details: {}", subject);
     }
 
     @Override
-    public void update(Course course) {
+    public void update(Subject subject) {
         Session session = this.sessionFactory.openSession();
         session.beginTransaction();
-        session.update(course);
+        session.update(subject);
         session.getTransaction().commit();
         session.close();
-        LOGGER.info("Course was successfully updated. Course details: {}", course);
+        LOGGER.info("Subject was successfully updated. Subject details: {}", subject);
     }
 
     @SuppressWarnings("unchecked")
     @Override
-    public List<Course> findAll() {
+    public List<Subject> findAll() {
         Session session = this.sessionFactory.openSession();
         session.beginTransaction();
-        List<Course> courses = session.createQuery("from Course").list();
+        List<Subject> subjects = session.createQuery("from Subject").list();
         session.getTransaction().commit();
         session.close();
-        LOGGER.info("Courses were successfully found");
+        LOGGER.info("Subjects were successfully found");
 
-        return courses;
+        return subjects;
     }
 
     @Override
-    public Course findById(Long id) {
+    public Subject findById(Long id) {
         Session session = this.sessionFactory.openSession();
         session.beginTransaction();
-        Course course = (Course) session.load(Course.class, id);
+        Subject subject = (Subject) session.load(Subject.class, id);
         session.getTransaction().commit();
-        LOGGER.info("Course was successfully found. Course details: {}", course);
+        LOGGER.info("Subject was successfully found. Subject details: {}", subject);
 
+        return subject;
+    }
 
-        return course;
+    @Override
+    public List<Subject> findAllTeacherSubjects(Long id) {
+        return null;
+    }
+
+    @Override
+    public List<Subject> findAllFacultySubjects(Long id) {
+        return null;
     }
 }

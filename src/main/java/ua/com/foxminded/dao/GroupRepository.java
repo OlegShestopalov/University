@@ -4,7 +4,7 @@ import ua.com.foxminded.domain.entity.Group;
 
 import java.util.List;
 
-public interface GroupDAO extends GenericDAO<Group> {
+public interface GroupRepository extends GenericRepository<Group> {
 
     List<Group> findAllGroupsInFaculty(final Long id);
 }

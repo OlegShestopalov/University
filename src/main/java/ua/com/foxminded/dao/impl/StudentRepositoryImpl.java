@@ -7,20 +7,20 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
-import ua.com.foxminded.dao.StudentDAO;
+import ua.com.foxminded.dao.StudentRepository;
 import ua.com.foxminded.domain.entity.Student;
 
 import java.util.List;
 
 @Repository
 @Transactional
-public class StudentDAOImpl implements StudentDAO {
+public class StudentRepositoryImpl implements StudentRepository {
 
     private final SessionFactory sessionFactory;
-    private static final Logger LOGGER = LoggerFactory.getLogger(StudentDAOImpl.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(StudentRepositoryImpl.class);
 
     @Autowired
-    public StudentDAOImpl(SessionFactory sessionFactory) {
+    public StudentRepositoryImpl(SessionFactory sessionFactory) {
         this.sessionFactory = sessionFactory;
     }
 

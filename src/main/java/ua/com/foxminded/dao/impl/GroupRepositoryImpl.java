@@ -7,87 +7,88 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
-import ua.com.foxminded.dao.SubjectDAO;
-import ua.com.foxminded.domain.entity.Subject;
+import ua.com.foxminded.dao.GroupRepository;
+import ua.com.foxminded.domain.entity.Group;
 
 import java.util.List;
 
 @Repository
 @Transactional
-public class SubjectDAOImpl implements SubjectDAO {
+public class GroupRepositoryImpl implements GroupRepository {
 
     private final SessionFactory sessionFactory;
-    private static final Logger LOGGER = LoggerFactory.getLogger(SubjectDAOImpl.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(GroupRepositoryImpl.class);
 
     @Autowired
-    public SubjectDAOImpl(SessionFactory sessionFactory) {
+    public GroupRepositoryImpl(SessionFactory sessionFactory) {
         this.sessionFactory = sessionFactory;
     }
 
     @Override
-    public void create(Subject subject) {
+    public void create(Group group) {
         Session session = this.sessionFactory.openSession();
         session.beginTransaction();
-        session.persist(subject);
+        session.persist(group);
         session.getTransaction().commit();
         session.close();
-        LOGGER.info("Subject was successfully saved. Subject details: {}", subject);
+        LOGGER.info("Group was successfully saved. Group details: {}", group);
     }
 
     @Override
     public void delete(Long id) {
         Session session = this.sessionFactory.openSession();
         session.beginTransaction();
-        Subject subject = (Subject) session.load(Subject.class, id);
-        if (subject != null) {
-            session.delete(subject);
+        Group group = (Group) session.load(Group.class, id);
+        if (group != null) {
+            session.delete(group);
         }
         session.getTransaction().commit();
         session.close();
-        LOGGER.info("Subject was successfully deleted. Subject details: {}", subject);
+        LOGGER.info("Group was successfully deleted. Group details: {}", group);
     }
 
     @Override
-    public void update(Subject subject) {
+    public void update(Group group) {
         Session session = this.sessionFactory.openSession();
         session.beginTransaction();
-        session.update(subject);
+        session.update(group);
         session.getTransaction().commit();
         session.close();
-        LOGGER.info("Subject was successfully updated. Subject details: {}", subject);
+        LOGGER.info("Group was successfully updated. Group details: {}", group);
     }
 
     @SuppressWarnings("unchecked")
     @Override
-    public List<Subject> findAll() {
+    public List<Group> findAll() {
         Session session = this.sessionFactory.openSession();
         session.beginTransaction();
-        List<Subject> subjects = session.createQuery("from Subject").list();
+        List<Group> groups = session.createQuery("from Group").list();
         session.getTransaction().commit();
         session.close();
-        LOGGER.info("Subjects were successfully found");
+        LOGGER.info("Groups were successfully found");
 
-        return subjects;
+        return groups;
     }
 
     @Override
-    public Subject findById(Long id) {
+    public Group findById(Long id) {
         Session session = this.sessionFactory.openSession();
         session.beginTransaction();
-        Subject subject = (Subject) session.load(Subject.class, id);
+        Group group = (Group) session.load(Group.class, id);
         session.getTransaction().commit();
-        LOGGER.info("Subject was successfully found. Subject details: {}", subject);
+        LOGGER.info("Group was successfully found. Group details: {}", group);
 
-        return subject;
+        return group;
     }
 
+//    @SuppressWarnings("unchecked")
     @Override
-    public List<Subject> findAllTeacherSubjects(Long id) {
-        return null;
-    }
-
-    @Override
-    public List<Subject> findAllFacultySubjects(Long id) {
+    public List<Group> findAllGroupsInFaculty(Long id) {
+//        Session session = this.sessionFactory.getCurrentSession();
+//        List<Group> groups = (List<Group>) session.load(Group.class, id);
+//        LOGGER.info("Groups in faculty was successfully found");
+//
+//        return groups;
         return null;
     }
 }

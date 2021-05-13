@@ -2,7 +2,7 @@ package ua.com.foxminded.dao;
 
 import java.util.List;
 
-public interface GenericDAO<T> {
+public interface GenericRepository<T> {
 
     void create(T t);
 

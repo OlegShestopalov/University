@@ -7,88 +7,78 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
-import ua.com.foxminded.dao.TeacherDAO;
-import ua.com.foxminded.domain.entity.Teacher;
+import ua.com.foxminded.dao.CourseRepository;
+import ua.com.foxminded.domain.entity.Course;
 
 import java.util.List;
 
 @Repository
 @Transactional
-public class TeacherDAOImpl implements TeacherDAO {
+public class CourseRepositoryImpl implements CourseRepository {
 
     private final SessionFactory sessionFactory;
-    private static final Logger LOGGER = LoggerFactory.getLogger(TeacherDAOImpl.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(CourseRepositoryImpl.class);
 
     @Autowired
-    public TeacherDAOImpl(SessionFactory sessionFactory) {
+    public CourseRepositoryImpl(SessionFactory sessionFactory) {
         this.sessionFactory = sessionFactory;
     }
 
     @Override
-    public void create(Teacher teacher) {
+    public void create(Course course) {
         Session session = this.sessionFactory.openSession();
         session.beginTransaction();
-        session.persist(teacher);
+        session.persist(course);
         session.getTransaction().commit();
         session.close();
-        LOGGER.info("Teacher was successfully saved. Teacher details: {}", teacher);
+        LOGGER.info("Course was successfully saved. Course details: {}", course);
     }
 
     @Override
     public void delete(Long id) {
         Session session = this.sessionFactory.openSession();
         session.beginTransaction();
-        Teacher teacher = (Teacher) session.load(Teacher.class, id);
-        if (teacher != null) {
-            session.delete(teacher);
+        Course course = (Course) session.load(Course.class, id);
+        if (course != null) {
+            session.delete(course);
         }
         session.getTransaction().commit();
         session.close();
-        LOGGER.info("Teacher was successfully deleted. Teacher details: {}", teacher);
+        LOGGER.info("Course was successfully deleted. Course details: {}", course);
     }
 
     @Override
-    public void update(Teacher teacher) {
+    public void update(Course course) {
         Session session = this.sessionFactory.openSession();
         session.beginTransaction();
-        session.update(teacher);
+        session.update(course);
         session.getTransaction().commit();
         session.close();
-        LOGGER.info("Teacher was successfully updated. Teacher details: {}", teacher);
+        LOGGER.info("Course was successfully updated. Course details: {}", course);
     }
 
     @SuppressWarnings("unchecked")
     @Override
-    public List<Teacher> findAll() {
+    public List<Course> findAll() {
         Session session = this.sessionFactory.openSession();
         session.beginTransaction();
-        List<Teacher> teachers = session.createQuery("from Teacher").list();
+        List<Course> courses = session.createQuery("from Course").list();
         session.getTransaction().commit();
         session.close();
-        LOGGER.info("Teachers were successfully found");
+        LOGGER.info("Courses were successfully found");
 
-
-        return teachers;
+        return courses;
     }
 
     @Override
-    public Teacher findById(Long id) {
+    public Course findById(Long id) {
         Session session = this.sessionFactory.openSession();
         session.beginTransaction();
-        Teacher teacher = (Teacher) session.load(Teacher.class, id);
+        Course course = (Course) session.load(Course.class, id);
         session.getTransaction().commit();
-        LOGGER.info("Teacher was successfully found. Teacher details: {}", teacher);
+        LOGGER.info("Course was successfully found. Course details: {}", course);
 
-        return teacher;
-    }
 
-    @Override
-    public List<Teacher> findAllTeachersBySubjectId(Long id) {
-        return null;
-    }
-
-    @Override
-    public List<Teacher> findAllTeachersInFaculty(Long id) {
-        return null;
+        return course;
     }
 }
