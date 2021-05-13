@@ -5,7 +5,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import ua.com.foxminded.dao.FacultyDAO;
+import ua.com.foxminded.dao.FacultyRepository;
 import ua.com.foxminded.domain.entity.Faculty;
 import ua.com.foxminded.domain.service.impl.FacultyServiceImpl;
 
@@ -23,7 +23,7 @@ import static org.mockito.Mockito.when;
 public class FacultyServiceTest {
 
     @Mock
-    private FacultyDAO facultyDAO;
+    private FacultyRepository facultyRepository;
 
     @InjectMocks
     private FacultyServiceImpl facultyService;
@@ -34,8 +34,8 @@ public class FacultyServiceTest {
 
         facultyService.create(faculty);
 
-        verify(facultyDAO, times(1)).create(faculty);
-        verifyNoMoreInteractions(facultyDAO);
+        verify(facultyRepository, times(1)).create(faculty);
+        verifyNoMoreInteractions(facultyRepository);
     }
 
     @Test
@@ -43,7 +43,7 @@ public class FacultyServiceTest {
         Faculty faculty = new Faculty(1L, "test");
         facultyService.delete(1L);
 
-        verify(facultyDAO, times(1)).delete(faculty.getId());
+        verify(facultyRepository, times(1)).delete(faculty.getId());
     }
 
     @Test
@@ -52,8 +52,8 @@ public class FacultyServiceTest {
 
         facultyService.update(1L, faculty);
 
-        verify(facultyDAO, times(1)).update(faculty);
-        verifyNoMoreInteractions(facultyDAO);
+        verify(facultyRepository, times(1)).update(faculty);
+        verifyNoMoreInteractions(facultyRepository);
     }
 
     @Test
@@ -62,19 +62,19 @@ public class FacultyServiceTest {
         Faculty two = new Faculty(2L, "faculty2");
         Faculty three = new Faculty(3L, "faculty3");
 
-        when(facultyDAO.findAll()).thenReturn(Stream.of(one, two, three).collect(Collectors.toList()));
+        when(facultyRepository.findAll()).thenReturn(Stream.of(one, two, three).collect(Collectors.toList()));
 
         assertEquals(3, facultyService.findAll().size());
         assertEquals(one, facultyService.findAll().get(0));
         assertEquals(two, facultyService.findAll().get(1));
-        verifyNoMoreInteractions(facultyDAO);
+        verifyNoMoreInteractions(facultyRepository);
     }
 
     @Test
     void whenInputIdItShouldReturnFacultyById() {
-        when(facultyDAO.findById(anyLong())).thenReturn(new Faculty(1L, "test"));
+        when(facultyRepository.findById(anyLong())).thenReturn(new Faculty(1L, "test"));
 
         assertEquals("test", facultyService.findById(1L).getName());
-        verifyNoMoreInteractions(facultyDAO);
+        verifyNoMoreInteractions(facultyRepository);
     }
 }
