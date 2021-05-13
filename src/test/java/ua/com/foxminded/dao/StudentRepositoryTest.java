@@ -1,5 +1,6 @@
 package ua.com.foxminded.dao;
 
+import org.hibernate.Hibernate;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,70 +16,64 @@ import ua.com.foxminded.domain.entity.Student;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes = SpringConfig.class, loader = AnnotationConfigContextLoader.class)
 @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = {"/scripts/schema.sql", "/scripts/data.sql"})
 @ActiveProfiles("test")
-public class StudentDAOTest {
+public class StudentRepositoryTest {
 
-    private final StudentDAO studentDAO;
-    private final GroupDAO groupDAO;
+    private final StudentRepository studentRepository;
+    private final GroupRepository groupRepository;
 
     @Autowired
-    StudentDAOTest(StudentDAO studentDAO, GroupDAO groupDAO) {
-        this.studentDAO = studentDAO;
-        this.groupDAO = groupDAO;
+    StudentRepositoryTest(StudentRepository studentRepository, GroupRepository groupRepository) {
+        this.studentRepository = studentRepository;
+        this.groupRepository = groupRepository;
     }
 
     @Test
     void createStudent() {
-        Group group = groupDAO.findById(1L);
+        Group group = groupRepository.findById(1L);
         Student student = new Student(group, "Student4", "Student4", "Male", 20, "student4@gmail.com");
-        studentDAO.create(student);
-        Student createdStudent = studentDAO.findById(student.getId());
+        studentRepository.create(student);
+        Student createdStudent = studentRepository.findById(student.getId());
 
-        assertEquals(student.getId(), createdStudent.getId());
-        assertEquals(student.getName(), createdStudent.getName());
-        assertEquals(student.getSurname(), createdStudent.getSurname());
-        assertEquals(student.getEmail(), createdStudent.getEmail());
+        assertEquals(student, Hibernate.unproxy(createdStudent));
     }
 
     @Test
     void deleteStudent() {
-        Student studentToBeDeleted = studentDAO.findById(1L);
-        studentDAO.delete(studentToBeDeleted.getId());
+        Student studentToBeDeleted = studentRepository.findById(1L);
+        studentRepository.delete(studentToBeDeleted.getId());
 
-        assertEquals(2, studentDAO.findAll().size());
+        assertEquals(2, studentRepository.findAll().size());
     }
 
     @Test
     void updateStudent() {
-        Student studentToBeUpdated = studentDAO.findById(1L);
-        Group group = groupDAO.findById(1L);
+        Group group = groupRepository.findById(1L);
         Student newStudent = new Student(1L, group, "UpdatedStudent", "UpdatedStudent", "Male", 25, "UpdatedStudent@gmail.com");
-        studentDAO.update(newStudent);
-        Student updatedStudent = studentDAO.findById(1L);
+        studentRepository.update(newStudent);
+        Student updatedStudent = studentRepository.findById(1L);
 
-        assertEquals(newStudent.getId(), updatedStudent.getId());
-        assertEquals(newStudent.getName(), updatedStudent.getName());
-        assertEquals(newStudent.getSurname(), updatedStudent.getSurname());
-        assertEquals(newStudent.getEmail(), updatedStudent.getEmail());
+        assertEquals(newStudent, Hibernate.unproxy(updatedStudent));
     }
 
     @Test
     void findAllStudents() {
-        List<Student> students = studentDAO.findAll();
+        List<Student> students = studentRepository.findAll();
 
         assertEquals(3, students.size());
     }
 
     @Test
     void findStudentById() {
-        Student student = studentDAO.findById(1L);
+        Group group = groupRepository.findById(1L);
+        Student student = new Student(1L, group, "Student1", "Student1", "Male", 20, "student1@gmail.com");
+        Student studentInDb = studentRepository.findById(1L);
 
-        assertEquals("Student1", student.getName());
+        assertEquals(student, Hibernate.unproxy(studentInDb));
     }
 
     @Test

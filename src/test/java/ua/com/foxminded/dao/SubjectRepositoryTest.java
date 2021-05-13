@@ -1,5 +1,6 @@
 package ua.com.foxminded.dao;
 
+import org.hibernate.Hibernate;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,56 +20,55 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 @ContextConfiguration(classes = SpringConfig.class, loader = AnnotationConfigContextLoader.class)
 @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = {"/scripts/schema.sql", "/scripts/data.sql"})
 @ActiveProfiles("test")
-public class SubjectDAOTest {
+public class SubjectRepositoryTest {
 
-    private final SubjectDAO subjectDAO;
+    private final SubjectRepository subjectRepository;
 
     @Autowired
-    public SubjectDAOTest(SubjectDAO subjectDAO) {
-        this.subjectDAO = subjectDAO;
+    public SubjectRepositoryTest(SubjectRepository subjectRepository) {
+        this.subjectRepository = subjectRepository;
     }
 
     @Test
     void createSubject() {
         Subject subject = new Subject("TEST", "TEST");
-        subjectDAO.create(subject);
-        Subject createdSubject = subjectDAO.findById(subject.getId());
+        subjectRepository.create(subject);
+        Subject createdSubject = subjectRepository.findById(subject.getId());
 
-        assertEquals(subject.getName(), createdSubject.getName());
+        assertEquals(subject, Hibernate.unproxy(createdSubject));
     }
 
     @Test
     void deleteSubject() {
-        Subject subjectToBeDeleted = subjectDAO.findById(1L);
-        subjectDAO.delete(subjectToBeDeleted.getId());
+        Subject subjectToBeDeleted = subjectRepository.findById(1L);
+        subjectRepository.delete(subjectToBeDeleted.getId());
 
-        assertEquals(2, subjectDAO.findAll().size());
+        assertEquals(2, subjectRepository.findAll().size());
     }
 
     @Test
     void updateSubject() {
         Subject newSubject = new Subject(1L, "UpdatedSubject", "UpdatedSubject");
 
-        subjectDAO.update(newSubject);
-        Subject updatedSubject = subjectDAO.findById(1L);
+        subjectRepository.update(newSubject);
+        Subject updatedSubject = subjectRepository.findById(1L);
 
-        assertEquals(newSubject.getId(), updatedSubject.getId());
-        assertEquals(newSubject.getName(), updatedSubject.getName());
-        assertEquals(newSubject.getDescription(), updatedSubject.getDescription());
+        assertEquals(newSubject, Hibernate.unproxy(updatedSubject));
     }
 
     @Test
     void findAllSubjects() {
-        List<Subject> subjects = subjectDAO.findAll();
+        List<Subject> subjects = subjectRepository.findAll();
 
         assertEquals(3, subjects.size());
     }
 
     @Test
     void findSubjectById() {
-        Subject subject = subjectDAO.findById(1L);
+        Subject subject = new Subject(1L, "Subject1", "Subject1");
+        Subject subjectInDB = subjectRepository.findById(1L);
 
-        assertEquals("Subject1", subject.getName());
+        assertEquals(subject, Hibernate.unproxy(subjectInDB));
     }
 
     @Test

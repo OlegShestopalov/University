@@ -1,5 +1,6 @@
 package ua.com.foxminded.dao;
 
+import org.hibernate.Hibernate;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,56 +20,54 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 @ContextConfiguration(classes = SpringConfig.class, loader = AnnotationConfigContextLoader.class)
 @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = {"/scripts/schema.sql", "/scripts/data.sql"})
 @ActiveProfiles("test")
-public class FacultyDAOTest {
+public class FacultyRepositoryTest {
 
-    private final FacultyDAO facultyDAO;
+    private final FacultyRepository facultyRepository;
 
     @Autowired
-    public FacultyDAOTest(FacultyDAO facultyDAO) {
-        this.facultyDAO = facultyDAO;
+    public FacultyRepositoryTest(FacultyRepository facultyRepository) {
+        this.facultyRepository = facultyRepository;
     }
 
     @Test
     void createFaculty() {
         Faculty faculty = new Faculty("TEST");
-        facultyDAO.create(faculty);
-        Faculty createdFaculty = facultyDAO.findById(faculty.getId());
+        facultyRepository.create(faculty);
+        Faculty createdFaculty = facultyRepository.findById(faculty.getId());
 
-        assertEquals(faculty.getName(), createdFaculty.getName());
+        assertEquals(faculty, Hibernate.unproxy(createdFaculty));
     }
 
     @Test
-    void daleteFaculty() {
-        Faculty facultyToBeDeleted = facultyDAO.findById(1L);
-        facultyDAO.delete(facultyToBeDeleted.getId());
+    void deleteFaculty() {
+        Faculty facultyToBeDeleted = facultyRepository.findById(1L);
+        facultyRepository.delete(facultyToBeDeleted.getId());
 
-        assertEquals(2, facultyDAO.findAll().size());
+        assertEquals(2, facultyRepository.findAll().size());
     }
 
     @Test
     void updateFaculty() {
-        Faculty facultyToBeUpdated = facultyDAO.findById(1L);
         Faculty newFaculty = new Faculty(1L, "UpdatedFaculty");
+        facultyRepository.update(newFaculty);
+        Faculty updatedFaculty = facultyRepository.findById(1L);
 
-        facultyDAO.update(newFaculty);
-        Faculty updatedFaculty = facultyDAO.findById(1L);
-
-        assertEquals(newFaculty.getId(), updatedFaculty.getId());
-        assertEquals(newFaculty.getName(), updatedFaculty.getName());
+        assertEquals(newFaculty, Hibernate.unproxy(updatedFaculty));
     }
 
     @Test
     void findAllFaculties() {
-        List<Faculty> faculties = facultyDAO.findAll();
+        List<Faculty> faculties = facultyRepository.findAll();
 
         assertEquals(3, faculties.size());
     }
 
     @Test
     void findFacultyById() {
-        Faculty faculty = facultyDAO.findById(1L);
+        Faculty faculty = new Faculty(1L, "Electronics");
+        Faculty facultyInDB = facultyRepository.findById(1L);
 
-        assertEquals("Electronics", faculty.getName());
+        assertEquals(faculty, Hibernate.unproxy(facultyInDB));
     }
 
     @Test

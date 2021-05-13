@@ -1,5 +1,6 @@
 package ua.com.foxminded.dao;
 
+import org.hibernate.Hibernate;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,58 +20,55 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 @ContextConfiguration(classes = SpringConfig.class, loader = AnnotationConfigContextLoader.class)
 @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = {"/scripts/schema.sql", "/scripts/data.sql"})
 @ActiveProfiles("test")
-public class TeacherDAOTest {
+public class TeacherRepositoryTest {
 
-    private final TeacherDAO teacherDAO;
+    private final TeacherRepository teacherRepository;
 
     @Autowired
-    public TeacherDAOTest(TeacherDAO teacherDAO) {
-        this.teacherDAO = teacherDAO;
+    public TeacherRepositoryTest(TeacherRepository teacherRepository) {
+        this.teacherRepository = teacherRepository;
     }
 
     @Test
     void createTeacher() {
         Teacher teacher = new Teacher("Teacher4", "Teacher4", "teacher4@gmail.com");
-        teacherDAO.create(teacher);
-        Teacher createdTeacher = teacherDAO.findById(teacher.getId());
+        teacherRepository.create(teacher);
+        Teacher createdTeacher = teacherRepository.findById(teacher.getId());
 
-        assertEquals(teacher.getName(), createdTeacher.getName());
+        assertEquals(teacher, Hibernate.unproxy(createdTeacher));
     }
 
     @Test
     void deleteTeacherFromUniversity() {
-        Teacher teacherToBeDeleted = teacherDAO.findById(1L);
-        teacherDAO.delete(teacherToBeDeleted.getId());
+        Teacher teacherToBeDeleted = teacherRepository.findById(1L);
+        teacherRepository.delete(teacherToBeDeleted.getId());
 
-        assertEquals(2, teacherDAO.findAll().size());
+        assertEquals(2, teacherRepository.findAll().size());
     }
 
     @Test
     void updateTeacher() {
-        Teacher teacherToBeUpdated = teacherDAO.findById(1L);
         Teacher newTeacher = new Teacher(1L, "UpdatedTeacher", "UpdatedTeacher", "UpdatedTeacher@gmail.com");
 
-        teacherDAO.update(newTeacher);
-        Teacher updatedTeacher = teacherDAO.findById(1L);
+        teacherRepository.update(newTeacher);
+        Teacher updatedTeacher = teacherRepository.findById(1L);
 
-        assertEquals(newTeacher.getId(), updatedTeacher.getId());
-        assertEquals(newTeacher.getName(), updatedTeacher.getName());
-        assertEquals(newTeacher.getSurname(), updatedTeacher.getSurname());
-        assertEquals(newTeacher.getEmail(), updatedTeacher.getEmail());
+        assertEquals(newTeacher, Hibernate.unproxy(updatedTeacher));
     }
 
     @Test
     void findAllTeachers() {
-        List<Teacher> teachers = teacherDAO.findAll();
+        List<Teacher> teachers = teacherRepository.findAll();
 
         assertEquals(3, teachers.size());
     }
 
     @Test
     void findTeacherById() {
-        Teacher teacher = teacherDAO.findById(1L);
+        Teacher teacher = new Teacher(1L, "Teacher1", "Teacher1", "teacher1@gmail.com");
+        Teacher teacherInDB = teacherRepository.findById(1L);
 
-        assertEquals("Teacher1", teacher.getName());
+        assertEquals(teacher, Hibernate.unproxy(teacherInDB));
     }
 
     @Test
