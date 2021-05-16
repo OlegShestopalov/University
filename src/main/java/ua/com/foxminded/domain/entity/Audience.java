@@ -1,9 +1,23 @@
 package ua.com.foxminded.domain.entity;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
+import java.util.Objects;
+
+@Entity
+@Table(name = "audience")
 public class Audience {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @Column(name = "number")
     private int number;
+    @Column(name = "desk")
     private int desk;
 
     public Audience() {
@@ -42,6 +56,19 @@ public class Audience {
 
     public void setDesk(int desk) {
         this.desk = desk;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Audience audience = (Audience) o;
+        return number == audience.number && desk == audience.desk && id.equals(audience.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, number, desk);
     }
 
     @Override

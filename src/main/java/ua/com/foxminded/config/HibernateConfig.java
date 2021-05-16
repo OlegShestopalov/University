@@ -3,32 +3,34 @@ package ua.com.foxminded.config;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Profile;
-import org.springframework.jdbc.datasource.DriverManagerDataSource;
+import org.springframework.context.annotation.PropertySource;
+import org.springframework.core.env.Environment;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jndi.JndiTemplate;
 import org.springframework.orm.hibernate5.HibernateTransactionManager;
 import org.springframework.orm.hibernate5.LocalSessionFactoryBean;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import javax.naming.NamingException;
 import javax.sql.DataSource;
+import java.util.Objects;
 import java.util.Properties;
 
 @Configuration
 @ComponentScan("ua.com.foxminded")
 @EnableTransactionManagement
+@PropertySource("classpath:jndi.properties")
+public class HibernateConfig {
 
-public class SpringConfig implements WebMvcConfigurer {
+    private final Environment environment;
+
+    public HibernateConfig(Environment environment) {
+        this.environment = environment;
+    }
 
     @Bean
-    @Profile("test")
-    public DataSource dataSource() {
-        DriverManagerDataSource dataSource = new DriverManagerDataSource();
-        dataSource.setDriverClassName("org.h2.Driver");
-        dataSource.setUrl("jdbc:h2:mem:testDB;DB_CLOSE_DELAY=-1;");
-        dataSource.setUsername("sa");
-        dataSource.setPassword("");
-        return dataSource;
+    public DataSource dataSource() throws NamingException {
+        return (DataSource) new JndiTemplate().lookup(Objects.requireNonNull(environment.getProperty("jdbc.url")));
     }
 
     @Bean
@@ -52,12 +54,9 @@ public class SpringConfig implements WebMvcConfigurer {
     private Properties hibernateProperties() {
         Properties properties = new Properties();
         properties.setProperty("hibernate.hbm2ddl", "update");
-        properties.setProperty("hibernate.dialect", "org.hibernate.dialect.H2Dialect");
+        properties.setProperty("hibernate.dialect", "org.hibernate.dialect.PostgreSQLDialect");
+        properties.setProperty("hibernate.current_session_context_class", "thread");
 
         return properties;
     }
 }
-
-
-
-

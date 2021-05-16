@@ -2,13 +2,13 @@ package ua.com.foxminded.dao;
 
 import java.util.List;
 
-public interface GenericDAO<T> {
+public interface GenericRepository<T> {
 
     void create(T t);
 
     void delete(Long id);
 
-    void update(Long id, T t);
+    void update(T t);
 
     List<T> findAll();
 

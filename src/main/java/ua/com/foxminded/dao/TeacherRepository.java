@@ -4,7 +4,7 @@ import ua.com.foxminded.domain.entity.Teacher;
 
 import java.util.List;
 
-public interface TeacherDAO extends GenericDAO<Teacher> {
+public interface TeacherRepository extends GenericRepository<Teacher> {
 
     public List<Teacher> findAllTeachersBySubjectId(final Long id);
 

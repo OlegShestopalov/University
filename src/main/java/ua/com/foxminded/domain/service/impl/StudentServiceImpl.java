@@ -2,8 +2,8 @@ package ua.com.foxminded.domain.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import ua.com.foxminded.dao.DayDAO;
-import ua.com.foxminded.dao.StudentDAO;
+import ua.com.foxminded.dao.DayRepository;
+import ua.com.foxminded.dao.StudentRepository;
 import ua.com.foxminded.domain.entity.Student;
 import ua.com.foxminded.domain.service.StudentService;
 
@@ -12,53 +12,53 @@ import java.util.List;
 @Service
 public class StudentServiceImpl implements StudentService {
 
-    private final StudentDAO studentDAO;
-    private final DayDAO dayDAO;
+    private final StudentRepository studentRepository;
+    private final DayRepository dayRepository;
 
     @Autowired
-    public StudentServiceImpl(StudentDAO studentDAO, DayDAO dayDAO) {
-        this.studentDAO = studentDAO;
+    public StudentServiceImpl(StudentRepository studentRepository, DayRepository dayRepository) {
+        this.studentRepository = studentRepository;
 
-        this.dayDAO = dayDAO;
+        this.dayRepository = dayRepository;
     }
 
     @Override
     public void create(Student student) {
-        studentDAO.create(student);
+        studentRepository.create(student);
     }
 
     @Override
     public void delete(Long id) {
-        studentDAO.delete(id);
+        studentRepository.delete(id);
     }
 
     @Override
     public void update(Long id, Student student) {
-        studentDAO.update(id, student);
+        studentRepository.update(student);
     }
 
     @Override
     public List<Student> findAll() {
-        return studentDAO.findAll();
+        return studentRepository.findAll();
     }
 
     @Override
     public Student findById(Long id) {
-        return studentDAO.findById(id);
+        return studentRepository.findById(id);
     }
 
     @Override
     public Student findByName(String name) {
-        return studentDAO.findByName(name);
+        return studentRepository.findByName(name);
     }
 
     @Override
     public List<Student> findStudentsInGroup(Long id) {
-        return studentDAO.findAllStudentsInGroup(id);
+        return studentRepository.findAllStudentsInGroup(id);
     }
 
     @Override
     public List<Student> findEmailsInGroup(Long id) {
-        return studentDAO.findAllEmailsInGroup(id);
+        return studentRepository.findAllEmailsInGroup(id);
     }
 }

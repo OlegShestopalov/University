@@ -4,7 +4,7 @@ import ua.com.foxminded.domain.entity.Student;
 
 import java.util.List;
 
-public interface StudentDAO extends GenericDAO<Student> {
+public interface StudentRepository extends GenericRepository<Student> {
 
     public Student findByName(final String name);
 

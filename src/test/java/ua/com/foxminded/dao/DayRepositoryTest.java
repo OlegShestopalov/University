@@ -1,8 +1,10 @@
 package ua.com.foxminded.dao;
 
+import org.hibernate.Hibernate;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
@@ -18,54 +20,54 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes = SpringConfig.class, loader = AnnotationConfigContextLoader.class)
 @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = {"/scripts/schema.sql", "/scripts/data.sql"})
-public class DayDAOTest {
+@ActiveProfiles("test")
+public class DayRepositoryTest {
 
-    private final DayDAO dayDAO;
+    private final DayRepository dayRepository;
 
     @Autowired
-    public DayDAOTest(DayDAO dayDAO) {
-        this.dayDAO = dayDAO;
+    public DayRepositoryTest(DayRepository dayRepository) {
+        this.dayRepository = dayRepository;
     }
 
     @Test
     void createDay() {
-        Day day = new Day(4L, LocalDate.parse("2020-09-04"));
-        dayDAO.create(day);
-        Day createdDay = dayDAO.findById(day.getId());
+        Day day = new Day(LocalDate.parse("2020-09-04"));
+        dayRepository.create(day);
+        Day createdDay = dayRepository.findById(day.getId());
 
-        assertEquals(day.getDay(), createdDay.getDay());
+        assertEquals(day, Hibernate.unproxy(createdDay));
     }
 
     @Test
     void deleteDay() {
-        Day dayToBeDeleted = dayDAO.findById(1L);
-        dayDAO.delete(dayToBeDeleted.getId());
+        Day dayToBeDeleted = dayRepository.findById(1L);
+        dayRepository.delete(dayToBeDeleted.getId());
 
-        assertEquals(2, dayDAO.findAll().size());
+        assertEquals(2, dayRepository.findAll().size());
     }
 
     @Test
     void updateDay() {
-        Day dayToBeUpdated = dayDAO.findById(1L);
         Day newDay = new Day(1L, LocalDate.parse("2020-09-04"));
+        dayRepository.update(newDay);
+        Day updatedDay = dayRepository.findById(1L);
 
-        dayDAO.update(dayToBeUpdated.getId(), newDay);
-        Day updatedDay = dayDAO.findById(1L);
-
-        assertEquals(newDay, updatedDay);
+        assertEquals(newDay, Hibernate.unproxy(updatedDay));
     }
 
     @Test
     void findAllDays() {
-        List<Day> days = dayDAO.findAll();
+        List<Day> days = dayRepository.findAll();
 
         assertEquals(3, days.size());
     }
 
     @Test
     void findDayById() {
-        Day day = dayDAO.findById(1L);
+        Day day = new Day(1L, LocalDate.parse("2020-09-01"));
+        Day dayInDB = dayRepository.findById(1L);
 
-        assertEquals(LocalDate.parse("2020-09-01"), day.getDay());
+        assertEquals(day, Hibernate.unproxy(dayInDB));
     }
 }
