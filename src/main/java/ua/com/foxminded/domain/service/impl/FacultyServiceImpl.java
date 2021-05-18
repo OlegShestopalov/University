@@ -2,6 +2,7 @@ package ua.com.foxminded.domain.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ua.com.foxminded.dao.FacultyRepository;
 import ua.com.foxminded.dao.GroupRepository;
 import ua.com.foxminded.dao.StudentRepository;
@@ -12,6 +13,7 @@ import ua.com.foxminded.domain.service.FacultyService;
 import java.util.List;
 
 @Service
+@Transactional
 public class FacultyServiceImpl implements FacultyService {
 
     private final FacultyRepository facultyRepository;
