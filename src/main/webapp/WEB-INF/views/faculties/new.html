@@ -47,10 +47,6 @@
 
 <div class="container">
   <form class="row g-3" th:action="@{/faculties/new}" th:object="${faculty}" th:method="POST">
-<!--    <div class="col-6">-->
-<!--      <label for="id" class="form-label">ID:</label>-->
-<!--      <input type="number" class="form-control" th:field="*{id}" id="id" placeholder="faculty id">-->
-<!--    </div>-->
     <div class="col-md-6">
       <label for="name" class="form-label">Name:</label>
       <input type="text" class="form-control" th:field="*{name}" id="name" placeholder="name">
