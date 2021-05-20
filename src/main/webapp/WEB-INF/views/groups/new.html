@@ -2,7 +2,7 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
   <meta charset="UTF-8">
-  <title>New faculty</title>
+  <title>New group</title>
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
@@ -32,8 +32,8 @@
     <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
       <div class="navbar-nav">
         <a class="nav-link" href="/home">Home</a>
-        <a class="nav-link active" aria-current="page" href="/faculties/menu">Faculties</a>
-        <a class="nav-link" href="/groups/menu">Groups</a>
+        <a class="nav-link" href="/faculties/menu">Faculties</a>
+        <a class="nav-link active" aria-current="page" href="/groups/menu">Groups</a>
         <a class="nav-link" href="/teachers/menu">Teachers</a>
         <a class="nav-link" href="/students/menu">Students</a>
       </div>
@@ -42,15 +42,23 @@
 </nav>
 
 <div class="p-1">
-  <a class="btn btn-outline-dark" href="/faculties/allFaculties" role="button">All faculties</a>
-  <a class="btn btn-outline-dark" href="/faculties/new" role="button">New faculty</a>
+  <a class="btn btn-outline-dark" href="/groups/allGroups" role="button">All groups</a>
+  <a class="btn btn-outline-dark" href="/groups/new" role="button">New group</a>
 </div>
 
 <div class="container">
-  <form class="row g-3" th:action="@{/faculties/new}" th:object="${faculty}" th:method="POST">
-    <div class="col-md-6">
+  <form class="row g-3" th:action="@{/groups/new}" th:object="${group}" th:method="POST">
+    <div class="col-md-12">
       <label for="name" class="form-label">Name:</label>
       <input type="text" class="form-control" th:field="*{name}" id="name" placeholder="name">
+    </div>
+    <div class="col-12">
+      <label for="faculty" class="form-label">Faculty ID:</label>
+      <input type="number" class="form-control" th:field="*{faculty.id}" id="faculty" placeholder="faculty id">
+    </div>
+    <div class="col-12">
+      <label for="course" class="form-label">Course ID:</label>
+      <input type="number" class="form-control" th:field="*{course.id}" id="course" placeholder="course id">
     </div>
 
     <div class="col-12">

@@ -33,6 +33,7 @@
       <div class="navbar-nav">
         <a class="nav-link" href="/home">Home</a>
         <a class="nav-link active" aria-current="page" href="/faculties/menu">Faculties</a>
+        <a class="nav-link" href="/groups/menu">Groups</a>
         <a class="nav-link" href="/teachers/menu">Teachers</a>
         <a class="nav-link" href="/students/menu">Students</a>
       </div>
@@ -45,9 +46,17 @@
   <a class="btn btn-outline-dark" href="/faculties/new" role="button">New faculty</a>
 </div>
 
-<div class="p-1">
-  <p th:text="${faculty.getId()}">value</p>
-  <p th:text="${faculty.getName()}">value</p>
+<div class="p-5" >
+  <table class="table" >
+    <tr>
+      <td>ID</td>
+      <td th:text="${faculty.getId()}">value</td>
+    </tr>
+    <tr>
+      <td>Name</td>
+      <td th:text="${faculty.getName()}">value</td>
+    </tr>
+  </table>
 </div>
 
 <div class="p-1">
