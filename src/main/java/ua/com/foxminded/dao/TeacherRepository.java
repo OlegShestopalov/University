@@ -1,12 +1,9 @@
 package ua.com.foxminded.dao;
 
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 import ua.com.foxminded.domain.entity.Teacher;
 
-import java.util.List;
-
-public interface TeacherRepository extends GenericRepository<Teacher> {
-
-    public List<Teacher> findAllTeachersBySubjectId(final Long id);
-
-    public List<Teacher> findAllTeachersInFaculty(final Long id);
+@Repository
+public interface TeacherRepository extends JpaRepository<Teacher, Long> {
 }

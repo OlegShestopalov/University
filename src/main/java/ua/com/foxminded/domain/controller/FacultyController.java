@@ -57,8 +57,8 @@ public class FacultyController {
     }
 
     @PostMapping("/{id}")
-    public String update(@ModelAttribute("faculty") Faculty faculty, @PathVariable("id") Long id) {
-        facultyService.update(id, faculty);
+    public String update(Faculty faculty) {
+        facultyService.create(faculty);
         return "redirect:/faculties/allFaculties";
     }
 

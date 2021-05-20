@@ -10,13 +10,7 @@ public interface TeacherService {
 
     void delete(final Long id);
 
-    void update(final Long id, final Teacher teacher);
-
     Teacher findById(final Long id);
 
     List<Teacher> findAll();
-
-    List<Teacher> findTeachersBySubject(final Long id);
-
-    List<Teacher> findTeachersInFaculty(final Long id);
 }

@@ -57,8 +57,8 @@ public class TeacherController {
     }
 
     @PostMapping("/{id}")
-    public String update(@ModelAttribute("teacher") Teacher teacher, @PathVariable("id") Long id) {
-        teacherService.update(id, teacher);
+    public String update(Teacher teacher) {
+        teacherService.create(teacher);
         return "redirect:/teachers/allTeachers";
     }
 

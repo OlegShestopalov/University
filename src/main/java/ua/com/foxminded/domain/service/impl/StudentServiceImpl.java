@@ -25,17 +25,12 @@ public class StudentServiceImpl implements StudentService {
 
     @Override
     public void create(Student student) {
-        studentRepository.create(student);
+        studentRepository.save(student);
     }
 
     @Override
     public void delete(Long id) {
-        studentRepository.delete(id);
-    }
-
-    @Override
-    public void update(Long id, Student student) {
-        studentRepository.update(student);
+        studentRepository.deleteById(id);
     }
 
     @Override
@@ -45,21 +40,6 @@ public class StudentServiceImpl implements StudentService {
 
     @Override
     public Student findById(Long id) {
-        return studentRepository.findById(id);
-    }
-
-    @Override
-    public Student findByName(String name) {
-        return studentRepository.findByName(name);
-    }
-
-    @Override
-    public List<Student> findStudentsInGroup(Long id) {
-        return studentRepository.findAllStudentsInGroup(id);
-    }
-
-    @Override
-    public List<Student> findEmailsInGroup(Long id) {
-        return studentRepository.findAllEmailsInGroup(id);
+        return studentRepository.getOne(id);
     }
 }

@@ -10,15 +10,7 @@ public interface FacultyService {
 
     void delete(final Long id);
 
-    void update(final Long id, final Faculty faculty);
-
     List<Faculty> findAll();
 
     Faculty findById(final Long id);
-
-    void calculateFacultyFullness(final Long id);
-
-    List<Faculty> findFacultiesBySubjectId(final Long id);
-
-    List<Faculty> findFacultiesByTeacherId(final Long id);
 }

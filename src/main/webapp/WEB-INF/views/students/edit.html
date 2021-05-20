@@ -47,7 +47,11 @@
 
 <div class="container">
 <form class="row g-3" th:action="@{/students/{id}(id=${student.getId()})}" th:object="${student}" th:method="POST">
-    <div class="col-12">
+    <div class="col-md-12">
+        <label for="id" class="form-label">ID:</label>
+        <input readonly type="number" class="form-control" th:field="*{id}" id="id">
+    </div>
+    <div class="col-12  ">
         <label for="group" class="form-label">Group ID:</label>
         <input type="number" class="form-control" th:field="*{group.id}" id="group" placeholder="id">
     </div>
