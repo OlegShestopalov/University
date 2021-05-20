@@ -34,7 +34,7 @@ public class FacultyServiceTest {
 
         facultyService.create(faculty);
 
-        verify(facultyRepository, times(1)).create(faculty);
+        verify(facultyRepository, times(1)).save(faculty);
         verifyNoMoreInteractions(facultyRepository);
     }
 
@@ -43,16 +43,16 @@ public class FacultyServiceTest {
         Faculty faculty = new Faculty(1L, "test");
         facultyService.delete(1L);
 
-        verify(facultyRepository, times(1)).delete(faculty.getId());
+        verify(facultyRepository, times(1)).deleteById(faculty.getId());
     }
 
     @Test
     void updateFaculty() {
         Faculty faculty = new Faculty(1L, "test");
 
-        facultyService.update(1L, faculty);
+        facultyService.create(faculty);
 
-        verify(facultyRepository, times(1)).update(faculty);
+        verify(facultyRepository, times(1)).save(faculty);
         verifyNoMoreInteractions(facultyRepository);
     }
 
@@ -72,7 +72,7 @@ public class FacultyServiceTest {
 
     @Test
     void whenInputIdItShouldReturnFacultyById() {
-        when(facultyRepository.findById(anyLong())).thenReturn(new Faculty(1L, "test"));
+        when(facultyRepository.getOne(anyLong())).thenReturn(new Faculty(1L, "test"));
 
         assertEquals("test", facultyService.findById(1L).getName());
         verifyNoMoreInteractions(facultyRepository);
