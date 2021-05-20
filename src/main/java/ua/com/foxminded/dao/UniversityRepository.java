@@ -1,10 +1,9 @@
 package ua.com.foxminded.dao;
 
-import ua.com.foxminded.domain.entity.Audience;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+import ua.com.foxminded.domain.entity.University;
 
-import java.util.List;
-
-public interface UniversityRepository {
-
-    public List<Audience> findAllAudiences();
+@Repository
+public interface UniversityRepository extends JpaRepository<University, Long> {
 }
