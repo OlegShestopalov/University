@@ -17,7 +17,6 @@ import java.util.Properties;
 @Configuration
 @ComponentScan("ua.com.foxminded")
 @EnableTransactionManagement
-
 public class SpringConfig implements WebMvcConfigurer {
 
     @Bean

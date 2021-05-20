@@ -2,14 +2,10 @@ package ua.com.foxminded.dao;
 
 import org.hibernate.Hibernate;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.jdbc.Sql;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
-import org.springframework.test.context.support.AnnotationConfigContextLoader;
-import ua.com.foxminded.config.SpringConfig;
 import ua.com.foxminded.domain.entity.Group;
 import ua.com.foxminded.domain.entity.Student;
 
@@ -17,8 +13,7 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-@ExtendWith(SpringExtension.class)
-@ContextConfiguration(classes = SpringConfig.class, loader = AnnotationConfigContextLoader.class)
+@SpringBootTest
 @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = {"/scripts/schema.sql", "/scripts/data.sql"})
 @ActiveProfiles("test")
 public class StudentRepositoryTest {
@@ -78,10 +73,11 @@ public class StudentRepositoryTest {
 
     @Test
     void findStudentByName() {
-//        Student student = studentDAO.findByName("Student3");
-//
-//        assertEquals("Student3", student.getName());
-//        assertTrue(true, student.getName());
+        Group group = groupRepository.findById(1L);
+        Student student = new Student(1L, group, "Student1", "Student1", "Male", 20, "student1@gmail.com");
+        Student studentInDB = studentRepository.findByName("Student1");
+
+        assertEquals(student, Hibernate.unproxy(studentInDB));
     }
 
     @Test

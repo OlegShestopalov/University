@@ -47,10 +47,6 @@
 
 <div class="container">
   <form class="row g-3" th:action="@{/teachers/new}" th:object="${teacher}" th:method="POST">
-    <div class="col-md-12">
-      <label for="id" class="form-label">ID:</label>
-      <input type="number" class="form-control" th:field="*{id}" id="id" placeholder="teacher id">
-    </div>
     <div class="col-md-6">
       <label for="name" class="form-label">Name:</label>
       <input type="text" class="form-control" th:field="*{name}" id="name" placeholder="name">
@@ -69,24 +65,6 @@
     </div>
   </form>
 </div>
-
-
-<!--<form class="p-1" th:action="@{/teachers/new}" th:object="${teacher}" th:method="POST">-->
-<!--    <label for="id">Enter id: </label>-->
-<!--    <input type="number" th:field="*{id}" id="id">-->
-<!--    </br>-->
-<!--    <label for="name">Enter name: </label>-->
-<!--    <input type="text" th:field="*{name}" id="name">-->
-<!--    </br>-->
-<!--    <label for="surname">Enter surname: </label>-->
-<!--    <input type="text" th:field="*{surname}" id="surname">-->
-<!--    </br>-->
-<!--    <label for="email">Enter email: </label>-->
-<!--    <input type="text" th:field="*{email}" id="email">-->
-
-<!--    <br/>-->
-<!--    <input class="btn btn-outline-dark" type="submit" value="Create">-->
-<!--</form>-->
 
 </body>
 </html>

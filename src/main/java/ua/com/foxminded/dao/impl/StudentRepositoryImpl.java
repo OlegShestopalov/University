@@ -6,14 +6,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
 import ua.com.foxminded.dao.StudentRepository;
 import ua.com.foxminded.domain.entity.Student;
 
 import java.util.List;
 
 @Repository
-@Transactional
 public class StudentRepositoryImpl implements StudentRepository {
 
     private final SessionFactory sessionFactory;
@@ -83,13 +81,24 @@ public class StudentRepositoryImpl implements StudentRepository {
 
     @Override
     public Student findByName(String name) {
-        return  null;
+        Session session = this.sessionFactory.openSession();
+        session.beginTransaction();
+
+        Student student = (Student) session.createQuery("from Student where name=:name").setParameter("name", name).getSingleResult();
+        LOGGER.info("Student was successfully found by name. Student details: {}", student);
+        return student;
     }
 
-    //    @SuppressWarnings("unchecked")
+    @SuppressWarnings("unchecked")
     @Override
     public List<Student> findAllStudentsInGroup(Long id) {
-        return null;
+        Session session = this.sessionFactory.openSession();
+        session.beginTransaction();
+        List<Student> students = session.createQuery("from Student where group=:id").setParameter("group", id).list();
+        session.getTransaction().commit();
+        session.close();
+
+        return students;
     }
 
     //    @SuppressWarnings("unchecked")

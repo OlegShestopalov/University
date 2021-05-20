@@ -47,11 +47,7 @@
 
 <div class="container">
   <form class="row g-3" th:action="@{/students/new}" th:object="${student}" th:method="POST">
-    <div class="col-6">
-      <label for="id" class="form-label">ID:</label>
-      <input type="number" class="form-control" th:field="*{id}" id="id" placeholder="student id">
-    </div>
-    <div class="col-6">
+    <div class="col-12">
       <label for="group" class="form-label">Group ID:</label>
       <input type="number" class="form-control" th:field="*{group.id}" id="group" placeholder="group id">
     </div>
@@ -81,44 +77,6 @@
     </div>
   </form>
 </div>
-
-
-
-
-
-
-
-
-
-
-
-<!--<div class="p-1">-->
-<!--  <form th:action="@{/students/new}" th:object="${student}" th:method="POST">-->
-<!--    <label for="id">Enter id: </label>-->
-<!--    <input type="number" th:field="*{id}" id="id">-->
-<!--    </br>-->
-<!--    <label for="group">Enter group ID: </label>-->
-<!--    <input type="number" th:field="*{group.id}" id="group">-->
-<!--    </br>-->
-<!--    <label for="name">Enter name: </label>-->
-<!--    <input type="text" th:field="*{name}" id="name">-->
-<!--    </br>-->
-<!--    <label for="surname">Enter surname: </label>-->
-<!--    <input type="text" th:field="*{surname}" id="surname">-->
-<!--    </br>-->
-<!--    <label for="sex">Enter sex: </label>-->
-<!--    <input type="text" th:field="*{sex}" id="sex">-->
-<!--    </br>-->
-<!--    <label for="age">Enter age: </label>-->
-<!--    <input type="number" th:field="*{age}" id="age">-->
-<!--    </br>-->
-<!--    <label for="email">Enter email: </label>-->
-<!--    <input type="text" th:field="*{email}" id="email">-->
-<!--    <br/>-->
-
-<!--    <input class="btn btn-outline-dark" type="submit" value="Create">-->
-<!--  </form>-->
-<!--</div>-->
 
 </body>
 </html>

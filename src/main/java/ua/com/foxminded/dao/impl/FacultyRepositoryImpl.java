@@ -6,14 +6,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
 import ua.com.foxminded.dao.FacultyRepository;
 import ua.com.foxminded.domain.entity.Faculty;
 
 import java.util.List;
 
 @Repository
-@Transactional
 public class FacultyRepositoryImpl implements FacultyRepository {
 
     private final SessionFactory sessionFactory;
