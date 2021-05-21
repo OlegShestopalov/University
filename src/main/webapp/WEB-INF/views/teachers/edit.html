@@ -33,6 +33,7 @@
       <div class="navbar-nav">
         <a class="nav-link" href="/home">Home</a>
         <a class="nav-link" href="/faculties/menu">Faculties</a>
+        <a class="nav-link" href="/groups/menu">Groups</a>
         <a class="nav-link active" aria-current="page" href="/teachers/menu">Teachers</a>
         <a class="nav-link" href="/students/menu">Students</a>
       </div>
@@ -47,6 +48,10 @@
 
 <div class="container">
   <form class="row g-3" th:action="@{/teachers/{id}(id=${teacher.getId()})}" th:object="${teacher}" th:method="POST">
+    <div class="col-md-12">
+      <label for="id" class="form-label">ID:</label>
+      <input readonly type="number" class="form-control" th:field="*{id}" id="id">
+    </div>
     <div class="col-md-6">
       <label for="name" class="form-label">Name:</label>
       <input type="text" class="form-control" th:field="*{name}" id="name" placeholder="name">

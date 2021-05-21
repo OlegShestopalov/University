@@ -32,7 +32,7 @@ public class GroupRepositoryTest {
 
     @Test
     void createGroup() {
-        Faculty faculty = facultyRepository.findById(1L);
+        Faculty faculty = facultyRepository.getOne(1L);
         Course course = courseRepository.findById(1L);
         Group group = new Group("TEST", faculty, course);
         groupRepository.create(group);
@@ -51,7 +51,7 @@ public class GroupRepositoryTest {
 
     @Test
     void updateGroup() {
-        Faculty faculty = facultyRepository.findById(1L);
+        Faculty faculty = facultyRepository.getOne(1L);
         Course course = courseRepository.findById(1L);
         Group newGroup = new Group(1L, "TEST", faculty, course);
         groupRepository.update(newGroup);
@@ -69,19 +69,11 @@ public class GroupRepositoryTest {
 
     @Test
     void findGroupById() {
-        Faculty faculty = facultyRepository.findById(1L);
+        Faculty faculty = facultyRepository.getOne(1L);
         Course course = courseRepository.findById(1L);
         Group group = new Group(1L, "AAAA", faculty, course);
         Group groupInDB = groupRepository.findById(1L);
 
         assertEquals(group, Hibernate.unproxy(groupInDB));
-    }
-
-    @Test
-    void findAllGroupsInFaculty() {
-//        List<Group> groups = groupDAO.findAllGroupsInFaculty(1L);
-//
-//        assertEquals(1, groups.size());
-//        assertEquals("AAAA", groups.get(0).getName());
     }
 }

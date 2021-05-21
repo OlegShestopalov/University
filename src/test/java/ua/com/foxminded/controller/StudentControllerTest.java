@@ -19,7 +19,6 @@ import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.instanceOf;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.atLeastOnce;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.times;
@@ -119,7 +118,7 @@ public class StudentControllerTest {
 
     @Test
     void updateStudent() throws Exception {
-        doNothing().when(studentService).update(anyLong(), any(Student.class));
-        assertEquals(studentController.update(students.get(0), students.get(0).getId()), "redirect:/students/allStudents");
+        doNothing().when(studentService).create(any(Student.class));
+        assertEquals(studentController.update(students.get(0)), "redirect:/students/allStudents");
     }
 }

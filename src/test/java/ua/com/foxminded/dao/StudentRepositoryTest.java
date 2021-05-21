@@ -31,16 +31,18 @@ public class StudentRepositoryTest {
     void createStudent() {
         Group group = groupRepository.findById(1L);
         Student student = new Student(group, "Student4", "Student4", "Male", 20, "student4@gmail.com");
-        studentRepository.create(student);
-        Student createdStudent = studentRepository.findById(student.getId());
+
+        studentRepository.save(student);
+        Student createdStudent = studentRepository.getOne(student.getId());
 
         assertEquals(student, Hibernate.unproxy(createdStudent));
     }
 
     @Test
     void deleteStudent() {
-        Student studentToBeDeleted = studentRepository.findById(1L);
-        studentRepository.delete(studentToBeDeleted.getId());
+        Student studentToBeDeleted = studentRepository.getOne(1L);
+
+        studentRepository.deleteById(studentToBeDeleted.getId());
 
         assertEquals(2, studentRepository.findAll().size());
     }
@@ -49,8 +51,9 @@ public class StudentRepositoryTest {
     void updateStudent() {
         Group group = groupRepository.findById(1L);
         Student newStudent = new Student(1L, group, "UpdatedStudent", "UpdatedStudent", "Male", 25, "UpdatedStudent@gmail.com");
-        studentRepository.update(newStudent);
-        Student updatedStudent = studentRepository.findById(1L);
+
+        studentRepository.save(newStudent);
+        Student updatedStudent = studentRepository.getOne(1L);
 
         assertEquals(newStudent, Hibernate.unproxy(updatedStudent));
     }
@@ -66,32 +69,9 @@ public class StudentRepositoryTest {
     void findStudentById() {
         Group group = groupRepository.findById(1L);
         Student student = new Student(1L, group, "Student1", "Student1", "Male", 20, "student1@gmail.com");
-        Student studentInDb = studentRepository.findById(1L);
+
+        Student studentInDb = studentRepository.getOne(1L);
 
         assertEquals(student, Hibernate.unproxy(studentInDb));
-    }
-
-    @Test
-    void findStudentByName() {
-        Group group = groupRepository.findById(1L);
-        Student student = new Student(1L, group, "Student1", "Student1", "Male", 20, "student1@gmail.com");
-        Student studentInDB = studentRepository.findByName("Student1");
-
-        assertEquals(student, Hibernate.unproxy(studentInDB));
-    }
-
-    @Test
-    void findAllStudentsInGroup() {
-//        List<Student> students = studentDAO.findAllStudentsInGroup(1L);
-//
-//        assertEquals(1, students.size());
-//        assertEquals("Student1", students.get(0).getName());
-    }
-
-    @Test
-    void findAllEmailsInGroup() {
-//        List<Student> catalogEmails = studentDAO.findAllEmailsInGroup(1L);
-//
-//        assertEquals(1, catalogEmails.size());
     }
 }

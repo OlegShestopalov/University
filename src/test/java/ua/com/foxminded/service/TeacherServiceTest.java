@@ -34,7 +34,7 @@ public class TeacherServiceTest {
 
         teacherService.create(teacher);
 
-        verify(teacherRepository, times(1)).create(teacher);
+        verify(teacherRepository, times(1)).save(teacher);
         verifyNoMoreInteractions(teacherRepository);
     }
 
@@ -43,16 +43,16 @@ public class TeacherServiceTest {
         Teacher teacher = new Teacher(1L, "test", "test", "test@gmail.com");
         teacherService.delete(1L);
 
-        verify(teacherRepository, times(1)).delete(teacher.getId());
+        verify(teacherRepository, times(1)).deleteById(teacher.getId());
     }
 
     @Test
     void updateTeacher() {
         Teacher teacher = new Teacher(1L, "test", "test", "test@gmail.com");
 
-        teacherService.update(1L, teacher);
+        teacherService.create(teacher);
 
-        verify(teacherRepository, times(1)).update(teacher);
+        verify(teacherRepository, times(1)).save(teacher);
         verifyNoMoreInteractions(teacherRepository);
     }
 
@@ -72,40 +72,11 @@ public class TeacherServiceTest {
 
     @Test
     void whenInputIdItShouldReturnTeacherById() {
-        when(teacherRepository.findById(anyLong())).thenReturn(new Teacher(1L, "test", "test", "test@gmail.com"));
+        when(teacherRepository.getOne(anyLong())).thenReturn(new Teacher(1L, "test", "test", "test@gmail.com"));
 
         assertEquals("test", teacherService.findById(1L).getName());
         assertEquals("test", teacherService.findById(1L).getSurname());
         assertEquals("test@gmail.com", teacherService.findById(1L).getEmail());
-        verifyNoMoreInteractions(teacherRepository);
-    }
-
-    @Test
-    void findTeachersBySubject() {
-        Teacher one = new Teacher(1L, "teacher1", "teacher1", "teacher1@gmail.com");
-        Teacher two = new Teacher(2L, "teacher2", "teacher2", "teacher2@gmail.com");
-        Teacher three = new Teacher(3L, "teacher3", "teacher3", "teacher3@gmail.com");
-
-        when(teacherRepository.findAllTeachersBySubjectId(anyLong())).thenReturn(Stream.of(one, two, three).collect(Collectors.toList()));
-
-        assertEquals(3, teacherService.findTeachersBySubject(anyLong()).size());
-        assertEquals(one, teacherService.findTeachersBySubject(anyLong()).get(0));
-        assertEquals(two, teacherService.findTeachersBySubject(anyLong()).get(1));
-        verifyNoMoreInteractions(teacherRepository);
-    }
-
-    @Test
-    void findTeachersInFaculty() {
-        Teacher one = new Teacher(1L, "teacher1", "teacher1", "teacher1@gmail.com");
-        Teacher two = new Teacher(2L, "teacher2", "teacher2", "teacher2@gmail.com");
-        Teacher three = new Teacher(3L, "teacher3", "teacher3", "teacher3@gmail.com");
-
-        when(teacherRepository.findAllTeachersInFaculty(anyLong())).thenReturn(Stream.of(one, two, three).collect(Collectors.toList()));
-
-        assertEquals(3, teacherService.findTeachersInFaculty(anyLong()).size());
-        assertEquals(one, teacherService.findTeachersInFaculty(anyLong()).get(0));
-        assertEquals(two, teacherService.findTeachersInFaculty(anyLong()).get(1));
-        assertEquals(three, teacherService.findTeachersInFaculty(anyLong()).get(2));
         verifyNoMoreInteractions(teacherRepository);
     }
 }

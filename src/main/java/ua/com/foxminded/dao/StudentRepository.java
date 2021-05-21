@@ -1,16 +1,9 @@
 package ua.com.foxminded.dao;
 
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 import ua.com.foxminded.domain.entity.Student;
 
-import java.util.List;
-
-public interface StudentRepository extends GenericRepository<Student> {
-
-    public Student findByName(final String name);
-
-    public List<Student> findAllStudentsInGroup(final Long id);
-
-    public List<Student> findAllEmailsInGroup(final Long id);
-
-
+@Repository
+public interface StudentRepository extends JpaRepository<Student, Long> {
 }

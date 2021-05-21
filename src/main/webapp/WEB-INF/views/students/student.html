@@ -32,6 +32,7 @@
       <div class="navbar-nav">
         <a class="nav-link" href="/home">Home</a>
         <a class="nav-link" href="/faculties/menu">Faculties</a>
+        <a class="nav-link" href="/groups/menu">Groups</a>
         <a class="nav-link" href="/teachers/menu">Teachers</a>
         <a class="nav-link active" aria-current="page" href="/students/menu">Students</a>
       </div>
@@ -44,14 +45,37 @@
   <a class="btn btn-outline-dark" href="/students/new" role="button">New student</a>
 </div>
 
-<div class="p-1">
-  <p th:text="${student.getId()}">value</p>
-  <p th:text="${student.getGroup().name}">value</p>
-  <p th:text="${student.getName()}">value</p>
-  <p th:text="${student.getSurname()}">value</p>
-  <p th:text="${student.getSex()}">value</p>
-  <p th:text="${student.getAge()}">value</p>
-  <p th:text="${student.getEmail()}">value</p>
+<div class="p-5" >
+  <table class="table" >
+    <tr>
+      <td>ID</td>
+      <td th:text="${student.getId()}">value</td>
+    </tr>
+    <tr>
+      <td>Group</td>
+      <td th:text="${student.getGroup().name}">value</td>
+    </tr>
+    <tr>
+      <td>Name</td>
+      <td th:text="${student.getName()}">value</td>
+    </tr>
+    <tr>
+      <td>Surname</td>
+      <td th:text="${student.getSurname()}">value</td>
+    </tr>
+    <tr>
+      <td>Sex</td>
+      <td th:text="${student.getSex()}">value</td>
+    </tr>
+    <tr>
+      <td>Age</td>
+      <td th:text="${student.getAge()}">value</td>
+    </tr>
+    <tr>
+      <td>Email</td>
+      <td th:text="${student.getEmail()}">value</td>
+    </tr>
+  </table>
 </div>
 
 <div class="p-1">

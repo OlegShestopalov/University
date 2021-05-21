@@ -32,6 +32,7 @@
       <div class="navbar-nav">
         <a class="nav-link" href="/home">Home</a>
         <a class="nav-link" href="/faculties/menu">Faculties</a>
+        <a class="nav-link" href="/groups/menu">Groups</a>
         <a class="nav-link active" aria-current="page" href="/teachers/menu">Teachers</a>
         <a class="nav-link" href="/students/menu">Students</a>
       </div>
@@ -44,11 +45,25 @@
   <a class="btn btn-outline-dark" href="/teachers/new" role="button">New teacher</a>
 </div>
 
-<div class="p-1">
-  <p th:text="${teacher.getId()}">value</p>
-  <p th:text="${teacher.getName()}">value</p>
-  <p th:text="${teacher.getSurname()}">value</p>
-  <p th:text="${teacher.getEmail()}">value</p>
+<div class="p-5" >
+  <table class="table" >
+    <tr>
+      <td>ID</td>
+      <td th:text="${teacher.getId()}">value</td>
+    </tr>
+    <tr>
+      <td>Name</td>
+      <td th:text="${teacher.getName()}">value</td>
+    </tr>
+    <tr>
+      <td>Surname</td>
+      <td th:text="${teacher.getSurname()}">value</td>
+    </tr>
+    <tr>
+      <td>Email</td>
+      <td th:text="${teacher.getEmail()}">value</td>
+    </tr>
+  </table>
 </div>
 
 <div class="p-1">

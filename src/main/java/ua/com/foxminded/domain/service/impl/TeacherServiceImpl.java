@@ -22,17 +22,12 @@ public class TeacherServiceImpl implements TeacherService {
 
     @Override
     public void create(Teacher teacher) {
-        teacherRepository.create(teacher);
+        teacherRepository.save(teacher);
     }
 
     @Override
     public void delete(Long id) {
-        teacherRepository.delete(id);
-    }
-
-    @Override
-    public void update(Long id, Teacher teacher) {
-        teacherRepository.update(teacher);
+        teacherRepository.deleteById(id);
     }
 
     @Override
@@ -42,16 +37,6 @@ public class TeacherServiceImpl implements TeacherService {
 
     @Override
     public Teacher findById(Long id) {
-        return teacherRepository.findById(id);
-    }
-
-    @Override
-    public List<Teacher> findTeachersBySubject(Long id) {
-        return teacherRepository.findAllTeachersBySubjectId(id);
-    }
-
-    @Override
-    public List<Teacher> findTeachersInFaculty(Long id) {
-        return teacherRepository.findAllTeachersInFaculty(id);
+        return teacherRepository.getOne(id);
     }
 }

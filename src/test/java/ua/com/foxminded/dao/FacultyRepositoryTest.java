@@ -27,16 +27,18 @@ public class FacultyRepositoryTest {
     @Test
     void createFaculty() {
         Faculty faculty = new Faculty("TEST");
-        facultyRepository.create(faculty);
-        Faculty createdFaculty = facultyRepository.findById(faculty.getId());
+
+        facultyRepository.save(faculty);
+        Faculty createdFaculty = facultyRepository.getOne(faculty.getId());
 
         assertEquals(faculty, Hibernate.unproxy(createdFaculty));
     }
 
     @Test
     void deleteFaculty() {
-        Faculty facultyToBeDeleted = facultyRepository.findById(1L);
-        facultyRepository.delete(facultyToBeDeleted.getId());
+        Faculty facultyToBeDeleted = facultyRepository.getOne(1L);
+
+        facultyRepository.deleteById(facultyToBeDeleted.getId());
 
         assertEquals(2, facultyRepository.findAll().size());
     }
@@ -44,8 +46,9 @@ public class FacultyRepositoryTest {
     @Test
     void updateFaculty() {
         Faculty newFaculty = new Faculty(1L, "UpdatedFaculty");
-        facultyRepository.update(newFaculty);
-        Faculty updatedFaculty = facultyRepository.findById(1L);
+
+        facultyRepository.save(newFaculty);
+        Faculty updatedFaculty = facultyRepository.getOne(1L);
 
         assertEquals(newFaculty, Hibernate.unproxy(updatedFaculty));
     }
@@ -60,22 +63,9 @@ public class FacultyRepositoryTest {
     @Test
     void findFacultyById() {
         Faculty faculty = new Faculty(1L, "Electronics");
-        Faculty facultyInDB = facultyRepository.findById(1L);
+
+        Faculty facultyInDB = facultyRepository.getOne(1L);
 
         assertEquals(faculty, Hibernate.unproxy(facultyInDB));
-    }
-
-    @Test
-    void findAllFacultiesBySubjectId() {
-//        List<Faculty> faculties = facultyDAO.findAllFacultiesBySubjectId(1L);
-//
-//        assertEquals(1, faculties.size());
-    }
-
-    @Test
-    void findAllFacultiesByTeacherId() {
-//        List<Faculty> faculties = facultyDAO.findAllFacultiesByTeacherId(1L);
-//
-//        assertEquals(1, faculties.size());
     }
 }
