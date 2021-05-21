@@ -62,8 +62,8 @@ public class StudentServiceTest {
     @Test
     void whenAddNewStudentsItShouldReturnAllStudents() {
         Student one = new Student(1L, group, "test", "test", "Male", 20, "test@gmail.com");
-        Student two = new Student(1L, group, "test", "test", "Male", 20, "test@gmail.com");
-        Student three = new Student(1L, group, "test", "test", "Male", 20, "test@gmail.com");
+        Student two = new Student(2L, group, "test", "test", "Male", 20, "test@gmail.com");
+        Student three = new Student(3L, group, "test", "test", "Male", 20, "test@gmail.com");
 
         when(studentRepository.findAll()).thenReturn(Stream.of(one, two, three).collect(Collectors.toList()));
 

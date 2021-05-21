@@ -3,7 +3,7 @@ package ua.com.foxminded.dao;
 import org.hibernate.Hibernate;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
 import ua.com.foxminded.domain.entity.Faculty;
@@ -12,7 +12,7 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-@SpringBootTest
+@DataJpaTest
 @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = {"/scripts/schema.sql", "/scripts/data.sql"})
 @ActiveProfiles("test")
 public class FacultyRepositoryTest {
@@ -27,17 +27,15 @@ public class FacultyRepositoryTest {
     @Test
     void createFaculty() {
         Faculty faculty = new Faculty("TEST");
-
         facultyRepository.save(faculty);
         Faculty createdFaculty = facultyRepository.getOne(faculty.getId());
 
-        assertEquals(faculty, Hibernate.unproxy(createdFaculty));
+        assertEquals(faculty, createdFaculty);
     }
 
     @Test
     void deleteFaculty() {
         Faculty facultyToBeDeleted = facultyRepository.getOne(1L);
-
         facultyRepository.deleteById(facultyToBeDeleted.getId());
 
         assertEquals(2, facultyRepository.findAll().size());
@@ -46,11 +44,10 @@ public class FacultyRepositoryTest {
     @Test
     void updateFaculty() {
         Faculty newFaculty = new Faculty(1L, "UpdatedFaculty");
-
         facultyRepository.save(newFaculty);
         Faculty updatedFaculty = facultyRepository.getOne(1L);
 
-        assertEquals(newFaculty, Hibernate.unproxy(updatedFaculty));
+        assertEquals(newFaculty, updatedFaculty);
     }
 
     @Test
@@ -63,7 +60,6 @@ public class FacultyRepositoryTest {
     @Test
     void findFacultyById() {
         Faculty faculty = new Faculty(1L, "Electronics");
-
         Faculty facultyInDB = facultyRepository.getOne(1L);
 
         assertEquals(faculty, Hibernate.unproxy(facultyInDB));
