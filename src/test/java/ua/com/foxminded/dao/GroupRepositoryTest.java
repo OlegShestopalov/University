@@ -3,7 +3,7 @@ package ua.com.foxminded.dao;
 import org.hibernate.Hibernate;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
 import ua.com.foxminded.domain.entity.Course;
@@ -14,7 +14,7 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-@SpringBootTest
+@DataJpaTest
 @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = {"/scripts/schema.sql", "/scripts/data.sql"})
 @ActiveProfiles("test")
 public class GroupRepositoryTest {
@@ -33,29 +33,29 @@ public class GroupRepositoryTest {
     @Test
     void createGroup() {
         Faculty faculty = facultyRepository.getOne(1L);
-        Course course = courseRepository.findById(1L);
+        Course course = courseRepository.getOne(1L);
         Group group = new Group("TEST", faculty, course);
-        groupRepository.create(group);
-        Group createdGroup = groupRepository.findById(group.getId());
+        groupRepository.save(group);
+        Group createdGroup = groupRepository.getOne(group.getId());
 
         assertEquals(group, Hibernate.unproxy(createdGroup));
     }
 
     @Test
     void deleteGroup() {
-        Group groupToBeDeleted = groupRepository.findById(1L);
-        groupRepository.delete(groupToBeDeleted.getId());
+        Group groupToBeDeleted = groupRepository.getOne(1L);
+        groupRepository.deleteById(groupToBeDeleted.getId());
 
         assertEquals(2, groupRepository.findAll().size());
     }
 
     @Test
     void updateGroup() {
-        Faculty faculty = facultyRepository.getOne(1L);
-        Course course = courseRepository.findById(1L);
+        Faculty faculty = new Faculty(1L, "Electronics");
+        Course course = new Course(1L, "first");
         Group newGroup = new Group(1L, "TEST", faculty, course);
-        groupRepository.update(newGroup);
-        Group updatedGroup = groupRepository.findById(1L);
+        groupRepository.save(newGroup);
+        Group updatedGroup = groupRepository.getOne(1L);
 
         assertEquals(newGroup, Hibernate.unproxy(updatedGroup));
     }
@@ -69,10 +69,10 @@ public class GroupRepositoryTest {
 
     @Test
     void findGroupById() {
-        Faculty faculty = facultyRepository.getOne(1L);
-        Course course = courseRepository.findById(1L);
+        Faculty faculty = new Faculty(1L, "Electronics");
+        Course course = new Course(1L, "first");
         Group group = new Group(1L, "AAAA", faculty, course);
-        Group groupInDB = groupRepository.findById(1L);
+        Group groupInDB = groupRepository.getOne(1L);
 
         assertEquals(group, Hibernate.unproxy(groupInDB));
     }
