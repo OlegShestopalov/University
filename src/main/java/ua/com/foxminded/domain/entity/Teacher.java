@@ -6,6 +6,10 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.Size;
 import java.util.Objects;
 
 @Entity
@@ -15,11 +19,20 @@ public class Teacher {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     @Column(name = "name")
+    @NotBlank(message = "{not.empty}")
+    @Size(min = 2, max = 30, message = "{range.size}")
     private String name;
+
     @Column(name = "surname")
+    @NotBlank(message = "{not.empty}")
+    @Size(min = 2, max = 30, message = "{range.size}")
     private String surname;
+
     @Column(name = "email")
+    @NotEmpty(message = "{not.empty}")
+    @Email(message = "{valid.email}")
     private String email;
 
     public Teacher() {

@@ -6,6 +6,9 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.util.Objects;
 
 @Entity
@@ -14,8 +17,12 @@ public class Faculty {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @NotNull(message = "{not.null}")
+    @Min(value = 1, message = "{min.id}")
     private Long id;
+
     @Column(name = "name")
+    @Size(min = 2, max = 30, message = "{range.size}")
     private String name;
 
     public Faculty() {
