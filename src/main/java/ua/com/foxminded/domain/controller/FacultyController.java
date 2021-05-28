@@ -3,6 +3,7 @@ package ua.com.foxminded.domain.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -10,6 +11,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import ua.com.foxminded.domain.entity.Faculty;
 import ua.com.foxminded.domain.service.FacultyService;
+
+import javax.validation.Valid;
 
 @Controller
 @RequestMapping("/faculties")
@@ -45,7 +48,10 @@ public class FacultyController {
     }
 
     @PostMapping("/new")
-    public String create(@ModelAttribute("faculty") Faculty faculty) {
+    public String create(@ModelAttribute("faculty") @Valid Faculty faculty, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            return "faculties/new";
+        }
         facultyService.create(faculty);
         return "redirect:/faculties/allFaculties";
     }
@@ -57,7 +63,10 @@ public class FacultyController {
     }
 
     @PostMapping("/{id}")
-    public String update(Faculty faculty) {
+    public String update(@Valid Faculty faculty, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            return "faculties/edit";
+        }
         facultyService.create(faculty);
         return "redirect:/faculties/allFaculties";
     }

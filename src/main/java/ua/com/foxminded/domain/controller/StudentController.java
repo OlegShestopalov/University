@@ -3,6 +3,7 @@ package ua.com.foxminded.domain.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -10,6 +11,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import ua.com.foxminded.domain.entity.Student;
 import ua.com.foxminded.domain.service.StudentService;
+
+import javax.validation.Valid;
 
 @Controller
 @RequestMapping("/students")
@@ -45,7 +48,10 @@ public class StudentController {
     }
 
     @PostMapping("/new")
-    public String create(@ModelAttribute("student") Student student) {
+    public String create(@ModelAttribute("student") @Valid Student student, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            return "students/new";
+        }
         studentService.create(student);
         return "redirect:/students/allStudents";
     }
@@ -57,7 +63,10 @@ public class StudentController {
     }
 
     @PostMapping("/{id}")
-    public String update(Student student) {
+    public String update(@Valid Student student, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            return "students/edit";
+        }
         studentService.create(student);
         return "redirect:/students/allStudents";
     }
