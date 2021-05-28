@@ -51,14 +51,28 @@
     <div class="col-md-12">
       <label for="name" class="form-label">Name:</label>
       <input type="text" class="form-control" th:field="*{name}" id="name" placeholder="name">
+      <div style="color: #ea7474" th:if="${#fields.hasErrors('name')}" th:errors="*{name}">Name error</div>
     </div>
-    <div class="col-12">
-      <label for="faculty" class="form-label">Faculty ID:</label>
-      <input type="number" class="form-control" th:field="*{faculty.id}" id="faculty" placeholder="faculty id">
+    <div class="col-6">
+      <label for="faculty" class="form-label">Faculty:</label>
+      <select class="form-select" th:field="*{faculty.id}" id="faculty" required aria-label="select example">
+        <option value="">Choose...</option>
+        <option value="1">Electronics</option>
+        <option value="2">Programming</option>
+        <option value="3">Psychology</option>
+      </select>
     </div>
-    <div class="col-12">
-      <label for="course" class="form-label">Course ID:</label>
-      <input type="number" class="form-control" th:field="*{course.id}" id="course" placeholder="course id">
+    <div class="col-6">
+      <label for="course" class="form-label">Course:</label>
+      <select class="form-select" th:field="*{course.id}" id="course" required aria-label="select example">
+        <option value="">Choose...</option>
+        <option value="1">first</option>
+        <option value="2">second</option>
+        <option value="3">third</option>
+        <option value="4">fourth</option>
+        <option value="5">fifth</option>
+        <option value="6">sixth</option>
+      </select>
     </div>
 
     <div class="col-12">

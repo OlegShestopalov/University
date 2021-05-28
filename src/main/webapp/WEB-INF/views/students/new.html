@@ -51,26 +51,35 @@
     <div class="col-12">
       <label for="group" class="form-label">Group ID:</label>
       <input type="number" class="form-control" th:field="*{group.id}" id="group" placeholder="group id">
+      <div style="color: #ea7474" th:if="${#fields.hasErrors('group.id')}" th:errors="*{group.id}">Group error</div>
     </div>
     <div class="col-md-6">
       <label for="name" class="form-label">Name:</label>
       <input type="text" class="form-control" th:field="*{name}" id="name" placeholder="name">
+      <div style="color: #ea7474" th:if="${#fields.hasErrors('name')}" th:errors="*{name}">Name error</div>
     </div>
     <div class="col-md-6">
       <label for="surname" class="form-label">Surname:</label>
       <input type="text" class="form-control" th:field="*{surname}" id="surname" placeholder="surname">
+      <div style="color: #ea7474" th:if="${#fields.hasErrors('surname')}" th:errors="*{surname}">Surname error</div>
     </div>
-    <div class="col-md-6">
-      <label for="sex" class="form-label">Sex:</label>
-      <input type="text" class="form-control" th:field="*{sex}" id="sex" placeholder="Male/Female">
+    <div class="col-6">
+      <label for="sex" class="form-label">Gender:</label>
+      <select class="form-select" th:field="*{sex}" id="sex" required aria-label="select example">
+        <option value="">Choose...</option>
+        <option value="Male">Male</option>
+        <option value="Female">Female</option>
+      </select>
     </div>
     <div class="col-6">
       <label for="age" class="form-label">Age:</label>
       <input type="number" class="form-control" th:field="*{age}" id="age" placeholder="age">
+      <div style="color: #ea7474" th:if="${#fields.hasErrors('age')}" th:errors="*{age}">Age error</div>
     </div>
     <div class="col-md-12">
       <label for="email" class="form-label">Email:</label>
       <input type="email" class="form-control" th:field="*{email}" id="email">
+      <div style="color: #ea7474" th:if="${#fields.hasErrors('email')}" th:errors="*{email}">Email error</div>
     </div>
 
     <div class="col-12">
