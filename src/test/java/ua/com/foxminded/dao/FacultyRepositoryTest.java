@@ -26,7 +26,7 @@ public class FacultyRepositoryTest {
 
     @Test
     void createFaculty() {
-        Faculty faculty = new Faculty("TEST");
+        Faculty faculty = new Faculty(1L, "TEST");
         facultyRepository.save(faculty);
         Faculty createdFaculty = facultyRepository.getOne(faculty.getId());
 

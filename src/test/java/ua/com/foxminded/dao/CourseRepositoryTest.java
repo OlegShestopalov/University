@@ -26,7 +26,7 @@ public class CourseRepositoryTest {
 
     @Test
     void createCourse() {
-        Course course = new Course("TEST");
+        Course course = new Course(1L, "TEST");
         courseRepository.save(course);
         Course createdCourse = courseRepository.getOne(course.getId());
 
