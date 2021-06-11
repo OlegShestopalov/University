@@ -26,7 +26,7 @@ public class SubjectRepositoryTest {
 
     @Test
     void createSubject() {
-        Subject subject = new Subject("TEST", "TEST");
+        Subject subject = new Subject(1L, "TEST", "TEST");
         subjectRepository.save(subject);
         Subject createdSubject = subjectRepository.getOne(subject.getId());
 

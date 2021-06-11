@@ -2,22 +2,26 @@ package ua.com.foxminded.controller;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import ua.com.foxminded.domain.controller.TeacherController;
+import ua.com.foxminded.domain.entity.Student;
 import ua.com.foxminded.domain.entity.Teacher;
 import ua.com.foxminded.domain.service.TeacherService;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.instanceOf;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.atLeastOnce;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.times;
@@ -25,24 +29,25 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
+@SpringBootTest
 public class TeacherControllerTest {
 
     private List<Teacher> teachers;
     private MockMvc mockMvc;
 
-    @Mock
+    @MockBean
     private TeacherService teacherService;
 
-    @InjectMocks
+    @Autowired
     private TeacherController teacherController;
 
     @BeforeEach
     public void setUp() {
-        MockitoAnnotations.initMocks(this);
         mockMvc = MockMvcBuilders
                 .standaloneSetup(teacherController)
                 .build();
@@ -58,14 +63,28 @@ public class TeacherControllerTest {
 
     @Test
     void findAllTeachers() throws Exception {
-        when(teacherService.findAll()).thenReturn(teachers);
+        int pageNumber = 1;
+        Teacher one = new Teacher(1L, "teacher1", "teacher1", "teacher1@gmail.com");
+        Page<Teacher> teachers = new PageImpl<>(Collections.singletonList(one));
+
+        when(teacherService.findAll(pageNumber)).thenReturn(teachers);
 
         mockMvc.perform(get("/teachers/allTeachers"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("teachers/allTeachers"))
+                .andExpect(model().attribute("teachers", hasSize(1)));
+    }
+
+    @Test
+    void findTeachersByName() throws Exception {
+        when(teacherService.findByPersonalData(any())).thenReturn(teachers);
+
+        mockMvc.perform(get("/teachers/search"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("teachers/teachersByName"))
                 .andExpect(model().attribute("teachers", hasSize(3)));
 
-        verify(teacherService, atLeastOnce()).findAll();
+        verify(teacherService, atLeastOnce()).findByPersonalData(any());
         verifyNoMoreInteractions(teacherService);
     }
 
@@ -116,7 +135,11 @@ public class TeacherControllerTest {
 
     @Test
     void updateTeacher() throws Exception {
-//        doNothing().when(teacherService).create(any(Teacher.class));
-//        assertEquals(teacherController.update(teachers.get(0)), "redirect:/teachers/allTeachers");
+        doNothing().when(teacherService).create(any(Teacher.class));
+
+        mockMvc.perform(post("/teachers/1"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("teachers/edit"))
+                .andExpect(model().attribute("teacher", instanceOf(Teacher.class)));
     }
 }

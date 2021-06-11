@@ -79,4 +79,15 @@ public class StudentRepositoryTest {
 
         assertEquals(student, Hibernate.unproxy(studentInDb));
     }
+
+    @Test
+    void findStudentsByPersonalData() {
+        Faculty faculty = new Faculty(1L, "Electronics");
+        Course course = new Course(1L, "first");
+        Group group = new Group(1L, "AAAA", faculty, course);
+        Student student = new Student(1L, group, "Student1", "Student1", "Male", 20, "student1@gmail.com");
+        List<Student> students = studentRepository.findByPersonalData(student.getName());
+
+        assertEquals(student, students.get(0));
+    }
 }

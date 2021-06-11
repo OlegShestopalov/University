@@ -64,4 +64,12 @@ public class FacultyRepositoryTest {
 
         assertEquals(faculty, Hibernate.unproxy(facultyInDB));
     }
+
+    @Test
+    void findByName() {
+        Faculty faculty = new Faculty(1L, "Electronics");
+        List<Faculty> faculties = facultyRepository.findByName(faculty.getName());
+        
+        assertEquals(faculty, faculties.get(0));
+    }
 }

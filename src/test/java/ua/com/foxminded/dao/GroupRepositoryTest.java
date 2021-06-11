@@ -76,4 +76,14 @@ public class GroupRepositoryTest {
 
         assertEquals(group, Hibernate.unproxy(groupInDB));
     }
+
+    @Test
+    void findByName() {
+        Faculty faculty = new Faculty(1L, "Electronics");
+        Course course = new Course(1L, "first");
+        Group group = new Group(1L, "AAAA", faculty, course);
+        List<Group> groups = groupRepository.findByName(group.getName());
+
+        assertEquals(group, groups.get(0));
+    }
 }

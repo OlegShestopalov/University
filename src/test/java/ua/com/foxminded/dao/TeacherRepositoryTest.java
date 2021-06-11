@@ -26,7 +26,7 @@ public class TeacherRepositoryTest {
 
     @Test
     void createTeacher() {
-        Teacher teacher = new Teacher("Teacher4", "Teacher4", "teacher4@gmail.com");
+        Teacher teacher = new Teacher(1L,"Teacher4", "Teacher4", "teacher4@gmail.com");
         teacherRepository.save(teacher);
         Teacher createdTeacher = teacherRepository.getOne(teacher.getId());
 
@@ -63,5 +63,13 @@ public class TeacherRepositoryTest {
         Teacher teacherInDB = teacherRepository.getOne(1L);
 
         assertEquals(teacher, Hibernate.unproxy(teacherInDB));
+    }
+
+    @Test
+    void findTeachersByPersonalData() {
+        Teacher teacher = new Teacher(1L, "Teacher1", "Teacher1", "teacher1@gmail.com");
+        List<Teacher> teachers = teacherRepository.findByPersonalData(teacher.getName());
+
+        assertEquals(teacher, teachers.get(0));
     }
 }

@@ -27,7 +27,7 @@ public class DayRepositoryTest {
 
     @Test
     void createDay() {
-        Day day = new Day(LocalDate.parse("2020-09-04"));
+        Day day = new Day(1L, LocalDate.parse("2020-09-04"));
         dayRepository.save(day);
         Day createdDay = dayRepository.getOne(day.getId());
 
