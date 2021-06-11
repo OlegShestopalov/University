@@ -18,6 +18,31 @@
 <div>&nbsp;</div>
 
 <form class="row g-3">
+  <div class="col-md-4"></div>
+
+  <form th:action="@{/teachers/search}">
+    <div class="col-md-2">
+      <input class="form-control" th:type="text" th:name="name" th:value="${name}" required
+             placeholder="enter personal data..."/>
+    </div>
+    <div class="col-auto">
+      &nbsp;
+      <input class="btn btn-outline-success" type="submit" value="Search"/>
+      &nbsp;
+      <input class="btn btn-outline-info" type="button" value="Clear" onclick="clearFilter()"/>
+    </div>
+  </form>
+
+</form>
+
+<script type="text/javascript">
+    function clearFilter() {
+        window.location = '/teachers/search';
+    }
+</script>
+<div>&nbsp;</div>
+
+<form class="row g-3">
   <div class="col-md-2"></div>
   <div class="col-md-8" th:switch="${teachers}">
     <h2 th:case="null">No teachers found!</h2>
@@ -37,14 +62,12 @@
           <td th:text="${teacher.id}"></td>
           <td th:text="${teacher.name}"></td>
           <td th:text="${teacher.surname}"></td>
-          <td th:align="center"><a class="btn btn-outline-dark" th:href="@{/teachers/{id}(id=${teacher.getId()})}">Info</a></td>
+          <td th:align="center"><a class="btn btn-outline-dark btn-" th:href="@{/teachers/{id}(id=${teacher.getId()})}">Info</a></td>
         </tr>
         </tbody>
       </table>
     </div>
   </div>
-
-  <div th:replace="pagination::pagination"></div>
 </form>
 
 </body>

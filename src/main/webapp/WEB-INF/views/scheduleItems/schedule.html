@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="navbar::header"/>
+
+<body>
+<div th:replace="navbar::menu"></div>
+
+<div class="p-5" >
+  <table class="table" >
+    <tr>
+      <td>ID</td>
+      <td th:text="${scheduleItem.getId()}">value</td>
+    </tr>
+    <tr>
+      <td>Lesson</td>
+      <td th:text="${scheduleItem.getLesson().name}">value</td>
+    </tr>
+    <tr>
+      <td>Subject</td>
+      <td th:text="${scheduleItem.getSubject().name}">value</td>
+    </tr>
+    <tr>
+      <td>Audience</td>
+      <td th:text="${scheduleItem.getAudience().number}">value</td>
+    </tr>
+    <tr>
+      <td>Day</td>
+      <td th:text="${scheduleItem.getDay().day}">value</td>
+    </tr>
+  </table>
+</div>
+
+<div class="p-1">
+  <a class="btn btn-outline-dark" th:href="@{/scheduleItems/{id}/edit(id=${scheduleItem.getId()})}">Edit</a>
+  <a class="btn btn-outline-dark" th:href="@{/scheduleItems/{id}/delete(id=${scheduleItem.getId()})}">Delete</a>
+</div>
+
+</body>
+</html>

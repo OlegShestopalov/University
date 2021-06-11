@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="navbar::header"/>
+
+<body>
+<div class="sticky">
+  <div th:replace="navbar::menu"></div>
+</div>
+
+<style>
+    .sticky {
+        position: sticky;
+        top: 0;
+        min-height: 2em;
+    }
+</style>
+
+<div>&nbsp;</div>
+
+<form class="row g-3">
+  <div class="col-md-4"></div>
+  <form th:action="@{/scheduleItems/page/}">
+    <div class="col-md-2">
+      <input class="form-control" th:type="date" th:name="day" th:value="${day}"
+             placeholder="enter day..."/>
+    </div>
+
+    <div class="col-auto">
+      &nbsp;
+      <input th:formaction="@{/scheduleItems/page/1}" class="btn btn-outline-success" type="submit" value="Search"/>
+      &nbsp;
+      <input class="btn btn-outline-info" type="button" value="Clear" onclick="clearFilter()"/>
+    </div>
+  </form>
+</form>
+
+
+<script type="text/javascript">
+    function clearFilter() {
+        window.location = '/scheduleItems/page/1';
+    }
+</script>
+<div>&nbsp;</div>
+
+<form class="row g-3">
+  <div class="col-md-2"></div>
+  <div class="col-md-8" th:switch="${scheduleItems}">
+    <h2 th:case="null">No schedule items found!</h2>
+    <div th:case="*">
+      <h2>Schedule</h2>
+      <table class="table table-bordered table-hover">
+        <thead>
+        <tr>
+          <th>Id</th>
+          <th>Day</th>
+          <th>Show</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="scheduleItem : ${scheduleItems}">
+          <td th:text="${scheduleItem.id}"></td>
+          <td th:text="${scheduleItem.day.day}"></td>
+          <td th:align="center"><a class="btn btn-outline-dark btn-"
+                                   th:href="@{/scheduleItems/{id}(id=${scheduleItem.getId()})}">Info</a>
+          </td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div th:replace="pagination::pagination"></div>
+</form>
+
+</body>
+</html>

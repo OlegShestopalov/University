@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="navbar::header"/>
+
+<body>
+<div th:replace="navbar::menu"></div>
+
+<div class="container">
+  <form class="row g-3" th:action="@{/scheduleItems/{id}(id=${scheduleItem.getId()})}" th:object="${scheduleItem}" th:method="POST">
+    <div class="col-md-12">
+      <label for="id" class="form-label">ID:</label>
+      <input readonly type="number" class="form-control" th:field="*{id}" id="id">
+    </div>
+    <div class="col-12">
+      <label for="lesson" class="form-label">Lesson ID:</label>
+      <input type="number" class="form-control" th:field="*{lesson.id}" id="lesson" placeholder="lesson id">
+      <div style="color: #ea7474" th:if="${#fields.hasErrors('lesson.id')}" th:errors="*{lesson.id}">Lesson error</div>
+    </div>
+    <div class="col-12">
+      <label for="subject" class="form-label">Subject ID:</label>
+      <input type="number" class="form-control" th:field="*{subject.id}" id="subject" placeholder="subject id">
+      <div style="color: #ea7474" th:if="${#fields.hasErrors('subject.id')}" th:errors="*{subject.id}">Subject error</div>
+    </div>
+    <div class="col-12">
+      <label for="audience" class="form-label">Audience ID:</label>
+      <input type="number" class="form-control" th:field="*{audience.id}" id="audience" placeholder="audience id">
+      <div style="color: #ea7474" th:if="${#fields.hasErrors('audience.id')}" th:errors="*{audience.id}">Audience error</div>
+    </div>
+    <div class="col-12">
+      <label for="day" class="form-label">Day ID:</label>
+      <input type="number" class="form-control" th:field="*{day.id}" id="day" placeholder="day id">
+      <div style="color: #ea7474" th:if="${#fields.hasErrors('day.id')}" th:errors="*{day.id}">Day error</div>
+    </div>
+
+    <div class="col-12">
+      <input class="btn btn-primary" type="submit" value="Update">
+    </div>
+  </form>
+</div>
+
+</body>
+</html>
