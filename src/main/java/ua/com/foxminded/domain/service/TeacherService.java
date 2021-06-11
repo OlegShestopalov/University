@@ -1,5 +1,6 @@
 package ua.com.foxminded.domain.service;
 
+import org.springframework.data.domain.Page;
 import ua.com.foxminded.domain.entity.Teacher;
 
 import java.util.List;
@@ -12,5 +13,7 @@ public interface TeacherService {
 
     Teacher findById(final Long id);
 
-    List<Teacher> findAll();
+    Page<Teacher> findAll(final int pageNumber);
+
+    List<Teacher> findByPersonalData(final String name);
 }

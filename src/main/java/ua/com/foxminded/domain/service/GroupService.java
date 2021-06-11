@@ -1,5 +1,6 @@
 package ua.com.foxminded.domain.service;
 
+import org.springframework.data.domain.Page;
 import ua.com.foxminded.domain.entity.Group;
 
 import java.util.List;
@@ -12,5 +13,7 @@ public interface GroupService {
 
     Group findById(final Long id);
 
-    List<Group> findAll();
+    Page<Group> findAll(final int pageNumber);
+
+    List<Group> findByName(final String name);
 }
