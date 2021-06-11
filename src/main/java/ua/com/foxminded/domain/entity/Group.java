@@ -1,17 +1,12 @@
 package ua.com.foxminded.domain.entity;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.OneToOne;
-import javax.persistence.Table;
+import javax.persistence.*;
 import javax.validation.Valid;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.util.Objects;
+import java.util.Set;
 
 @Entity
 @Table(name = "group1")
@@ -34,6 +29,14 @@ public class Group {
     @OneToOne
     @Valid
     private Course course;
+
+    @ManyToMany
+    @JoinTable(
+            name = "group_scheduleitem",
+            joinColumns = {@JoinColumn(name = "group_id")},
+            inverseJoinColumns = {@JoinColumn(name = "scheduleitem_id")}
+    )
+    private Set<ScheduleItem> scheduleItems;
 
     public Group() {
     }
@@ -81,6 +84,14 @@ public class Group {
 
     public void setCourse(Course course) {
         this.course = course;
+    }
+
+    public Set<ScheduleItem> getScheduleItems() {
+        return scheduleItems;
+    }
+
+    public void setScheduleItems(Set<ScheduleItem> scheduleItems) {
+        this.scheduleItems = scheduleItems;
     }
 
     @Override
