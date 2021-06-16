@@ -1,8 +1,11 @@
 package ua.com.foxminded.domain.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -10,6 +13,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import ua.com.foxminded.domain.entity.Teacher;
 import ua.com.foxminded.domain.service.TeacherService;
+
+import javax.validation.Valid;
+import java.util.List;
 
 @Controller
 @RequestMapping("/teachers")
@@ -23,14 +29,35 @@ public class TeacherController {
     }
 
     @GetMapping("/menu")
-    public String showMenu(Model model) {
+    public String showMenu() {
         return "teachers/menu";
     }
 
     @GetMapping("/allTeachers")
     public String showAllTeachers(Model model) {
-        model.addAttribute("teachers", teacherService.findAll());
+        return showListByPage(model, "name", 1);
+    }
+
+    @GetMapping("/page/{pageNumber}")
+    public String showListByPage(Model model, @Param("name") String name, @PathVariable("pageNumber") int currentPage) {
+        Page<Teacher> page = teacherService.findAll(currentPage);
+        int totalPages = page.getTotalPages();
+        List<Teacher> teachers = page.getContent();
+
+        String link = "/teachers/page/";
+        model.addAttribute("currentPage", currentPage);
+        model.addAttribute("totalPages", totalPages);
+        model.addAttribute("teachers", teachers);
+        model.addAttribute("name", name);
+        model.addAttribute("link", link);
         return "teachers/allTeachers";
+    }
+
+    @GetMapping("/search")
+    public String showTeachersByName(Model model, @Param("name") String name) {
+        model.addAttribute("teachers", teacherService.findByPersonalData(name));
+        model.addAttribute("name", name);
+        return "teachers/teachersByName";
     }
 
     @GetMapping("/{id}")
@@ -45,7 +72,10 @@ public class TeacherController {
     }
 
     @PostMapping("/new")
-    public String create(@ModelAttribute("teacher") Teacher teacher) {
+    public String create(@ModelAttribute("teacher") @Valid Teacher teacher, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            return "teachers/new";
+        }
         teacherService.create(teacher);
         return "redirect:/teachers/allTeachers";
     }
@@ -57,7 +87,10 @@ public class TeacherController {
     }
 
     @PostMapping("/{id}")
-    public String update(Teacher teacher) {
+    public String update(@Valid Teacher teacher, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            return "teachers/edit";
+        }
         teacherService.create(teacher);
         return "redirect:/teachers/allTeachers";
     }

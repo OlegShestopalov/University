@@ -26,8 +26,8 @@ public class DayRepositoryTest {
     }
 
     @Test
-    void createDay() {
-        Day day = new Day(LocalDate.parse("2020-09-04"));
+    void shouldCreateNewDayInDBWhenAddNewDay() {
+        Day day = new Day(1L, LocalDate.parse("2020-09-04"));
         dayRepository.save(day);
         Day createdDay = dayRepository.getOne(day.getId());
 
@@ -35,7 +35,7 @@ public class DayRepositoryTest {
     }
 
     @Test
-    void deleteDay() {
+    void shouldDeleteDayFromDBWhenInputId() {
         Day dayToBeDeleted = dayRepository.getOne(1L);
         dayRepository.deleteById(dayToBeDeleted.getId());
 
@@ -43,7 +43,7 @@ public class DayRepositoryTest {
     }
 
     @Test
-    void updateDay() {
+    void shouldSaveUpdatedDayWhenChangeDataAboutDay() {
         Day newDay = new Day(1L, LocalDate.parse("2020-09-04"));
         dayRepository.save(newDay);
         Day updatedDay = dayRepository.getOne(1L);
@@ -52,14 +52,14 @@ public class DayRepositoryTest {
     }
 
     @Test
-    void findAllDays() {
+    void shouldReturnListDayWhenFindAll() {
         List<Day> days = dayRepository.findAll();
 
         assertEquals(3, days.size());
     }
 
     @Test
-    void findDayById() {
+    void shouldReturnDayByIdWhenInputId() {
         Day day = new Day(1L, LocalDate.parse("2020-09-01"));
         Day dayInDB = dayRepository.getOne(1L);
 

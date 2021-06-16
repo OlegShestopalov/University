@@ -2,7 +2,7 @@ INSERT INTO audience (number, desk)
 VALUES (1, 50),
        (2, 40),
        (3, 30);
-INSERT INTO class (name)
+INSERT INTO lesson (name)
 VALUES ('first'),
        ('second'),
        ('third'),
@@ -32,7 +32,7 @@ INSERT INTO subject (name, description)
 VALUES ('Subject1', 'Subject1'),
        ('Subject2', 'Subject2'),
        ('Subject3', 'Subject3');
-INSERT INTO scheduleitem (class_id, subject_id, audience_id, day_id)
+INSERT INTO scheduleitem (lesson_id, subject_id, audience_id, day_id)
 VALUES (1, 1, 1, 1),
        (2, 2, 2, 2),
        (3, 3, 3, 3);

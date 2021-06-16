@@ -1,8 +1,11 @@
 package ua.com.foxminded.domain.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -10,6 +13,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import ua.com.foxminded.domain.entity.Faculty;
 import ua.com.foxminded.domain.service.FacultyService;
+
+import javax.validation.Valid;
+import java.util.List;
 
 @Controller
 @RequestMapping("/faculties")
@@ -29,8 +35,29 @@ public class FacultyController {
 
     @GetMapping("/allFaculties")
     public String showAllFaculties(Model model) {
-        model.addAttribute("faculties", facultyService.findAll());
+        return showListByPage(model, "name", 1);
+    }
+
+    @GetMapping("/page/{pageNumber}")
+    public String showListByPage(Model model, @Param("name") String name, @PathVariable("pageNumber") int currentPage) {
+        Page<Faculty> page = facultyService.findAll(currentPage);
+        int totalPages = page.getTotalPages();
+        List<Faculty> faculties = page.getContent();
+
+        String link = "/faculties/page/";
+        model.addAttribute("currentPage", currentPage);
+        model.addAttribute("totalPages", totalPages);
+        model.addAttribute("faculties", faculties);
+        model.addAttribute("name", name);
+        model.addAttribute("link", link);
         return "faculties/allFaculties";
+    }
+
+    @GetMapping("/search")
+    public String showFacultiesByName(Model model, @Param("name") String name) {
+        model.addAttribute("faculties", facultyService.findByName(name));
+        model.addAttribute("name", name);
+        return "faculties/facultiesByName";
     }
 
     @GetMapping("/{id}")
@@ -45,7 +72,10 @@ public class FacultyController {
     }
 
     @PostMapping("/new")
-    public String create(@ModelAttribute("faculty") Faculty faculty) {
+    public String create(@ModelAttribute("faculty") @Valid Faculty faculty, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            return "faculties/new";
+        }
         facultyService.create(faculty);
         return "redirect:/faculties/allFaculties";
     }
@@ -57,7 +87,10 @@ public class FacultyController {
     }
 
     @PostMapping("/{id}")
-    public String update(Faculty faculty) {
+    public String update(@Valid Faculty faculty, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            return "faculties/edit";
+        }
         facultyService.create(faculty);
         return "redirect:/faculties/allFaculties";
     }

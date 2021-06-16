@@ -31,7 +31,7 @@ public class GroupRepositoryTest {
     }
 
     @Test
-    void createGroup() {
+    void shouldCreateNewGroupInDBWhenAddNewGroup() {
         Faculty faculty = facultyRepository.getOne(1L);
         Course course = courseRepository.getOne(1L);
         Group group = new Group("TEST", faculty, course);
@@ -42,7 +42,7 @@ public class GroupRepositoryTest {
     }
 
     @Test
-    void deleteGroup() {
+    void shouldDeleteGroupFromDBWhenInputId() {
         Group groupToBeDeleted = groupRepository.getOne(1L);
         groupRepository.deleteById(groupToBeDeleted.getId());
 
@@ -50,7 +50,7 @@ public class GroupRepositoryTest {
     }
 
     @Test
-    void updateGroup() {
+    void shouldSaveUpdatedGroupWhenChangeDataAboutGroup() {
         Faculty faculty = new Faculty(1L, "Electronics");
         Course course = new Course(1L, "first");
         Group newGroup = new Group(1L, "TEST", faculty, course);
@@ -61,19 +61,29 @@ public class GroupRepositoryTest {
     }
 
     @Test
-    void findAllGroups() {
+    void shouldReturnListOfGroupsWhenFindAll() {
         List<Group> groups = groupRepository.findAll();
 
         assertEquals(3, groups.size());
     }
 
     @Test
-    void findGroupById() {
+    void shouldReturnGroupByIdWhenInputId() {
         Faculty faculty = new Faculty(1L, "Electronics");
         Course course = new Course(1L, "first");
         Group group = new Group(1L, "AAAA", faculty, course);
         Group groupInDB = groupRepository.getOne(1L);
 
         assertEquals(group, Hibernate.unproxy(groupInDB));
+    }
+
+    @Test
+    void shouldReturnGroupsByNameWhenInputName() {
+        Faculty faculty = new Faculty(1L, "Electronics");
+        Course course = new Course(1L, "first");
+        Group group = new Group(1L, "AAAA", faculty, course);
+        List<Group> groups = groupRepository.findByNameOrFaculty(group.getName());
+
+        assertEquals(group, groups.get(0));
     }
 }

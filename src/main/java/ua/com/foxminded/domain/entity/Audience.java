@@ -6,6 +6,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
 import java.util.Objects;
 
 @Entity
@@ -14,9 +16,13 @@ public class Audience {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @NotNull(message = "{not.null}")
+    @Min(value = 1, message = "{min.id}")
     private Long id;
+
     @Column(name = "number")
     private int number;
+
     @Column(name = "desk")
     private int desk;
 

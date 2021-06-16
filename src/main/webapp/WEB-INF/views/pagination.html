@@ -1,0 +1,96 @@
+<div th:fragment="pagination">
+  <nav aria-label="Page navigation example">
+    <ul class="pagination justify-content-center flex-wrap" th:with="pageUrlPrefix = ${link}">
+
+      <th:block th:if="${day == null}">
+        <li th:class="${currentPage > 1 ? 'page-item' : 'page-item disabled'}">
+          <a th:href="@{${pageUrlPrefix} + '1'} + '?day=' + '&name=' + ${name}" class="page-link">First</a>
+        </li>
+      </th:block>
+
+      <th:block th:if="${day != null}">
+        <li th:class="${currentPage > 1 ? 'page-item' : 'page-item disabled'}">
+          <a th:href="@{${pageUrlPrefix} + '1'} + '?day=' + ${day} + '&name=' + ${name}" class="page-link">First</a>
+        </li>
+      </th:block>
+
+      <th:block th:if="${day == null}">
+        <li th:class="${currentPage > 1 ? 'page-item' : 'page-item disabled'}">
+          <a th:href="@{${pageUrlPrefix} + ${currentPage - 1}} + '?day=' + '&name=' + ${name}" class="page-link">Previous</a>
+        </li>
+      </th:block>
+
+      <th:block th:if="${day != null}">
+        <li th:class="${currentPage > 1 ? 'page-item' : 'page-item disabled'}">
+          <a th:href="@{${pageUrlPrefix} + ${currentPage - 1}} + '?day=' + ${day} + '&name=' + ${name}"
+             class="page-link">Previous</a>
+        </li>
+      </th:block>
+
+      <th:block th:if="${totalPages <= 10 && day == null}">
+        <li th:each="i: ${#numbers.sequence(1, totalPages)}"
+            th:class="${currentPage != i ? 'page-item' : 'page-item active'}">
+          <a th:href="@{${pageUrlPrefix} + ${i}} + '?day=' + '&name=' + ${name}" class="page-link">[[${i}]]</a>
+        </li>
+      </th:block>
+
+
+      <th:block th:if="${totalPages <= 10 && day != null}">
+        <li th:each="i: ${#numbers.sequence(1, totalPages)}"
+            th:class="${currentPage != i ? 'page-item' : 'page-item active'}">
+          <a th:href="@{${pageUrlPrefix} + ${i}} + '?day=' + ${day} + '&name=' + ${name}" class="page-link">[[${i}]]</a>
+        </li>
+      </th:block>
+
+      <th:block th:if="${totalPages > 10}">
+        <th:block th:if="${currentPage <= 5 || currentPage > totalPages - 4}">
+          <li th:each="i: ${#numbers.sequence(1, 5)}" th:class="${currentPage != i ? 'page-item' : 'page-item active'}">
+            <a th:href="@{${pageUrlPrefix} + ${i}}" class="page-link">[[${i}]]</a>
+          </li>
+
+          <a th:href="@{${pageUrlPrefix} + 6}" class="page-link">...</a>
+
+          <li th:each="i: ${#numbers.sequence(totalPages - 4, totalPages)}"
+              th:class="${currentPage != i ? 'page-item' : 'page-item active'}">
+            <a th:href="@{${pageUrlPrefix} + ${i}}" class="page-link">[[${i}]]</a>
+          </li>
+        </th:block>
+
+        <th:block th:if="${currentPage > 5 && currentPage < totalPages - 4}">
+          <a th:href="@{${pageUrlPrefix} + ${currentPage - 5}}" class="page-link">...</a>
+
+          <li th:each="i: ${#numbers.sequence(currentPage - 4, currentPage + 4)}"
+              th:class="${currentPage != i ? 'page-item' : 'page-item active'}">
+            <a th:href="@{${pageUrlPrefix} + ${i}}" class="page-link">[[${i}]]</a>
+          </li>
+
+          <a th:href="@{${pageUrlPrefix} + ${currentPage + 5}}" class="page-link">...</a>
+        </th:block>
+      </th:block>
+
+      <th:block th:if="${day == null}">
+        <li th:class="${currentPage < totalPages ? 'page-item' : 'page-item disabled'}">
+          <a th:href="@{${pageUrlPrefix} + ${currentPage + 1}} + '?day=' + '&name=' + ${name}" class="page-link">Next</a>
+        </li>
+      </th:block>
+
+      <th:block th:if="${day != null}">
+        <li th:class="${currentPage < totalPages ? 'page-item' : 'page-item disabled'}">
+          <a th:href="@{${pageUrlPrefix} + ${currentPage + 1}} + '?day=' + ${day} + '&name=' + ${name}" class="page-link">Next</a>
+        </li>
+      </th:block>
+
+      <th:block th:if="${day == null}">
+        <li th:class="${currentPage < totalPages ? 'page-item' : 'page-item disabled'}">
+          <a th:href="@{${pageUrlPrefix} + ${totalPages}} + '?day=' + '&name=' + ${name}" class="page-link">Last</a>
+        </li>
+      </th:block>
+
+      <th:block th:if="${day != null}">
+        <li th:class="${currentPage < totalPages ? 'page-item' : 'page-item disabled'}">
+          <a th:href="@{${pageUrlPrefix} + ${totalPages}} + '?day=' + ${day} + '&name=' + ${name}" class="page-link">Last</a>
+        </li>
+      </th:block>
+    </ul>
+  </nav>
+</div>

@@ -6,26 +6,33 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.util.Objects;
 
 @Entity
-@Table(name = "class")
-public class Class {
+@Table(name = "lesson")
+public class Lesson {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @NotNull(message = "{not.null}")
+    @Min(value = 1, message = "{min.id}")
     private Long id;
+
     @Column(name = "name")
+    @Size(min = 2, max = 30, message = "{range.size}")
     private String name;
 
-    public Class() {
+    public Lesson() {
     }
 
-    public Class(String name) {
+    public Lesson(String name) {
         this.name = name;
     }
 
-    public Class(Long id, String name) {
+    public Lesson(Long id, String name) {
         this.id = id;
         this.name = name;
     }
@@ -50,8 +57,8 @@ public class Class {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Class aClass = (Class) o;
-        return id.equals(aClass.id) && name.equals(aClass.name);
+        Lesson aLesson = (Lesson) o;
+        return id.equals(aLesson.id) && name.equals(aLesson.name);
     }
 
     @Override
@@ -61,7 +68,7 @@ public class Class {
 
     @Override
     public String toString() {
-        return "Couple{" +
+        return "Lesson{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
                 '}';

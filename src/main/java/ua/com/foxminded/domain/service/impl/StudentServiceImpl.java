@@ -1,6 +1,10 @@
 package ua.com.foxminded.domain.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ua.com.foxminded.dao.StudentRepository;
@@ -31,12 +35,18 @@ public class StudentServiceImpl implements StudentService {
     }
 
     @Override
-    public List<Student> findAll() {
-        return studentRepository.findAll();
+    public Student findById(Long id) {
+        return studentRepository.getOne(id);
     }
 
     @Override
-    public Student findById(Long id) {
-        return studentRepository.getOne(id);
+    public Page<Student> findAll(int pageNumber) {
+        Pageable pageable = PageRequest.of(pageNumber - 1, 10, Sort.by("name"));
+        return studentRepository.findAll(pageable);
+    }
+
+    @Override
+    public List<Student> findByPersonalData(String name) {
+        return studentRepository.findByNameOrSurnameOrGroup(name);
     }
 }

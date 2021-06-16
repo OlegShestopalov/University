@@ -5,12 +5,18 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import ua.com.foxminded.dao.TeacherRepository;
 import ua.com.foxminded.domain.entity.Teacher;
 import ua.com.foxminded.domain.service.impl.TeacherServiceImpl;
 
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.anyLong;
@@ -29,7 +35,7 @@ public class TeacherServiceTest {
     private TeacherServiceImpl teacherService;
 
     @Test
-    void crateTeacher() {
+    void shouldCreateNewTeacherInDBWhenAddNewTeacher() {
         Teacher teacher = new Teacher(1L, "test", "test", "test@gmail.com");
 
         teacherService.create(teacher);
@@ -39,15 +45,16 @@ public class TeacherServiceTest {
     }
 
     @Test
-    void deleteTeacherById() {
+    void shouldDeleteTeacherFromDBWhenInputId() {
         Teacher teacher = new Teacher(1L, "test", "test", "test@gmail.com");
+
         teacherService.delete(1L);
 
         verify(teacherRepository, times(1)).deleteById(teacher.getId());
     }
 
     @Test
-    void updateTeacher() {
+    void shouldSaveUpdatedTeacherWhenChangeDataAboutTeacher() {
         Teacher teacher = new Teacher(1L, "test", "test", "test@gmail.com");
 
         teacherService.create(teacher);
@@ -57,26 +64,38 @@ public class TeacherServiceTest {
     }
 
     @Test
-    void whenAddNewTeachersItShouldReturnAllTeachers() {
+    void shouldReturnPagesWithTeachersWhenFindAll() {
+        int pageNumber = 1;
+        Pageable pageable = PageRequest.of(pageNumber - 1, 10, Sort.by("name"));
         Teacher one = new Teacher(1L, "teacher1", "teacher1", "teacher1@gmail.com");
-        Teacher two = new Teacher(2L, "teacher2", "teacher2", "teacher2@gmail.com");
-        Teacher three = new Teacher(3L, "teacher3", "teacher3", "teacher3@gmail.com");
+        Page<Teacher> teachers = new PageImpl<>(Collections.singletonList(one));
 
-        when(teacherRepository.findAll()).thenReturn(Stream.of(one, two, three).collect(Collectors.toList()));
+        when(teacherRepository.findAll(pageable)).thenReturn(teachers);
 
-        assertEquals(3, teacherService.findAll().size());
-        assertEquals(one, teacherService.findAll().get(0));
-        assertEquals(two, teacherService.findAll().get(1));
+        assertEquals(1, teacherService.findAll(pageNumber).getTotalPages());
+        assertEquals(1, teacherService.findAll(pageNumber).getTotalElements());
+        assertEquals(one, teacherService.findAll(pageNumber).toList().get(0));
         verifyNoMoreInteractions(teacherRepository);
     }
 
     @Test
-    void whenInputIdItShouldReturnTeacherById() {
+    void shouldReturnTeacherByIdWhenInputId() {
         when(teacherRepository.getOne(anyLong())).thenReturn(new Teacher(1L, "test", "test", "test@gmail.com"));
 
         assertEquals("test", teacherService.findById(1L).getName());
         assertEquals("test", teacherService.findById(1L).getSurname());
         assertEquals("test@gmail.com", teacherService.findById(1L).getEmail());
+        verifyNoMoreInteractions(teacherRepository);
+    }
+
+    @Test
+    void shouldReturnStudentsByNameWhenInputNameOrSurname() {
+        List<Teacher> teachers = new ArrayList<>(Collections.singleton(new Teacher(1L, "test", "test", "test@gmail.com")));
+
+        when(teacherRepository.findByNameOrSurname("test")).thenReturn(teachers);
+
+        assertEquals(teachers, teacherService.findByPersonalData("test"));
+        assertEquals(1, teacherService.findByPersonalData("test").size());
         verifyNoMoreInteractions(teacherRepository);
     }
 }

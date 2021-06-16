@@ -1,5 +1,6 @@
 package ua.com.foxminded.domain.service;
 
+import org.springframework.data.domain.Page;
 import ua.com.foxminded.domain.entity.Faculty;
 
 import java.util.List;
@@ -10,7 +11,9 @@ public interface FacultyService {
 
     void delete(final Long id);
 
-    List<Faculty> findAll();
-
     Faculty findById(final Long id);
+
+    Page<Faculty> findAll(final int pageNumber);
+
+    List<Faculty> findByName(final String name);
 }

@@ -2,9 +2,11 @@ package ua.com.foxminded.controller;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import ua.com.foxminded.domain.controller.GroupController;
@@ -14,11 +16,11 @@ import ua.com.foxminded.domain.entity.Group;
 import ua.com.foxminded.domain.service.GroupService;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.instanceOf;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.atLeastOnce;
 import static org.mockito.Mockito.doNothing;
@@ -27,24 +29,26 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
+@SpringBootTest
 public class GroupControllerTest {
 
     private List<Group> groups;
+
     private MockMvc mockMvc;
 
-    @Mock
+    @MockBean
     private GroupService groupService;
 
-    @InjectMocks
+    @Autowired
     private GroupController groupController;
 
     @BeforeEach
     public void setUp() {
-        MockitoAnnotations.initMocks(this);
         mockMvc = MockMvcBuilders
                 .standaloneSetup(groupController)
                 .build();
@@ -61,20 +65,36 @@ public class GroupControllerTest {
     }
 
     @Test
-    void findAllGroups() throws Exception {
-        when(groupService.findAll()).thenReturn(groups);
+    void shouldShowAllGroupsWhenFindAll() throws Exception {
+        int pageNumber = 1;
+        Faculty faculty = new Faculty();
+        Course course = new Course();
+        Group one = new Group(1L, "test", faculty, course);
+        Page<Group> groups = new PageImpl<>(Collections.singletonList(one));
+
+        when(groupService.findAll(pageNumber)).thenReturn(groups);
 
         mockMvc.perform(get("/groups/allGroups"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("groups/allGroups"))
+                .andExpect(model().attribute("groups", hasSize(1)));
+    }
+
+    @Test
+    void shouldShowGroupByNameWhenInputName() throws Exception {
+        when(groupService.findByName(any())).thenReturn(groups);
+
+        mockMvc.perform(get("/groups/search"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("groups/groupsByName"))
                 .andExpect(model().attribute("groups", hasSize(3)));
 
-        verify(groupService, atLeastOnce()).findAll();
+        verify(groupService, atLeastOnce()).findByName(any());
         verifyNoMoreInteractions(groupService);
     }
 
     @Test
-    void findGroupById() throws Exception {
+    void shouldShowGroupByIdWhenInputId() throws Exception {
         when(groupService.findById(1L)).thenReturn(groups.get(0));
 
         mockMvc.perform(get("/groups/1"))
@@ -87,7 +107,7 @@ public class GroupControllerTest {
     }
 
     @Test
-    void editGroup() throws Exception {
+    void shouldShowFormWithInfoAboutGroupWhenEditGroup() throws Exception {
         when(groupService.findById(1L)).thenReturn(groups.get(0));
 
         mockMvc.perform(get("/groups/1/edit"))
@@ -97,7 +117,7 @@ public class GroupControllerTest {
     }
 
     @Test
-    void createNewGroup() throws Exception {
+    void shouldCreateNewGroupWhenFillOutForm() throws Exception {
         verifyNoMoreInteractions(groupService);
 
         mockMvc.perform(get("/groups/new"))
@@ -107,7 +127,7 @@ public class GroupControllerTest {
     }
 
     @Test
-    public void deleteGroup() throws Exception {
+    void shouldReturnAllGroupsWhenDeleteGroupById() throws Exception {
         doNothing().when(groupService).delete(groups.get(0).getId());
 
         mockMvc.perform(
@@ -119,8 +139,12 @@ public class GroupControllerTest {
     }
 
     @Test
-    void updateGroup() throws Exception {
+    void shouldUpdateGroupWhenChangeInfo() throws Exception {
         doNothing().when(groupService).create(any(Group.class));
-        assertEquals(groupController.update(groups.get(0)), "redirect:/groups/allGroups");
+
+        mockMvc.perform(post("/groups/1"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("groups/edit"))
+                .andExpect(model().attribute("group", instanceOf(Group.class)));
     }
 }

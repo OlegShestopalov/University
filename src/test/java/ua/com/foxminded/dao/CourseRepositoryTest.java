@@ -25,8 +25,8 @@ public class CourseRepositoryTest {
     }
 
     @Test
-    void createCourse() {
-        Course course = new Course("TEST");
+    void shouldCreateNewCourseInDBWhenAddNewCourse() {
+        Course course = new Course(1L, "TEST");
         courseRepository.save(course);
         Course createdCourse = courseRepository.getOne(course.getId());
 
@@ -34,7 +34,7 @@ public class CourseRepositoryTest {
     }
 
     @Test
-    void deleteCourse() {
+    void shouldDeleteCourseFromDBWhenInputId() {
         Course courseToBeDeleted = courseRepository.getOne(1L);
         courseRepository.deleteById(courseToBeDeleted.getId());
 
@@ -42,7 +42,7 @@ public class CourseRepositoryTest {
     }
 
     @Test
-    void updateCourse() {
+    void shouldSaveUpdatedCourseWhenChangeDataAboutCourse() {
         Course newCourse = new Course(1L, "UpdatedCourse");
         courseRepository.save(newCourse);
         Course updatedCourse = courseRepository.getOne(1L);
@@ -51,14 +51,14 @@ public class CourseRepositoryTest {
     }
 
     @Test
-    void findAllCourses() {
+    void shouldReturnListCoursesWhenFindAll() {
         List<Course> courses = courseRepository.findAll();
 
         assertEquals(6, courses.size());
     }
 
     @Test
-    void findCourseById() {
+    void shouldReturnCourseByIdWhenInputId() {
         Course course = new Course(1L, "first");
         Course courseInDB = courseRepository.getOne(1L);
 

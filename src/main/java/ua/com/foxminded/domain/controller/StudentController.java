@@ -1,8 +1,11 @@
 package ua.com.foxminded.domain.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -10,6 +13,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import ua.com.foxminded.domain.entity.Student;
 import ua.com.foxminded.domain.service.StudentService;
+
+import javax.validation.Valid;
+import java.util.List;
 
 @Controller
 @RequestMapping("/students")
@@ -29,8 +35,31 @@ public class StudentController {
 
     @GetMapping("/allStudents")
     public String showAllStudents(Model model) {
-        model.addAttribute("students", studentService.findAll());
+        return showListByPage(model, "name", 1);
+    }
+
+    @GetMapping("/page/{pageNumber}")
+    public String showListByPage(Model model,
+                                 @Param("name") String name,
+                                 @PathVariable("pageNumber") int currentPage) {
+        Page<Student> page = studentService.findAll(currentPage);
+        int totalPages = page.getTotalPages();
+        List<Student> students = page.getContent();
+
+        String link = "/students/page/";
+        model.addAttribute("currentPage", currentPage);
+        model.addAttribute("totalPages", totalPages);
+        model.addAttribute("students", students);
+        model.addAttribute("name", name);
+        model.addAttribute("link", link);
         return "students/allStudents";
+    }
+
+    @GetMapping("/search")
+    public String showStudentsByName(Model model, @Param("name") String name) {
+        model.addAttribute("students", studentService.findByPersonalData(name));
+        model.addAttribute("name", name);
+        return "students/studentsByName";
     }
 
     @GetMapping("/{id}")
@@ -45,7 +74,10 @@ public class StudentController {
     }
 
     @PostMapping("/new")
-    public String create(@ModelAttribute("student") Student student) {
+    public String create(@ModelAttribute("student") @Valid Student student, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            return "students/new";
+        }
         studentService.create(student);
         return "redirect:/students/allStudents";
     }
@@ -57,7 +89,10 @@ public class StudentController {
     }
 
     @PostMapping("/{id}")
-    public String update(Student student) {
+    public String update(@Valid Student student, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            return "students/edit";
+        }
         studentService.create(student);
         return "redirect:/students/allStudents";
     }

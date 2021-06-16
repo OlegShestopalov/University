@@ -4,7 +4,6 @@ import org.hibernate.Hibernate;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
 import ua.com.foxminded.domain.entity.Course;
@@ -32,7 +31,7 @@ public class StudentRepositoryTest {
     }
 
     @Test
-    void createStudent() {
+    void shouldCreateNewStudentInDBWhenAddNewStudent() {
         Group group = groupRepository.getOne(1L);
         Student student = new Student(group, "Student4", "Student4", "Male", 20, "student4@gmail.com");
         studentRepository.save(student);
@@ -42,7 +41,7 @@ public class StudentRepositoryTest {
     }
 
     @Test
-    void deleteStudent() {
+    void shouldDeleteStudentFromDBWhenInputId() {
         Student studentToBeDeleted = studentRepository.getOne(1L);
         studentRepository.deleteById(studentToBeDeleted.getId());
 
@@ -50,7 +49,7 @@ public class StudentRepositoryTest {
     }
 
     @Test
-    void updateStudent() {
+    void shouldSaveUpdatedStudentWhenChangeDataAboutStudent() {
         Faculty faculty = new Faculty(1L, "Electronics");
         Course course = new Course(1L, "first");
         Group group = new Group(1L, "AAAA", faculty, course);
@@ -63,14 +62,14 @@ public class StudentRepositoryTest {
     }
 
     @Test
-    void findAllStudents() {
+    void shouldReturnListOfStudentsWhenFindAll() {
         List<Student> students = studentRepository.findAll();
 
         assertEquals(3, students.size());
     }
 
     @Test
-    void findStudentById() {
+    void shouldReturnStudentByIdWhenInputId() {
         Faculty faculty = new Faculty(1L, "Electronics");
         Course course = new Course(1L, "first");
         Group group = new Group(1L, "AAAA", faculty, course);
@@ -78,5 +77,16 @@ public class StudentRepositoryTest {
         Student studentInDb = studentRepository.getOne(student.getId());
 
         assertEquals(student, Hibernate.unproxy(studentInDb));
+    }
+
+    @Test
+    void shouldReturnStudentsByNameWhenInputNameOrSurname() {
+        Faculty faculty = new Faculty(1L, "Electronics");
+        Course course = new Course(1L, "first");
+        Group group = new Group(1L, "AAAA", faculty, course);
+        Student student = new Student(1L, group, "Student1", "Student1", "Male", 20, "student1@gmail.com");
+        List<Student> students = studentRepository.findByNameOrSurnameOrGroup(student.getName());
+
+        assertEquals(student, students.get(0));
     }
 }
