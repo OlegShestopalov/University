@@ -47,7 +47,7 @@ public class TeacherServiceImpl implements TeacherService {
 
     @Override
     public List<Teacher> findByPersonalData(String name) {
-        return teacherRepository.findByPersonalData(name);
+        return teacherRepository.findByNameOrSurname(name);
 
     }
 }

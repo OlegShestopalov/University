@@ -25,7 +25,7 @@ public class FacultyRepositoryTest {
     }
 
     @Test
-    void createFaculty() {
+    void shouldCreateNewFacultyInDBWhenAddNewFaculty() {
         Faculty faculty = new Faculty(1L, "TEST");
         facultyRepository.save(faculty);
         Faculty createdFaculty = facultyRepository.getOne(faculty.getId());
@@ -34,7 +34,7 @@ public class FacultyRepositoryTest {
     }
 
     @Test
-    void deleteFaculty() {
+    void shouldDeleteFacultyFromDBWhenInputId() {
         Faculty facultyToBeDeleted = facultyRepository.getOne(1L);
         facultyRepository.deleteById(facultyToBeDeleted.getId());
 
@@ -42,7 +42,7 @@ public class FacultyRepositoryTest {
     }
 
     @Test
-    void updateFaculty() {
+    void shouldSaveUpdatedFacultyWhenChangeDataAboutFaculty() {
         Faculty newFaculty = new Faculty(1L, "UpdatedFaculty");
         facultyRepository.save(newFaculty);
         Faculty updatedFaculty = facultyRepository.getOne(1L);
@@ -51,14 +51,14 @@ public class FacultyRepositoryTest {
     }
 
     @Test
-    void findAllFaculties() {
+    void shouldReturnListOfFacultiesWhenFindAll() {
         List<Faculty> faculties = facultyRepository.findAll();
 
         assertEquals(3, faculties.size());
     }
 
     @Test
-    void findFacultyById() {
+    void shouldReturnFacultyByIdWhenInputId() {
         Faculty faculty = new Faculty(1L, "Electronics");
         Faculty facultyInDB = facultyRepository.getOne(1L);
 
@@ -66,7 +66,7 @@ public class FacultyRepositoryTest {
     }
 
     @Test
-    void findByName() {
+    void shouldReturnListOfFacultiesWhenInputName() {
         Faculty faculty = new Faculty(1L, "Electronics");
         List<Faculty> faculties = facultyRepository.findByName(faculty.getName());
         

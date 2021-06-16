@@ -35,10 +35,11 @@ public class StudentServiceTest {
     @InjectMocks
     private StudentServiceImpl studentService;
 
+    @Mock
     private Group group;
 
     @Test
-    void CreateStudent_WhenAddNewStudent_ThenCreatedNewStudentInDB() {
+    void shouldCreateNewStudentInDBWhenAddNewStudent() {
         Student student = new Student(1L, group, "test", "test", "Male", 20, "test@gmail.com");
 
         studentService.create(student);
@@ -48,7 +49,7 @@ public class StudentServiceTest {
     }
 
     @Test
-    void DeleteStudentById_WhenInputId_ThenDeletedStudentFromDB() {
+    void shouldDeleteStudentFromDBWhenInputId() {
         Student student = new Student(1L, group, "test", "test", "Male", 20, "test@gmail.com");
 
         studentService.delete(1L);
@@ -57,7 +58,7 @@ public class StudentServiceTest {
     }
 
     @Test
-    void UpdateStudent_WhenChangeDataAboutStudent_ThenSaveUpdatedStudent() {
+    void shouldSaveUpdatedStudentWhenChangeDataAboutStudent() {
         Student student = new Student(1L, group, "test", "test", "Male", 20, "test@gmail.com");
 
         studentService.create(student);
@@ -67,7 +68,7 @@ public class StudentServiceTest {
     }
 
     @Test
-    void FindAllStudentsByPages_WhenFindAll_ThenReturnedPagesWithStudents() {
+    void shouldReturnPagesWithStudentsWhenFindAll() {
         int pageNumber = 1;
         Pageable pageable = PageRequest.of(pageNumber - 1, 10, Sort.by("name"));
         Student one = new Student(1L, group, "test", "test", "Male", 20, "test@gmail.com");
@@ -82,7 +83,7 @@ public class StudentServiceTest {
     }
 
     @Test
-    void FindStudentById_WhenInputId_ThenReturnedStudentById() {
+    void shouldReturnStudentByIdWhenInputId() {
         when(studentRepository.getOne(anyLong())).thenReturn(new Student(1L, group, "test", "test", "Male", 20, "test@gmail.com"));
 
         assertEquals("test", studentService.findById(1L).getName());
@@ -92,10 +93,10 @@ public class StudentServiceTest {
     }
 
     @Test
-    void FindStudentsByPersonalData_WhenInputNameOrSurname_ThenReturnedStudentsByName() {
+    void shouldReturnStudentsByNameWhenInputNameOrSurname() {
         List<Student> students = new ArrayList<>(Collections.singleton(new Student(1L, group, "test", "test", "Male", 20, "test@gmail.com")));
 
-        when(studentRepository.findByPersonalData("test")).thenReturn(students);
+        when(studentRepository.findByNameOrSurnameOrGroup("test")).thenReturn(students);
 
         assertEquals(students, studentService.findByPersonalData("test"));
         assertEquals(1, studentService.findByPersonalData("test").size());

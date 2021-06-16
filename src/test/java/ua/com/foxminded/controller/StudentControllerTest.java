@@ -67,7 +67,7 @@ public class StudentControllerTest {
     }
 
     @Test
-    void findAllStudents() throws Exception {
+    void shouldShowAllStudentsWhenFindAll() throws Exception {
         int pageNumber = 1;
         Group group = new Group();
         Student one = new Student(1L, group, "test", "test", "Male", 20, "test@gmail.com");
@@ -83,7 +83,7 @@ public class StudentControllerTest {
     }
 
     @Test
-    void findStudentsByName() throws Exception {
+    void shouldShowStudentByNameWhenInputName() throws Exception {
         when(studentService.findByPersonalData(any())).thenReturn(students);
 
         mockMvc.perform(get("/students/search"))
@@ -96,7 +96,7 @@ public class StudentControllerTest {
     }
 
     @Test
-    void findStudentById() throws Exception {
+    void shouldShowStudentByIdWhenInputId() throws Exception {
         when(studentService.findById(1L)).thenReturn(students.get(0));
 
         mockMvc.perform(get("/students/1"))
@@ -109,7 +109,7 @@ public class StudentControllerTest {
     }
 
     @Test
-    void editStudent() throws Exception {
+    void shouldShowFormWithInfoAboutStudentWhenEditStudent() throws Exception {
         when(studentService.findById(1L)).thenReturn(students.get(0));
 
         mockMvc.perform(get("/students/1/edit"))
@@ -119,7 +119,7 @@ public class StudentControllerTest {
     }
 
     @Test
-    void createNewStudent() throws Exception {
+    void shouldCreateNewStudentWhenFillOutForm() throws Exception {
         verifyNoMoreInteractions(studentService);
 
         mockMvc.perform(get("/students/new"))
@@ -129,7 +129,7 @@ public class StudentControllerTest {
     }
 
     @Test
-    public void deleteStudent() throws Exception {
+    void shouldReturnAllStudentsWhenDeleteStudentById() throws Exception {
         doNothing().when(studentService).delete(students.get(0).getId());
 
         mockMvc.perform(
@@ -141,7 +141,7 @@ public class StudentControllerTest {
     }
 
     @Test
-    void updateStudent() throws Exception {
+    void shouldUpdateStudentWhenChangeInfo() throws Exception {
         doNothing().when(studentService).create(any(Student.class));
 
         mockMvc.perform(post("/students/1"))

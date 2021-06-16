@@ -35,7 +35,7 @@ public class TeacherServiceTest {
     private TeacherServiceImpl teacherService;
 
     @Test
-    void CreateTeacher_WhenAddNewTeacher_ThenCreatedNewTeacherInDB() {
+    void shouldCreateNewTeacherInDBWhenAddNewTeacher() {
         Teacher teacher = new Teacher(1L, "test", "test", "test@gmail.com");
 
         teacherService.create(teacher);
@@ -45,7 +45,7 @@ public class TeacherServiceTest {
     }
 
     @Test
-    void DeleteTeacherById_WhenInputId_ThenDeletedTeacherFromDB() {
+    void shouldDeleteTeacherFromDBWhenInputId() {
         Teacher teacher = new Teacher(1L, "test", "test", "test@gmail.com");
 
         teacherService.delete(1L);
@@ -54,7 +54,7 @@ public class TeacherServiceTest {
     }
 
     @Test
-    void UpdateTeacher_WhenChangeDataAboutTeacher_ThenSaveUpdatedTeacher() {
+    void shouldSaveUpdatedTeacherWhenChangeDataAboutTeacher() {
         Teacher teacher = new Teacher(1L, "test", "test", "test@gmail.com");
 
         teacherService.create(teacher);
@@ -64,7 +64,7 @@ public class TeacherServiceTest {
     }
 
     @Test
-    void FindAllTeachersByPages_WhenFindAll_ThenReturnedPagesWithTeachers() {
+    void shouldReturnPagesWithTeachersWhenFindAll() {
         int pageNumber = 1;
         Pageable pageable = PageRequest.of(pageNumber - 1, 10, Sort.by("name"));
         Teacher one = new Teacher(1L, "teacher1", "teacher1", "teacher1@gmail.com");
@@ -79,7 +79,7 @@ public class TeacherServiceTest {
     }
 
     @Test
-    void FindTeacherById_WhenInputId_ThenReturnedTeacherById() {
+    void shouldReturnTeacherByIdWhenInputId() {
         when(teacherRepository.getOne(anyLong())).thenReturn(new Teacher(1L, "test", "test", "test@gmail.com"));
 
         assertEquals("test", teacherService.findById(1L).getName());
@@ -89,10 +89,10 @@ public class TeacherServiceTest {
     }
 
     @Test
-    void FindTeachersByPersonalData_WhenInputNameOrSurname_ThenReturnedStudentsByName() {
+    void shouldReturnStudentsByNameWhenInputNameOrSurname() {
         List<Teacher> teachers = new ArrayList<>(Collections.singleton(new Teacher(1L, "test", "test", "test@gmail.com")));
 
-        when(teacherRepository.findByPersonalData("test")).thenReturn(teachers);
+        when(teacherRepository.findByNameOrSurname("test")).thenReturn(teachers);
 
         assertEquals(teachers, teacherService.findByPersonalData("test"));
         assertEquals(1, teacherService.findByPersonalData("test").size());

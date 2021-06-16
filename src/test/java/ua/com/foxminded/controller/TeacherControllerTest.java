@@ -62,7 +62,7 @@ public class TeacherControllerTest {
     }
 
     @Test
-    void findAllTeachers() throws Exception {
+    void shouldShowAllTeachersWhenFindAll() throws Exception {
         int pageNumber = 1;
         Teacher one = new Teacher(1L, "teacher1", "teacher1", "teacher1@gmail.com");
         Page<Teacher> teachers = new PageImpl<>(Collections.singletonList(one));
@@ -76,7 +76,7 @@ public class TeacherControllerTest {
     }
 
     @Test
-    void findTeachersByName() throws Exception {
+    void shouldShowTeacherByNameWhenInputName() throws Exception {
         when(teacherService.findByPersonalData(any())).thenReturn(teachers);
 
         mockMvc.perform(get("/teachers/search"))
@@ -89,7 +89,7 @@ public class TeacherControllerTest {
     }
 
     @Test
-    void findTeacherById() throws Exception {
+    void shouldShowTeacherByIdWhenInputId() throws Exception {
         when(teacherService.findById(1L)).thenReturn(teachers.get(0));
 
         mockMvc.perform(get("/teachers/1"))
@@ -102,7 +102,7 @@ public class TeacherControllerTest {
     }
 
     @Test
-    void editTeacher() throws Exception {
+    void shouldShowFormWithInfoAboutTeacherWhenEdiTeacher() throws Exception {
         when(teacherService.findById(1L)).thenReturn(teachers.get(0));
 
         mockMvc.perform(get("/teachers/1/edit"))
@@ -112,7 +112,7 @@ public class TeacherControllerTest {
     }
 
     @Test
-    void createNewTeacher() throws Exception {
+    void shouldCreateNewTeacherWhenFillOutForm() throws Exception {
         verifyNoMoreInteractions(teacherService);
 
         mockMvc.perform(get("/teachers/new"))
@@ -122,7 +122,7 @@ public class TeacherControllerTest {
     }
 
     @Test
-    public void deleteTeacher() throws Exception {
+    void shouldReturnAllTeachersWhenDeleteTeacherById() throws Exception {
         doNothing().when(teacherService).delete(teachers.get(0).getId());
 
         mockMvc.perform(
@@ -134,7 +134,7 @@ public class TeacherControllerTest {
     }
 
     @Test
-    void updateTeacher() throws Exception {
+    void shouldUpdateTeacherWhenChangeInfo() throws Exception {
         doNothing().when(teacherService).create(any(Teacher.class));
 
         mockMvc.perform(post("/teachers/1"))

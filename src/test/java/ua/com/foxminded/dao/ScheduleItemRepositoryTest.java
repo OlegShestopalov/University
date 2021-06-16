@@ -43,7 +43,7 @@ public class ScheduleItemRepositoryTest {
     }
 
     @Test
-    void createScheduleItem() {
+    void shouldCreateNewScheduleItemInDBWhenAddNewScheduleItem() {
         Lesson lesson = lessonRepository.getOne(1L);
         Subject subject = subjectRepository.getOne(1L);
         Audience audience = audienceRepository.getOne(1L);
@@ -56,7 +56,7 @@ public class ScheduleItemRepositoryTest {
     }
 
     @Test
-    void deleteScheduleItem() {
+    void shouldDeleteScheduleItemFromDBWhenInputId() {
         ScheduleItem scheduleItemToBeDeleted = scheduleItemRepository.getOne(1L);
         scheduleItemRepository.deleteById(scheduleItemToBeDeleted.getId());
 
@@ -64,7 +64,7 @@ public class ScheduleItemRepositoryTest {
     }
 
     @Test
-    void updateScheduleItem() {
+    void shouldSaveUpdatedScheduleItemWhenChangeDataAboutScheduleItem() {
         Lesson lesson = new Lesson(1L, "first");
         Subject subject = new Subject(1L, "Subject1", "Subject1");
         Audience audience = new Audience(1L, 1, 50);
@@ -78,14 +78,14 @@ public class ScheduleItemRepositoryTest {
     }
 
     @Test
-    void findAllScheduleItems() {
+    void shouldReturnAllScheduleItemsWhenFindAll() {
         List<ScheduleItem> scheduleItems = scheduleItemRepository.findAll();
 
         assertEquals(3, scheduleItems.size());
     }
 
     @Test
-    void findScheduleItemById() {
+    void shouldReturnScheduleItemByIdWhenInputId() {
         Lesson lesson = new Lesson(1L, "first");
         Subject subject = new Subject(1L, "Subject1", "Subject1");
         Audience audience = new Audience(1L, 1, 50);
@@ -97,7 +97,7 @@ public class ScheduleItemRepositoryTest {
     }
 
     @Test
-    void findScheduleItemByDay() {
+    void shouldReturnPagesWithScheduleItemsByDayWhenInputDay() {
         int pageNumber = 1;
         Pageable pageable = PageRequest.of(pageNumber - 1, 10, Sort.by("day"));
         Page<ScheduleItem> scheduleItemInDB = scheduleItemRepository.findByDayDay(pageable, LocalDate.parse("2020-09-01"));
@@ -106,7 +106,7 @@ public class ScheduleItemRepositoryTest {
     }
 
     @Test
-    void findScheduleItemByGroupsName() {
+    void shouldReturnPagesWithScheduleItemsByGroupsNameWhenInputName() {
         int pageNumber = 1;
         Pageable pageable = PageRequest.of(pageNumber - 1, 10, Sort.by("day"));
         Page<ScheduleItem> scheduleItemInDB = scheduleItemRepository.findByGroupsName(pageable, "AAAA");
@@ -115,7 +115,7 @@ public class ScheduleItemRepositoryTest {
     }
 
     @Test
-    void findScheduleItemByTeachersName() {
+    void shouldReturnPagesWithScheduleItemsByTeachersNameWhenInputName() {
         int pageNumber = 1;
         Pageable pageable = PageRequest.of(pageNumber - 1, 10, Sort.by("day"));
         Page<ScheduleItem> scheduleItemInDB = scheduleItemRepository.findByTeachersName(pageable, "Teacher1");
@@ -124,7 +124,7 @@ public class ScheduleItemRepositoryTest {
     }
 
     @Test
-    void findScheduleItemByGroupsNameAndDay() {
+    void shouldReturnPagesWithScheduleItemsByDayWhenInputDayOrGroupsName() {
         int pageNumber = 1;
         Pageable pageable = PageRequest.of(pageNumber - 1, 10, Sort.by("day"));
         Page<ScheduleItem> scheduleItemInDB = scheduleItemRepository.findByGroupsNameAndDayDay(pageable, "AAAA", LocalDate.parse("2020-09-01"));
@@ -133,7 +133,7 @@ public class ScheduleItemRepositoryTest {
     }
 
     @Test
-    void findScheduleItemByTeachersNameAndDay() {
+    void shouldReturnPagesWithScheduleItemsByDayWhenInputDayOrTeacherName() {
         int pageNumber = 1;
         Pageable pageable = PageRequest.of(pageNumber - 1, 10, Sort.by("day"));
         Page<ScheduleItem> scheduleItemInDB = scheduleItemRepository.findByTeachersNameAndDayDay(pageable, "Teacher1", LocalDate.parse("2020-09-01"));

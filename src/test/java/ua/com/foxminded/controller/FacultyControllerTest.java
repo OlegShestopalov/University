@@ -7,14 +7,10 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import ua.com.foxminded.domain.controller.FacultyController;
 import ua.com.foxminded.domain.entity.Faculty;
-import ua.com.foxminded.domain.entity.Student;
 import ua.com.foxminded.domain.service.FacultyService;
 
 import java.util.ArrayList;
@@ -64,7 +60,7 @@ public class FacultyControllerTest {
     }
 
     @Test
-    void findAllFaculties() throws Exception {
+    void shouldShowAllFacultiesWhenFindAll() throws Exception {
         int pageNumber = 1;
         Faculty one = new Faculty(1L, "faculty1");
         Page<Faculty> faculties = new PageImpl<>(Collections.singletonList(one));
@@ -78,7 +74,7 @@ public class FacultyControllerTest {
     }
 
     @Test
-    void findFacultiesByName() throws Exception {
+    void shouldShowFacultyByNameWhenInputName() throws Exception {
         when(facultyService.findByName(any())).thenReturn(faculties);
 
         mockMvc.perform(get("/faculties/search"))
@@ -91,7 +87,7 @@ public class FacultyControllerTest {
     }
 
     @Test
-    void findFacultyById() throws Exception {
+    void shouldShowFacultyByIdWhenInputId() throws Exception {
         when(facultyService.findById(1L)).thenReturn(faculties.get(0));
 
         mockMvc.perform(get("/faculties/1"))
@@ -104,7 +100,7 @@ public class FacultyControllerTest {
     }
 
     @Test
-    void editFaculty() throws Exception {
+    void shouldShowFormWithInfoAboutFacultyWhenEditFaculty() throws Exception {
         when(facultyService.findById(1L)).thenReturn(faculties.get(0));
 
         mockMvc.perform(get("/faculties/1/edit"))
@@ -114,7 +110,7 @@ public class FacultyControllerTest {
     }
 
     @Test
-    void createNewFaculty() throws Exception {
+    void shouldCreateNewFacultyWhenFillOutForm() throws Exception {
         verifyNoMoreInteractions(facultyService);
 
         mockMvc.perform(get("/faculties/new"))
@@ -124,7 +120,7 @@ public class FacultyControllerTest {
     }
 
     @Test
-    public void deleteFaculty() throws Exception {
+    void shouldReturnAllFacultiesWhenDeleteFacultyById() throws Exception {
         doNothing().when(facultyService).delete(faculties.get(0).getId());
 
         mockMvc.perform(
@@ -136,7 +132,7 @@ public class FacultyControllerTest {
     }
 
     @Test
-    void updateFaculty() throws Exception {
+    void shouldUpdateFacultyWhenChangeInfo() throws Exception {
         doNothing().when(facultyService).create(any(Faculty.class));
 
         mockMvc.perform(post("/faculties/1"))

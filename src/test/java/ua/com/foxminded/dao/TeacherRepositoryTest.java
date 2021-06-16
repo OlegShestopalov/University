@@ -25,7 +25,7 @@ public class TeacherRepositoryTest {
     }
 
     @Test
-    void createTeacher() {
+    void shouldCreateNewTeacherInDBWhenAddNewTeacher() {
         Teacher teacher = new Teacher(1L,"Teacher4", "Teacher4", "teacher4@gmail.com");
         teacherRepository.save(teacher);
         Teacher createdTeacher = teacherRepository.getOne(teacher.getId());
@@ -34,7 +34,7 @@ public class TeacherRepositoryTest {
     }
 
     @Test
-    void deleteTeacherFromUniversity() {
+    void shouldDeleteTeacherFromDBWhenInputId() {
         Teacher teacherToBeDeleted = teacherRepository.getOne(1L);
         teacherRepository.deleteById(teacherToBeDeleted.getId());
 
@@ -42,7 +42,7 @@ public class TeacherRepositoryTest {
     }
 
     @Test
-    void updateTeacher() {
+    void shouldSaveUpdatedTeacherWhenChangeDataAboutTeacher() {
         Teacher newTeacher = new Teacher(1L, "UpdatedTeacher", "UpdatedTeacher", "UpdatedTeacher@gmail.com");
         teacherRepository.save(newTeacher);
         Teacher updatedTeacher = teacherRepository.getOne(1L);
@@ -51,14 +51,14 @@ public class TeacherRepositoryTest {
     }
 
     @Test
-    void findAllTeachers() {
+    void shouldReturnListOfTeachersWhenFindAll() {
         List<Teacher> teachers = teacherRepository.findAll();
 
         assertEquals(3, teachers.size());
     }
 
     @Test
-    void findTeacherById() {
+    void shouldReturnTeacherByIdWhenInputId() {
         Teacher teacher = new Teacher(1L, "Teacher1", "Teacher1", "teacher1@gmail.com");
         Teacher teacherInDB = teacherRepository.getOne(1L);
 
@@ -66,9 +66,9 @@ public class TeacherRepositoryTest {
     }
 
     @Test
-    void findTeachersByPersonalData() {
+    void shouldReturnStudentsByNameWhenInputNameOrSurname() {
         Teacher teacher = new Teacher(1L, "Teacher1", "Teacher1", "teacher1@gmail.com");
-        List<Teacher> teachers = teacherRepository.findByPersonalData(teacher.getName());
+        List<Teacher> teachers = teacherRepository.findByNameOrSurname(teacher.getName());
 
         assertEquals(teacher, teachers.get(0));
     }

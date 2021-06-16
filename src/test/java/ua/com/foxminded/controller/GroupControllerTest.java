@@ -38,6 +38,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class GroupControllerTest {
 
     private List<Group> groups;
+
     private MockMvc mockMvc;
 
     @MockBean
@@ -64,7 +65,7 @@ public class GroupControllerTest {
     }
 
     @Test
-    void findAllGroups() throws Exception {
+    void shouldShowAllGroupsWhenFindAll() throws Exception {
         int pageNumber = 1;
         Faculty faculty = new Faculty();
         Course course = new Course();
@@ -78,8 +79,9 @@ public class GroupControllerTest {
                 .andExpect(view().name("groups/allGroups"))
                 .andExpect(model().attribute("groups", hasSize(1)));
     }
+
     @Test
-    void findGroupsByName() throws Exception {
+    void shouldShowGroupByNameWhenInputName() throws Exception {
         when(groupService.findByName(any())).thenReturn(groups);
 
         mockMvc.perform(get("/groups/search"))
@@ -92,7 +94,7 @@ public class GroupControllerTest {
     }
 
     @Test
-    void findGroupById() throws Exception {
+    void shouldShowGroupByIdWhenInputId() throws Exception {
         when(groupService.findById(1L)).thenReturn(groups.get(0));
 
         mockMvc.perform(get("/groups/1"))
@@ -105,7 +107,7 @@ public class GroupControllerTest {
     }
 
     @Test
-    void editGroup() throws Exception {
+    void shouldShowFormWithInfoAboutGroupWhenEditGroup() throws Exception {
         when(groupService.findById(1L)).thenReturn(groups.get(0));
 
         mockMvc.perform(get("/groups/1/edit"))
@@ -115,7 +117,7 @@ public class GroupControllerTest {
     }
 
     @Test
-    void createNewGroup() throws Exception {
+    void shouldCreateNewGroupWhenFillOutForm() throws Exception {
         verifyNoMoreInteractions(groupService);
 
         mockMvc.perform(get("/groups/new"))
@@ -125,7 +127,7 @@ public class GroupControllerTest {
     }
 
     @Test
-    public void deleteGroup() throws Exception {
+    void shouldReturnAllGroupsWhenDeleteGroupById() throws Exception {
         doNothing().when(groupService).delete(groups.get(0).getId());
 
         mockMvc.perform(
@@ -137,7 +139,7 @@ public class GroupControllerTest {
     }
 
     @Test
-    void updateGroup() throws Exception {
+    void shouldUpdateGroupWhenChangeInfo() throws Exception {
         doNothing().when(groupService).create(any(Group.class));
 
         mockMvc.perform(post("/groups/1"))

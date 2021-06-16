@@ -25,7 +25,7 @@ public class LessonRepositoryTest {
     }
 
     @Test
-    void createLesson() {
+    void shouldCreateNewLessonInDBWhenAddNewLesson() {
         Lesson lesson = new Lesson(1L, "TEST");
         lessonRepository.save(lesson);
         Lesson createdLesson = lessonRepository.getOne(lesson.getId());
@@ -34,7 +34,7 @@ public class LessonRepositoryTest {
     }
 
     @Test
-    void deleteLesson() {
+    void shouldDeleteLessonFromDBWhenInputId() {
         Lesson lessonToBeDeleted = lessonRepository.getOne(1L);
         lessonRepository.deleteById(lessonToBeDeleted.getId());
 
@@ -42,7 +42,7 @@ public class LessonRepositoryTest {
     }
 
     @Test
-    void updateLesson() {
+    void shouldSaveUpdatedLessonWhenChangeDataAboutLesson() {
         Lesson newLesson = new Lesson(1L, "UpdatedLesson");
         lessonRepository.save(newLesson);
         Lesson updatedLesson = lessonRepository.getOne(1L);
@@ -51,14 +51,14 @@ public class LessonRepositoryTest {
     }
 
     @Test
-    void findAllLessons() {
+    void shouldReturnListLessonsWhenFindAll() {
         List<Lesson> lessons = lessonRepository.findAll();
 
         assertEquals(6, lessons.size());
     }
 
     @Test
-    void findLessonById() {
+    void shouldReturnLessonByIdWhenInputId() {
         Lesson lesson = new Lesson(1L, "first");
         Lesson lessonInDB = lessonRepository.getOne(1L);
 

@@ -47,6 +47,6 @@ public class GroupServiceImpl implements GroupService {
 
     @Override
     public List<Group> findByName(String name) {
-        return groupRepository.findByName(name);
+        return groupRepository.findByNameOrFaculty(name);
     }
 }

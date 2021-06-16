@@ -14,14 +14,11 @@ import ua.com.foxminded.dao.GroupRepository;
 import ua.com.foxminded.domain.entity.Course;
 import ua.com.foxminded.domain.entity.Faculty;
 import ua.com.foxminded.domain.entity.Group;
-import ua.com.foxminded.domain.entity.Student;
 import ua.com.foxminded.domain.service.impl.GroupServiceImpl;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.anyLong;
@@ -38,11 +35,15 @@ public class GroupServiceTest {
 
     @InjectMocks
     private GroupServiceImpl groupService;
+
+    @Mock
     private Faculty faculty;
+
+    @Mock
     private Course course;
 
     @Test
-    void CreateGroup_WhenAddNewGroup_ThenCreatedNewGroupInDB() {
+    void shouldCreateNewGroupInDBWhenAddNewGroup() {
         Group group = new Group(1L, "test", faculty, course);
 
         groupService.create(group);
@@ -52,7 +53,7 @@ public class GroupServiceTest {
     }
 
     @Test
-    void DeleteGroupById_WhenInputId_ThenDeletedGroupFromDB() {
+    void shouldDeleteGroupFromDBWhenInputId() {
         Group group = new Group(1L, "test", faculty, course);
 
         groupService.delete(1L);
@@ -61,7 +62,7 @@ public class GroupServiceTest {
     }
 
     @Test
-    void UpdateGroup_WhenChangeDataAboutGroup_ThenSaveUpdatedGroup() {
+    void shouldSaveUpdatedGroupWhenChangeDataAboutGroup() {
         Group group = new Group(1L, "test", faculty, course);
 
         groupService.create(group);
@@ -71,7 +72,7 @@ public class GroupServiceTest {
     }
 
     @Test
-    void FindAllGroupsByPages_WhenFindAll_ThenReturnedPagesWithGroups() {
+    void shouldReturnPagesWithGroupsWhenFindAll() {
         int pageNumber = 1;
         Pageable pageable = PageRequest.of(pageNumber - 1, 10, Sort.by("name"));
         Group one = new Group(1L, "test", faculty, course);
@@ -86,7 +87,7 @@ public class GroupServiceTest {
     }
 
     @Test
-    void FindGroupById_WhenInputId_ThenReturnedGroupById() {
+    void shouldReturnGroupByIdWhenInputId() {
         when(groupRepository.getOne(anyLong())).thenReturn(new Group(1L, "test", faculty, course));
 
         assertEquals("test", groupService.findById(1L).getName());
@@ -96,10 +97,10 @@ public class GroupServiceTest {
     }
 
     @Test
-    void FindGroupsByName_WhenInputName_ThenReturnedGroupsByName() {
+    void shouldReturnGroupsByNameWhenInputName() {
         List<Group> groups = new ArrayList<>(Collections.singleton(new Group(1L, "test", faculty, course)));
 
-        when(groupRepository.findByName("test")).thenReturn(groups);
+        when(groupRepository.findByNameOrFaculty("test")).thenReturn(groups);
 
         assertEquals(groups, groupService.findByName("test"));
         assertEquals(1, groupService.findByName("test").size());

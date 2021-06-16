@@ -15,7 +15,6 @@ import ua.com.foxminded.domain.entity.Day;
 import ua.com.foxminded.domain.entity.Group;
 import ua.com.foxminded.domain.entity.Lesson;
 import ua.com.foxminded.domain.entity.ScheduleItem;
-import ua.com.foxminded.domain.entity.Student;
 import ua.com.foxminded.domain.entity.Subject;
 import ua.com.foxminded.domain.entity.Teacher;
 import ua.com.foxminded.domain.service.ScheduleItemService;
@@ -75,7 +74,7 @@ public class ScheduleItemControllerTest {
     }
 
     @Test
-    void findAllScheduleItems() throws Exception {
+    void shouldShowAllScheduleItemsWhenFindAll() throws Exception {
         int pageNumber = 1;
         Lesson lesson = new Lesson();
         Subject subject = new Subject();
@@ -94,7 +93,7 @@ public class ScheduleItemControllerTest {
     }
 
     @Test
-    void findAllScheduleItemsForGroup() throws Exception {
+    void shouldShowAllScheduleItemsForGroupWhenInputNameOrDay() throws Exception {
         int pageNumber = 1;
         Lesson lesson = new Lesson();
         Subject subject = new Subject();
@@ -114,7 +113,7 @@ public class ScheduleItemControllerTest {
     }
 
     @Test
-    void findAllScheduleItemsForTeacher() throws Exception {
+    void shouldShowAllScheduleItemsForTeacherWhenInputNameOrDay() throws Exception {
         int pageNumber = 1;
         Lesson lesson = new Lesson();
         Subject subject = new Subject();
@@ -134,7 +133,7 @@ public class ScheduleItemControllerTest {
     }
 
     @Test
-    void findScheduleItemById() throws Exception {
+    void shouldShowScheduleItemByIdWhenInputId() throws Exception {
         when(scheduleItemService.findById(1L)).thenReturn(scheduleItems.get(0));
 
         mockMvc.perform(get("/scheduleItems/1"))
@@ -147,7 +146,7 @@ public class ScheduleItemControllerTest {
     }
 
     @Test
-    void editScheduleItem() throws Exception {
+    void shouldShowFormWithInfoAboutScheduleItemWhenEditScheduleItem() throws Exception {
         when(scheduleItemService.findById(1L)).thenReturn(scheduleItems.get(0));
 
         mockMvc.perform(get("/scheduleItems/1/edit"))
@@ -157,7 +156,7 @@ public class ScheduleItemControllerTest {
     }
 
     @Test
-    void createNewScheduleItem() throws Exception {
+    void shouldCreateNewScheduleItemWhenFillOutForm() throws Exception {
         verifyNoMoreInteractions(scheduleItemService);
 
         mockMvc.perform(get("/scheduleItems/new"))
@@ -167,7 +166,7 @@ public class ScheduleItemControllerTest {
     }
 
     @Test
-    public void deleteScheduleItem() throws Exception {
+    public void shouldReturnAllScheduleItemsWhenDeleteScheduleItemById() throws Exception {
         doNothing().when(scheduleItemService).delete(scheduleItems.get(0).getId());
 
         mockMvc.perform(
@@ -179,7 +178,7 @@ public class ScheduleItemControllerTest {
     }
 
     @Test
-    void updateScheduleItem() throws Exception {
+    void shouldUpdateScheduleItemWhenChangeInfo() throws Exception {
         doNothing().when(scheduleItemService).create(any(ScheduleItem.class));
 
         mockMvc.perform(post("/scheduleItems/1"))

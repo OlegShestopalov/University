@@ -35,7 +35,7 @@ public class FacultyServiceTest {
     private FacultyServiceImpl facultyService;
 
     @Test
-    void CreateFaculty_WhenAddNewFaculty_ThenCreatedNewFacultyInDB() {
+    void shouldCreateNewFacultyInDBWhenAddNewFaculty() {
         Faculty faculty = new Faculty(1L, "test");
 
         facultyService.create(faculty);
@@ -45,7 +45,7 @@ public class FacultyServiceTest {
     }
 
     @Test
-    void DeleteFacultyById_WhenInputId_ThenDeletedFacultyFromDB() {
+    void shouldDeleteFacultyFromDBWhenInputId() {
         Faculty faculty = new Faculty(1L, "test");
 
         facultyService.delete(1L);
@@ -54,7 +54,7 @@ public class FacultyServiceTest {
     }
 
     @Test
-    void UpdateFaculty_WhenChangeDataAboutFaculty_ThenSaveUpdatedFaculty() {
+    void shouldSaveUpdatedFacultyWhenChangeDataAboutFaculty() {
         Faculty faculty = new Faculty(1L, "test");
 
         facultyService.create(faculty);
@@ -64,7 +64,7 @@ public class FacultyServiceTest {
     }
 
     @Test
-    void FindAllFacultiesByPages_WhenFindAll_ThenReturnedPagesWithFaculties() {
+    void shouldReturnPagesWithFacultiesWhenFindAll() {
         int pageNumber = 1;
         Pageable pageable = PageRequest.of(pageNumber - 1, 10, Sort.by("name"));
         Faculty one = new Faculty(1L, "faculty1");
@@ -79,7 +79,7 @@ public class FacultyServiceTest {
     }
 
     @Test
-    void FindFacultyById_WhenInputId_ThenReturnedFacultyById() {
+    void shouldReturnFacultyByIdWhenInputId() {
         when(facultyRepository.getOne(anyLong())).thenReturn(new Faculty(1L, "test"));
 
         assertEquals("test", facultyService.findById(1L).getName());
@@ -87,7 +87,7 @@ public class FacultyServiceTest {
     }
 
     @Test
-    void FindFacultyByName_WhenInputName_ThenReturnedListOfFaculties() {
+    void shouldReturnListOfFacultiesWhenInputName() {
         List<Faculty> faculties = new ArrayList<>(Collections.singleton(new Faculty(1L, "test")));
 
         when(facultyRepository.findByName("test")).thenReturn(faculties);

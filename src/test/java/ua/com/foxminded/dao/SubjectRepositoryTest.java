@@ -25,7 +25,7 @@ public class SubjectRepositoryTest {
     }
 
     @Test
-    void createSubject() {
+    void shouldCreateNewSubjectInDBWhenAddNewSubject() {
         Subject subject = new Subject(1L, "TEST", "TEST");
         subjectRepository.save(subject);
         Subject createdSubject = subjectRepository.getOne(subject.getId());
@@ -34,7 +34,7 @@ public class SubjectRepositoryTest {
     }
 
     @Test
-    void deleteSubject() {
+    void shouldDeleteSubjectFromDBWhenInputId() {
         Subject subjectToBeDeleted = subjectRepository.getOne(1L);
         subjectRepository.deleteById(subjectToBeDeleted.getId());
 
@@ -42,7 +42,7 @@ public class SubjectRepositoryTest {
     }
 
     @Test
-    void updateSubject() {
+    void shouldSaveUpdatedSubjectWhenChangeDataAboutSubject() {
         Subject newSubject = new Subject(1L, "UpdatedSubject", "UpdatedSubject");
         subjectRepository.save(newSubject);
         Subject updatedSubject = subjectRepository.getOne(1L);
@@ -51,14 +51,14 @@ public class SubjectRepositoryTest {
     }
 
     @Test
-    void findAllSubjects() {
+    void shouldReturnListSubjectsWhenFindAll() {
         List<Subject> subjects = subjectRepository.findAll();
 
         assertEquals(3, subjects.size());
     }
 
     @Test
-    void findSubjectById() {
+    void shouldReturnSubjectByIdWhenInputId() {
         Subject subject = new Subject(1L, "Subject1", "Subject1");
         Subject subjectInDB = subjectRepository.getOne(1L);
 

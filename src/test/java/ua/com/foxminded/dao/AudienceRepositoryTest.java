@@ -25,7 +25,7 @@ public class AudienceRepositoryTest {
     }
 
     @Test
-    void createAudience() {
+    void shouldCreateNewAudienceInDBWhenAddNewAudience() {
         Audience audience = new Audience(1L, 1, 1);
         audienceRepository.save(audience);
         Audience createdAudience = audienceRepository.getOne(audience.getId());
@@ -34,7 +34,7 @@ public class AudienceRepositoryTest {
     }
 
     @Test
-    void deleteAudience() {
+    void shouldDeleteAudienceFromDBWhenInputId() {
         Audience audienceToBeDeleted = audienceRepository.getOne(1L);
         audienceRepository.deleteById(audienceToBeDeleted.getId());
 
@@ -42,7 +42,7 @@ public class AudienceRepositoryTest {
     }
 
     @Test
-    void updateAudience() {
+    void shouldSaveUpdatedAudienceWhenChangeDataAboutAudience() {
         Audience newAudience = new Audience(1L, 2, 2);
         audienceRepository.save(newAudience);
         Audience updatedAudience = audienceRepository.getOne(1L);
@@ -51,14 +51,14 @@ public class AudienceRepositoryTest {
     }
 
     @Test
-    void findAllAudiences() {
+    void shouldReturnListAudiencesWhenFindAll() {
         List<Audience> audiences = audienceRepository.findAll();
 
         assertEquals(3, audiences.size());
     }
 
     @Test
-    void findAudienceById() {
+    void shouldReturnAudienceByIdWhenInputId() {
         Audience audience = new Audience(1L, 1, 50);
         Audience audienceInDB = audienceRepository.getOne(1L);
 

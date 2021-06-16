@@ -2,8 +2,6 @@ package ua.com.foxminded.controller;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
-import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.web.servlet.MockMvc;
@@ -31,7 +29,7 @@ public class HomePageControllerTest {
     }
 
     @Test
-    void name() throws Exception {
+    void shouldShowHomePageWhenChooseTemplate() throws Exception {
         mockMvc.perform(get("/home"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("homePage"))

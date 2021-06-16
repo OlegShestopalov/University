@@ -47,6 +47,6 @@ public class StudentServiceImpl implements StudentService {
 
     @Override
     public List<Student> findByPersonalData(String name) {
-        return studentRepository.findByPersonalData(name);
+        return studentRepository.findByNameOrSurnameOrGroup(name);
     }
 }
