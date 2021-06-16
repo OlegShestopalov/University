@@ -10,6 +10,6 @@ import java.util.List;
 @Repository
 public interface FacultyRepository extends JpaRepository<Faculty, Long> {
 
-    @Query(value = "SELECT f FROM Faculty f WHERE f.name LIKE %?1%")
+    @Query(value = "SELECT f FROM Faculty f WHERE f.name LIKE %?1%  ORDER BY f.name ASC")
     List<Faculty> findByName(final String name);
 }

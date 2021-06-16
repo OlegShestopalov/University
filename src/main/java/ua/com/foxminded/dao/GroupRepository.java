@@ -11,5 +11,5 @@ import java.util.List;
 public interface GroupRepository extends JpaRepository<Group, Long> {
 
     @Query(value = "SELECT g FROM Group g WHERE CONCAT(g.name, g.faculty.name) LIKE %?1%  ORDER BY g.name ASC")
-    List<Group> findByName(final String name);
+    List<Group> findByNameOrFaculty(final String name);
 }

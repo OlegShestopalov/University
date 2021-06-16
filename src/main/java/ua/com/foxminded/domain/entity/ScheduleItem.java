@@ -8,8 +8,6 @@ import javax.persistence.ManyToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.validation.Valid;
-import javax.validation.constraints.Min;
-import javax.validation.constraints.NotNull;
 import java.util.Objects;
 import java.util.Set;
 
@@ -19,8 +17,6 @@ public class ScheduleItem {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-//    @NotNull(message = "{not.null}")
-//    @Min(value = 1, message = "{min.id}")
     private Long id;
 
     @OneToOne

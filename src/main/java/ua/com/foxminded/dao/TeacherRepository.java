@@ -11,5 +11,5 @@ import java.util.List;
 public interface TeacherRepository extends JpaRepository<Teacher, Long> {
 
     @Query(value = "SELECT t FROM Teacher t WHERE CONCAT(t.name, t.surname) LIKE %?1% ORDER BY t.name ASC")
-    List<Teacher> findByPersonalData(final String name);
+    List<Teacher> findByNameOrSurname(final String name);
 }

@@ -20,7 +20,7 @@
 <form class="row g-3">
   <div class="col-md-4"></div>
 
-  <form th:action="@{/students/search}">
+  <form th:action="@{/faculties/search}">
     <div class="col-md-2">
       <input class="form-control" th:type="text" th:name="name" th:value="${name}" required
              placeholder="enter personal data..."/>
@@ -37,7 +37,7 @@
 
 <script type="text/javascript">
     function clearFilter() {
-        window.location = '/students/search';
+        window.location = '/faculties/search';
     }
 </script>
 <div>&nbsp;</div>
