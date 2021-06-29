@@ -1,5 +1,6 @@
 package ua.com.foxminded.domain.controller;
 
+import javassist.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.repository.query.Param;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import ua.com.foxminded.domain.entity.Faculty;
 import ua.com.foxminded.domain.service.FacultyService;
+import ua.com.foxminded.exception.AlreadyExistException;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -34,12 +36,14 @@ public class FacultyController {
     }
 
     @GetMapping("/allFaculties")
-    public String showAllFaculties(Model model) {
+    public String showAllFaculties(Model model) throws NotFoundException {
         return showListByPage(model, "name", 1);
     }
 
     @GetMapping("/page/{pageNumber}")
-    public String showListByPage(Model model, @Param("name") String name, @PathVariable("pageNumber") int currentPage) {
+    public String showListByPage(Model model,
+                                 @Param("name") String name,
+                                 @PathVariable("pageNumber") int currentPage) throws NotFoundException {
         Page<Faculty> page = facultyService.findAll(currentPage);
         int totalPages = page.getTotalPages();
         List<Faculty> faculties = page.getContent();
@@ -54,14 +58,14 @@ public class FacultyController {
     }
 
     @GetMapping("/search")
-    public String showFacultiesByName(Model model, @Param("name") String name) {
+    public String showFacultiesByName(Model model, @Param("name") String name) throws NotFoundException {
         model.addAttribute("faculties", facultyService.findByName(name));
         model.addAttribute("name", name);
         return "faculties/facultiesByName";
     }
 
     @GetMapping("/{id}")
-    public String showInfo(@PathVariable("id") Long id, Model model) {
+    public String showInfo(@PathVariable("id") Long id, Model model) throws NotFoundException {
         model.addAttribute("faculty", facultyService.findById(id));
         return "faculties/faculty";
     }
@@ -72,7 +76,7 @@ public class FacultyController {
     }
 
     @PostMapping("/new")
-    public String create(@ModelAttribute("faculty") @Valid Faculty faculty, BindingResult bindingResult) {
+    public String create(@ModelAttribute("faculty") @Valid Faculty faculty, BindingResult bindingResult) throws AlreadyExistException {
         if (bindingResult.hasErrors()) {
             return "faculties/new";
         }
@@ -81,13 +85,13 @@ public class FacultyController {
     }
 
     @GetMapping("/{id}/edit")
-    public String edit(Model model, @PathVariable("id") Long id) {
+    public String edit(Model model, @PathVariable("id") Long id) throws NotFoundException {
         model.addAttribute("faculty", facultyService.findById(id));
         return "faculties/edit";
     }
 
     @PostMapping("/{id}")
-    public String update(@Valid Faculty faculty, BindingResult bindingResult) {
+    public String update(@Valid Faculty faculty, BindingResult bindingResult) throws AlreadyExistException {
         if (bindingResult.hasErrors()) {
             return "faculties/edit";
         }
@@ -96,7 +100,7 @@ public class FacultyController {
     }
 
     @GetMapping("/{id}/delete")
-    public String delete(@PathVariable("id") Long id) {
+    public String delete(@PathVariable("id") Long id) throws NotFoundException {
         facultyService.delete(id);
         return "redirect:/faculties/allFaculties";
     }

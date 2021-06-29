@@ -1,5 +1,6 @@
 package ua.com.foxminded.domain.controller;
 
+import javassist.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.repository.query.Param;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import ua.com.foxminded.domain.entity.Teacher;
 import ua.com.foxminded.domain.service.TeacherService;
+import ua.com.foxminded.exception.AlreadyExistException;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -34,12 +36,12 @@ public class TeacherController {
     }
 
     @GetMapping("/allTeachers")
-    public String showAllTeachers(Model model) {
+    public String showAllTeachers(Model model) throws NotFoundException {
         return showListByPage(model, "name", 1);
     }
 
     @GetMapping("/page/{pageNumber}")
-    public String showListByPage(Model model, @Param("name") String name, @PathVariable("pageNumber") int currentPage) {
+    public String showListByPage(Model model, @Param("name") String name, @PathVariable("pageNumber") int currentPage) throws NotFoundException {
         Page<Teacher> page = teacherService.findAll(currentPage);
         int totalPages = page.getTotalPages();
         List<Teacher> teachers = page.getContent();
@@ -54,14 +56,14 @@ public class TeacherController {
     }
 
     @GetMapping("/search")
-    public String showTeachersByName(Model model, @Param("name") String name) {
+    public String showTeachersByName(Model model, @Param("name") String name) throws NotFoundException {
         model.addAttribute("teachers", teacherService.findByPersonalData(name));
         model.addAttribute("name", name);
         return "teachers/teachersByName";
     }
 
     @GetMapping("/{id}")
-    public String showInfo(@PathVariable("id") Long id, Model model) {
+    public String showInfo(@PathVariable("id") Long id, Model model) throws NotFoundException {
         model.addAttribute("teacher", teacherService.findById(id));
         return "teachers/teacher";
     }
@@ -72,7 +74,7 @@ public class TeacherController {
     }
 
     @PostMapping("/new")
-    public String create(@ModelAttribute("teacher") @Valid Teacher teacher, BindingResult bindingResult) {
+    public String create(@ModelAttribute("teacher") @Valid Teacher teacher, BindingResult bindingResult) throws AlreadyExistException {
         if (bindingResult.hasErrors()) {
             return "teachers/new";
         }
@@ -81,13 +83,13 @@ public class TeacherController {
     }
 
     @GetMapping("/{id}/edit")
-    public String edit(Model model, @PathVariable("id") Long id) {
+    public String edit(Model model, @PathVariable("id") Long id) throws NotFoundException {
         model.addAttribute("teacher", teacherService.findById(id));
         return "teachers/edit";
     }
 
     @PostMapping("/{id}")
-    public String update(@Valid Teacher teacher, BindingResult bindingResult) {
+    public String update(@Valid Teacher teacher, BindingResult bindingResult) throws AlreadyExistException {
         if (bindingResult.hasErrors()) {
             return "teachers/edit";
         }
@@ -96,7 +98,7 @@ public class TeacherController {
     }
 
     @GetMapping("/{id}/delete")
-    public String delete(@PathVariable("id") Long id) {
+    public String delete(@PathVariable("id") Long id) throws NotFoundException {
         teacherService.delete(id);
         return "redirect:/teachers/allTeachers";
     }
