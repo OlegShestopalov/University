@@ -1,5 +1,6 @@
 package ua.com.foxminded.config;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -24,5 +25,10 @@ public class SpringConfig implements WebMvcConfigurer {
         dataSource.setUsername("sa");
         dataSource.setPassword("");
         return dataSource;
+    }
+
+    @Bean
+    public ModelMapper modelMapper() {
+        return new ModelMapper();
     }
 }

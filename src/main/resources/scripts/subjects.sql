@@ -34,7 +34,7 @@ insert into subject (name, description) values ('Pedagogy', 'Pedagogy is a term 
 insert into subject (name, description) values ('Philology', 'Philology, traditionally, the study of the history of language, including the historical study of literary texts.');
 insert into subject (name, description) values ('Philosophy', 'Philosophy is the study of general and fundamental questions, such as those about reason, existence, knowledge, values, mind, and language.');
 insert into subject (name, description) values ('Physics', 'Physics is the natural science that studies matter, its motion and behavior through space and time, and the related entities of energy and force.');
-insert into subject (name, description) values ('Physics of electronic processes', 'Electronics comprises the physics, engineering, technology and applications that deal with the emission, flow and control of electrons in vacuum and matter.');
+insert into subject (name, description) values ('Physics of electronic', 'Electronics comprises the physics, engineering, technology and applications that deal with the emission, flow and control of electrons in vacuum and matter.');
 insert into subject (name, description) values ('Physics of solid', 'A solid is a state of matter characterized by particles arranged such that their shape and volume are relatively stable.');
 insert into subject (name, description) values ('Physiology', 'Physiology is the study of how the human body functions. Learn what it can tell us about health and how it applies to medicine.');
 insert into subject (name, description) values ('Political science', 'Political science focuses on the theory and practice of government and politics at the local, state, national, and international levels.');
