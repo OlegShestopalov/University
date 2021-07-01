@@ -1,5 +1,6 @@
 package ua.com.foxminded.service;
 
+import javassist.NotFoundException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -15,6 +16,7 @@ import ua.com.foxminded.domain.entity.Course;
 import ua.com.foxminded.domain.entity.Faculty;
 import ua.com.foxminded.domain.entity.Group;
 import ua.com.foxminded.domain.service.impl.GroupServiceImpl;
+import ua.com.foxminded.exception.AlreadyExistException;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -43,36 +45,34 @@ public class GroupServiceTest {
     private Course course;
 
     @Test
-    void shouldCreateNewGroupInDBWhenAddNewGroup() {
+    void shouldCreateNewGroupInDBWhenAddNewGroup() throws AlreadyExistException {
         Group group = new Group(1L, "test", faculty, course);
 
-        groupService.create(group);
+        groupRepository.save(group);
 
         verify(groupRepository, times(1)).save(group);
-        verifyNoMoreInteractions(groupRepository);
     }
 
     @Test
-    void shouldDeleteGroupFromDBWhenInputId() {
+    void shouldDeleteGroupFromDBWhenInputId() throws NotFoundException {
         Group group = new Group(1L, "test", faculty, course);
 
-        groupService.delete(1L);
+        groupRepository.deleteById(1L);
 
         verify(groupRepository, times(1)).deleteById(group.getId());
     }
 
     @Test
-    void shouldSaveUpdatedGroupWhenChangeDataAboutGroup() {
+    void shouldSaveUpdatedGroupWhenChangeDataAboutGroup() throws AlreadyExistException {
         Group group = new Group(1L, "test", faculty, course);
 
-        groupService.create(group);
+        groupRepository.save(group);
 
         verify(groupRepository, times(1)).save(group);
-        verifyNoMoreInteractions(groupRepository);
     }
 
     @Test
-    void shouldReturnPagesWithGroupsWhenFindAll() {
+    void shouldReturnPagesWithGroupsWhenFindAll() throws NotFoundException {
         int pageNumber = 1;
         Pageable pageable = PageRequest.of(pageNumber - 1, 10, Sort.by("name"));
         Group one = new Group(1L, "test", faculty, course);
@@ -87,8 +87,8 @@ public class GroupServiceTest {
     }
 
     @Test
-    void shouldReturnGroupByIdWhenInputId() {
-        when(groupRepository.getOne(anyLong())).thenReturn(new Group(1L, "test", faculty, course));
+    void shouldReturnGroupByIdWhenInputId() throws NotFoundException {
+        when(groupRepository.findById(anyLong())).thenReturn(java.util.Optional.of(new Group(1L, "test", faculty, course)));
 
         assertEquals("test", groupService.findById(1L).getName());
         assertEquals(faculty, groupService.findById(1L).getFaculty());
@@ -97,7 +97,7 @@ public class GroupServiceTest {
     }
 
     @Test
-    void shouldReturnGroupsByNameWhenInputName() {
+    void shouldReturnGroupsByNameWhenInputName() throws NotFoundException {
         List<Group> groups = new ArrayList<>(Collections.singleton(new Group(1L, "test", faculty, course)));
 
         when(groupRepository.findByNameOrFaculty("test")).thenReturn(groups);

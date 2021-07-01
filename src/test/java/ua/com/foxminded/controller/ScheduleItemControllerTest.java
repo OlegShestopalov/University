@@ -183,7 +183,7 @@ public class ScheduleItemControllerTest {
 
         mockMvc.perform(post("/scheduleItems/1"))
                 .andExpect(status().isOk())
-                .andExpect(view().name("redirect:/scheduleItems/page/1"))
+                .andExpect(view().name("scheduleItems/edit"))
                 .andExpect(model().attribute("scheduleItem", instanceOf(ScheduleItem.class)));
     }
 }

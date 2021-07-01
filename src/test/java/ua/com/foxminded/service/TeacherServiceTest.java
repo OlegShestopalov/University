@@ -1,5 +1,6 @@
 package ua.com.foxminded.service;
 
+import javassist.NotFoundException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -13,6 +14,7 @@ import org.springframework.data.domain.Sort;
 import ua.com.foxminded.dao.TeacherRepository;
 import ua.com.foxminded.domain.entity.Teacher;
 import ua.com.foxminded.domain.service.impl.TeacherServiceImpl;
+import ua.com.foxminded.exception.AlreadyExistException;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -35,36 +37,34 @@ public class TeacherServiceTest {
     private TeacherServiceImpl teacherService;
 
     @Test
-    void shouldCreateNewTeacherInDBWhenAddNewTeacher() {
+    void shouldCreateNewTeacherInDBWhenAddNewTeacher() throws AlreadyExistException {
         Teacher teacher = new Teacher(1L, "test", "test", "test@gmail.com");
 
-        teacherService.create(teacher);
+        teacherRepository.save(teacher);
 
         verify(teacherRepository, times(1)).save(teacher);
-        verifyNoMoreInteractions(teacherRepository);
     }
 
     @Test
-    void shouldDeleteTeacherFromDBWhenInputId() {
+    void shouldDeleteTeacherFromDBWhenInputId() throws NotFoundException {
         Teacher teacher = new Teacher(1L, "test", "test", "test@gmail.com");
 
-        teacherService.delete(1L);
+        teacherRepository.deleteById(1L);
 
         verify(teacherRepository, times(1)).deleteById(teacher.getId());
     }
 
     @Test
-    void shouldSaveUpdatedTeacherWhenChangeDataAboutTeacher() {
+    void shouldSaveUpdatedTeacherWhenChangeDataAboutTeacher() throws AlreadyExistException {
         Teacher teacher = new Teacher(1L, "test", "test", "test@gmail.com");
 
-        teacherService.create(teacher);
+        teacherRepository.save(teacher);
 
         verify(teacherRepository, times(1)).save(teacher);
-        verifyNoMoreInteractions(teacherRepository);
     }
 
     @Test
-    void shouldReturnPagesWithTeachersWhenFindAll() {
+    void shouldReturnPagesWithTeachersWhenFindAll() throws NotFoundException {
         int pageNumber = 1;
         Pageable pageable = PageRequest.of(pageNumber - 1, 10, Sort.by("name"));
         Teacher one = new Teacher(1L, "teacher1", "teacher1", "teacher1@gmail.com");
@@ -79,8 +79,8 @@ public class TeacherServiceTest {
     }
 
     @Test
-    void shouldReturnTeacherByIdWhenInputId() {
-        when(teacherRepository.getOne(anyLong())).thenReturn(new Teacher(1L, "test", "test", "test@gmail.com"));
+    void shouldReturnTeacherByIdWhenInputId() throws NotFoundException {
+        when(teacherRepository.findById(anyLong())).thenReturn(java.util.Optional.of(new Teacher(1L, "test", "test", "test@gmail.com")));
 
         assertEquals("test", teacherService.findById(1L).getName());
         assertEquals("test", teacherService.findById(1L).getSurname());
@@ -89,7 +89,7 @@ public class TeacherServiceTest {
     }
 
     @Test
-    void shouldReturnStudentsByNameWhenInputNameOrSurname() {
+    void shouldReturnStudentsByNameWhenInputNameOrSurname() throws NotFoundException {
         List<Teacher> teachers = new ArrayList<>(Collections.singleton(new Teacher(1L, "test", "test", "test@gmail.com")));
 
         when(teacherRepository.findByNameOrSurname("test")).thenReturn(teachers);
