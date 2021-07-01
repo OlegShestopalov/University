@@ -102,7 +102,9 @@ public class ScheduleItemRestController {
     }
 
     @GetMapping("/pages/{pageNumber}")
-    public ResponseEntity findAllOnPage(@PathVariable("pageNumber") int pageNumber, LocalDate day) {
+    public ResponseEntity findAllOnPage(@PathVariable("pageNumber") int pageNumber,
+                                        @RequestParam("day")
+                                        @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate day) {
         try {
             List<ScheduleItemDto> scheduleItemsDto = mapPage(scheduleItemService.findAll(pageNumber, day), ScheduleItemDto.class);
             return ResponseEntity.ok(scheduleItemsDto);
@@ -113,8 +115,10 @@ public class ScheduleItemRestController {
         }
     }
 
-    @GetMapping("/pagesByDay/{pageNumber}/{day}")
-    public ResponseEntity findByDayOnPage(@PathVariable("pageNumber") int pageNumber, @PathVariable("day") LocalDate day) {
+    @GetMapping("/pagesByDay/{pageNumber}")
+    public ResponseEntity findByDayOnPage(@PathVariable("pageNumber") int pageNumber,
+                                          @RequestParam("day")
+                                          @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate day) {
         try {
             List<ScheduleItemDto> scheduleItemsDto = mapPage(scheduleItemService.findByDay(pageNumber, day), ScheduleItemDto.class);
             return ResponseEntity.ok(scheduleItemsDto);

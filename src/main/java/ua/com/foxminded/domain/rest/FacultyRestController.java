@@ -66,7 +66,7 @@ public class FacultyRestController {
         try {
             Faculty faculty = modelMapper.map(facultyDto, Faculty.class);
             facultyService.create(faculty);
-            return ResponseEntity.ok("Faculty successfully saved");
+            return ResponseEntity.ok(faculty);
         } catch (AlreadyExistException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         } catch (Exception e) {
@@ -75,7 +75,7 @@ public class FacultyRestController {
     }
 
     @PutMapping
-    public ResponseEntity update(@RequestBody FacultyDto facultyDto) {
+    public ResponseEntity update(@RequestBody @Valid FacultyDto facultyDto) {
         try {
             Faculty faculty = modelMapper.map(facultyDto, Faculty.class);
             facultyService.update(faculty);

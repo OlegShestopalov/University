@@ -28,7 +28,7 @@ public class FacultyServiceImpl implements FacultyService {
 
     @Override
     public void create(Faculty faculty) throws AlreadyExistException {
-        if (facultyRepository.findByName(faculty.getName()) != null) {
+        if (facultyRepository.findById(faculty.getId()) != null) {
             throw new AlreadyExistException("Faculty with the same name already exists");
         }
         facultyRepository.save(faculty);
