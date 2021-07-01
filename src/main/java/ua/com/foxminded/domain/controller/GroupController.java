@@ -1,5 +1,6 @@
 package ua.com.foxminded.domain.controller;
 
+import javassist.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.repository.query.Param;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import ua.com.foxminded.domain.entity.Group;
 import ua.com.foxminded.domain.service.GroupService;
+import ua.com.foxminded.exception.AlreadyExistException;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -34,12 +36,12 @@ public class GroupController {
     }
 
     @GetMapping("/allGroups")
-    public String showAllGroups(Model model) {
+    public String showAllGroups(Model model) throws NotFoundException {
         return showListByPage(model, "name", 1);
     }
 
     @GetMapping("/page/{pageNumber}")
-    public String showListByPage(Model model, @Param("name") String name, @PathVariable("pageNumber") int currentPage) {
+    public String showListByPage(Model model, @Param("name") String name, @PathVariable("pageNumber") int currentPage) throws NotFoundException {
         Page<Group> page = groupService.findAll(currentPage);
         int totalPages = page.getTotalPages();
         List<Group> groups = page.getContent();
@@ -54,14 +56,14 @@ public class GroupController {
     }
 
     @GetMapping("/search")
-    public String showGroupsByName(Model model, @Param("name") String name) {
+    public String showGroupsByName(Model model, @Param("name") String name) throws NotFoundException {
         model.addAttribute("groups", groupService.findByName(name));
         model.addAttribute("name", name);
         return "groups/groupsByName";
     }
 
     @GetMapping("/{id}")
-    public String showInfo(@PathVariable("id") Long id, Model model) {
+    public String showInfo(@PathVariable("id") Long id, Model model) throws NotFoundException {
         model.addAttribute("group", groupService.findById(id));
         return "groups/group";
     }
@@ -72,7 +74,7 @@ public class GroupController {
     }
 
     @PostMapping("/new")
-    public String create(@ModelAttribute("group") @Valid Group group, BindingResult bindingResult) {
+    public String create(@ModelAttribute("group") @Valid Group group, BindingResult bindingResult) throws AlreadyExistException {
         if (bindingResult.hasErrors()) {
             return "groups/new";
         }
@@ -81,13 +83,13 @@ public class GroupController {
     }
 
     @GetMapping("/{id}/edit")
-    public String edit(Model model, @PathVariable("id") Long id) {
+    public String edit(Model model, @PathVariable("id") Long id) throws NotFoundException {
         model.addAttribute("group", groupService.findById(id));
         return "groups/edit";
     }
 
     @PostMapping("/{id}")
-    public String update(@Valid Group group, BindingResult bindingResult) {
+    public String update(@Valid Group group, BindingResult bindingResult) throws AlreadyExistException {
         if (bindingResult.hasErrors()) {
             return "groups/edit";
         }
@@ -96,7 +98,7 @@ public class GroupController {
     }
 
     @GetMapping("/{id}/delete")
-    public String delete(@PathVariable("id") Long id) {
+    public String delete(@PathVariable("id") Long id) throws NotFoundException {
         groupService.delete(id);
         return "redirect:/groups/allGroups";
     }

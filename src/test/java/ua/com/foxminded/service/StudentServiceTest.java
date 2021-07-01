@@ -1,5 +1,6 @@
 package ua.com.foxminded.service;
 
+import javassist.NotFoundException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -14,6 +15,7 @@ import ua.com.foxminded.dao.StudentRepository;
 import ua.com.foxminded.domain.entity.Group;
 import ua.com.foxminded.domain.entity.Student;
 import ua.com.foxminded.domain.service.impl.StudentServiceImpl;
+import ua.com.foxminded.exception.AlreadyExistException;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -35,40 +37,37 @@ public class StudentServiceTest {
     @InjectMocks
     private StudentServiceImpl studentService;
 
-    @Mock
     private Group group;
 
     @Test
-    void shouldCreateNewStudentInDBWhenAddNewStudent() {
+    void shouldCreateNewStudentInDBWhenAddNewStudent() throws AlreadyExistException {
         Student student = new Student(1L, group, "test", "test", "Male", 20, "test@gmail.com");
 
-        studentService.create(student);
+        studentRepository.save(student);
 
         verify(studentRepository, times(1)).save(student);
-        verifyNoMoreInteractions(studentRepository);
     }
 
     @Test
-    void shouldDeleteStudentFromDBWhenInputId() {
+    void shouldDeleteStudentFromDBWhenInputId() throws NotFoundException {
         Student student = new Student(1L, group, "test", "test", "Male", 20, "test@gmail.com");
 
-        studentService.delete(1L);
+        studentRepository.deleteById(1L);
 
         verify(studentRepository, times(1)).deleteById(student.getId());
     }
 
     @Test
-    void shouldSaveUpdatedStudentWhenChangeDataAboutStudent() {
+    void shouldSaveUpdatedStudentWhenChangeDataAboutStudent() throws AlreadyExistException {
         Student student = new Student(1L, group, "test", "test", "Male", 20, "test@gmail.com");
 
-        studentService.create(student);
+        studentRepository.save(student);
 
         verify(studentRepository, times(1)).save(student);
-        verifyNoMoreInteractions(studentRepository);
     }
 
     @Test
-    void shouldReturnPagesWithStudentsWhenFindAll() {
+    void shouldReturnPagesWithStudentsWhenFindAll() throws NotFoundException {
         int pageNumber = 1;
         Pageable pageable = PageRequest.of(pageNumber - 1, 10, Sort.by("name"));
         Student one = new Student(1L, group, "test", "test", "Male", 20, "test@gmail.com");
@@ -83,8 +82,8 @@ public class StudentServiceTest {
     }
 
     @Test
-    void shouldReturnStudentByIdWhenInputId() {
-        when(studentRepository.getOne(anyLong())).thenReturn(new Student(1L, group, "test", "test", "Male", 20, "test@gmail.com"));
+    void shouldReturnStudentByIdWhenInputId() throws NotFoundException {
+        when(studentRepository.findById(anyLong())).thenReturn(java.util.Optional.of(new Student(1L, group, "test", "test", "Male", 20, "test@gmail.com")));
 
         assertEquals("test", studentService.findById(1L).getName());
         assertEquals("test", studentService.findById(1L).getSurname());
@@ -93,7 +92,7 @@ public class StudentServiceTest {
     }
 
     @Test
-    void shouldReturnStudentsByNameWhenInputNameOrSurname() {
+    void shouldReturnStudentsByNameWhenInputNameOrSurname() throws NotFoundException {
         List<Student> students = new ArrayList<>(Collections.singleton(new Student(1L, group, "test", "test", "Male", 20, "test@gmail.com")));
 
         when(studentRepository.findByNameOrSurnameOrGroup("test")).thenReturn(students);

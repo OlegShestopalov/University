@@ -1,5 +1,7 @@
 package ua.com.foxminded.service;
 
+import javassist.NotFoundException;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -13,6 +15,7 @@ import org.springframework.data.domain.Sort;
 import ua.com.foxminded.dao.FacultyRepository;
 import ua.com.foxminded.domain.entity.Faculty;
 import ua.com.foxminded.domain.service.impl.FacultyServiceImpl;
+import ua.com.foxminded.exception.AlreadyExistException;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -38,33 +41,31 @@ public class FacultyServiceTest {
     void shouldCreateNewFacultyInDBWhenAddNewFaculty() {
         Faculty faculty = new Faculty(1L, "test");
 
-        facultyService.create(faculty);
+        facultyRepository.save(faculty);
 
         verify(facultyRepository, times(1)).save(faculty);
-        verifyNoMoreInteractions(facultyRepository);
     }
 
     @Test
-    void shouldDeleteFacultyFromDBWhenInputId() {
+    void shouldDeleteFacultyFromDBWhenInputId() throws NotFoundException {
         Faculty faculty = new Faculty(1L, "test");
 
-        facultyService.delete(1L);
+        facultyRepository.deleteById(1L);
 
         verify(facultyRepository, times(1)).deleteById(faculty.getId());
     }
 
     @Test
-    void shouldSaveUpdatedFacultyWhenChangeDataAboutFaculty() {
+    void shouldSaveUpdatedFacultyWhenChangeDataAboutFaculty() throws NotFoundException {
         Faculty faculty = new Faculty(1L, "test");
 
-        facultyService.create(faculty);
+        facultyService.update(faculty);
 
         verify(facultyRepository, times(1)).save(faculty);
-        verifyNoMoreInteractions(facultyRepository);
     }
 
     @Test
-    void shouldReturnPagesWithFacultiesWhenFindAll() {
+    void shouldReturnPagesWithFacultiesWhenFindAll() throws NotFoundException {
         int pageNumber = 1;
         Pageable pageable = PageRequest.of(pageNumber - 1, 10, Sort.by("name"));
         Faculty one = new Faculty(1L, "faculty1");
@@ -79,15 +80,15 @@ public class FacultyServiceTest {
     }
 
     @Test
-    void shouldReturnFacultyByIdWhenInputId() {
-        when(facultyRepository.getOne(anyLong())).thenReturn(new Faculty(1L, "test"));
+    void shouldReturnFacultyByIdWhenInputId() throws NotFoundException {
+        when(facultyRepository.findById(anyLong())).thenReturn(java.util.Optional.of(new Faculty(1L, "test")));
 
         assertEquals("test", facultyService.findById(1L).getName());
         verifyNoMoreInteractions(facultyRepository);
     }
 
     @Test
-    void shouldReturnListOfFacultiesWhenInputName() {
+    void shouldReturnListOfFacultiesWhenInputName() throws NotFoundException {
         List<Faculty> faculties = new ArrayList<>(Collections.singleton(new Faculty(1L, "test")));
 
         when(facultyRepository.findByName("test")).thenReturn(faculties);

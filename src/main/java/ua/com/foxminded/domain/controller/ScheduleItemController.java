@@ -1,5 +1,6 @@
 package ua.com.foxminded.domain.controller;
 
+import javassist.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import ua.com.foxminded.domain.entity.ScheduleItem;
 import ua.com.foxminded.domain.service.ScheduleItemService;
+import ua.com.foxminded.exception.AlreadyExistException;
 
 import javax.validation.Valid;
 import java.time.LocalDate;
@@ -37,7 +39,7 @@ public class ScheduleItemController {
     @GetMapping("/page/{pageNumber}")
     public String showListByPage(Model model,
                                  @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate day,
-                                 @PathVariable("pageNumber") int currentPage) {
+                                 @PathVariable("pageNumber") int currentPage) throws NotFoundException {
         Page<ScheduleItem> page = scheduleItemService.findAll(currentPage, day);
         int totalPages = page.getTotalPages();
         List<ScheduleItem> scheduleItems = page.getContent();
@@ -55,7 +57,7 @@ public class ScheduleItemController {
     public String showAllSchedulesForGroup(Model model,
                                            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate day,
                                            String name,
-                                           @PathVariable("pageNumber") int currentPage) {
+                                           @PathVariable("pageNumber") int currentPage) throws NotFoundException {
         Page<ScheduleItem> page = scheduleItemService.findByGroupNameOrDay(currentPage, name, day);
         int totalPages = page.getTotalPages();
         List<ScheduleItem> scheduleItems = page.getContent();
@@ -74,7 +76,7 @@ public class ScheduleItemController {
     public String showAllSchedulesForTeacher(Model model,
                                              @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate day,
                                              String name,
-                                             @PathVariable("pageNumber") int currentPage) {
+                                             @PathVariable("pageNumber") int currentPage) throws NotFoundException {
         Page<ScheduleItem> page = scheduleItemService.findByTeacherNameOrDay(currentPage, name, day);
         int totalPages = page.getTotalPages();
         List<ScheduleItem> scheduleItems = page.getContent();
@@ -90,7 +92,7 @@ public class ScheduleItemController {
     }
 
     @GetMapping("/{id}")
-    public String showInfo(@PathVariable("id") Long id, Model model) {
+    public String showInfo(@PathVariable("id") Long id, Model model) throws NotFoundException {
         model.addAttribute("scheduleItem", scheduleItemService.findById(id));
         return "scheduleItems/schedule";
     }
@@ -101,7 +103,7 @@ public class ScheduleItemController {
     }
 
     @PostMapping("/new")
-    public String create(@ModelAttribute("scheduleItem") @Valid ScheduleItem scheduleItem, BindingResult bindingResult) {
+    public String create(@ModelAttribute("scheduleItem") @Valid ScheduleItem scheduleItem, BindingResult bindingResult) throws AlreadyExistException {
         if (bindingResult.hasErrors()) {
             return "scheduleItems/new";
         }
@@ -110,13 +112,13 @@ public class ScheduleItemController {
     }
 
     @GetMapping("/{id}/edit")
-    public String edit(Model model, @PathVariable("id") Long id) {
+    public String edit(Model model, @PathVariable("id") Long id) throws NotFoundException {
         model.addAttribute("scheduleItem", scheduleItemService.findById(id));
         return "scheduleItems/edit";
     }
 
     @PostMapping("/{id}")
-    public String update(@Valid ScheduleItem scheduleItem, BindingResult bindingResult) {
+    public String update(@Valid ScheduleItem scheduleItem, BindingResult bindingResult) throws AlreadyExistException {
         if (bindingResult.hasErrors()) {
             return "scheduleItems/edit";
         }
@@ -125,7 +127,7 @@ public class ScheduleItemController {
     }
 
     @GetMapping("/{id}/delete")
-    public String delete(@PathVariable("id") Long id) {
+    public String delete(@PathVariable("id") Long id) throws NotFoundException {
         scheduleItemService.delete(id);
         return "redirect:/scheduleItems/page/1";
     }

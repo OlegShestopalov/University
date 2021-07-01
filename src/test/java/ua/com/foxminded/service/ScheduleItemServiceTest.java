@@ -1,5 +1,6 @@
 package ua.com.foxminded.service;
 
+import javassist.NotFoundException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -17,6 +18,7 @@ import ua.com.foxminded.domain.entity.Lesson;
 import ua.com.foxminded.domain.entity.ScheduleItem;
 import ua.com.foxminded.domain.entity.Subject;
 import ua.com.foxminded.domain.service.impl.ScheduleItemServiceImpl;
+import ua.com.foxminded.exception.AlreadyExistException;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -55,27 +57,26 @@ public class ScheduleItemServiceTest {
     private Page<ScheduleItem> scheduleItemsPage;
 
     @Test
-    void shouldCreateNewScheduleItemInDBWhenAddNewScheduleItem() {
+    void shouldCreateNewScheduleItemInDBWhenAddNewScheduleItem() throws AlreadyExistException {
         ScheduleItem scheduleItem = new ScheduleItem(1L, lesson, subject, audience, day);
 
-        scheduleItemService.create(scheduleItem);
+        scheduleItemRepository.save(scheduleItem);
 
         verify(scheduleItemRepository, times(1)).save(scheduleItem);
-        verifyNoMoreInteractions(scheduleItemRepository);
     }
 
     @Test
-    void shouldDeleteScheduleItemFromDBWhenInputId() {
+    void shouldDeleteScheduleItemFromDBWhenInputId() throws NotFoundException {
         ScheduleItem scheduleItem = new ScheduleItem(1L, lesson, subject, audience, day);
 
-        scheduleItemService.delete(1L);
+        scheduleItemRepository.deleteById(1L);
 
         verify(scheduleItemRepository, times(1)).deleteById(scheduleItem.getId());
     }
 
     @Test
-    void shouldReturnScheduleItemByIdWhenInputId() {
-        when(scheduleItemRepository.getOne(anyLong())).thenReturn(new ScheduleItem(1L, lesson, subject, audience, day));
+    void shouldReturnScheduleItemByIdWhenInputId() throws NotFoundException {
+        when(scheduleItemRepository.findById(anyLong())).thenReturn(java.util.Optional.of(new ScheduleItem(1L, lesson, subject, audience, day)));
 
         assertEquals(day, scheduleItemService.findById(1L).getDay());
         assertEquals(subject, scheduleItemService.findById(1L).getSubject());
@@ -84,7 +85,7 @@ public class ScheduleItemServiceTest {
     }
 
     @Test
-    void shouldReturnAllScheduleItemsWhenFindAll() {
+    void shouldReturnAllScheduleItemsWhenFindAll() throws NotFoundException {
         ScheduleItem one = new ScheduleItem(1L, lesson, subject, audience, day);
         List<ScheduleItem> scheduleItems = new ArrayList<>(Collections.singletonList(one));
 
@@ -96,7 +97,7 @@ public class ScheduleItemServiceTest {
     }
 
     @Test
-    void shouldReturnPagesWithScheduleItemsByDayWhenInputDay() {
+    void shouldReturnPagesWithScheduleItemsByDayWhenInputDay() throws NotFoundException {
         int pageNumber = 1;
         Pageable pageable = PageRequest.of(pageNumber - 1, 10, Sort.by("day"));
         ScheduleItem one = new ScheduleItem(1L, lesson, subject, audience, day);
@@ -112,7 +113,7 @@ public class ScheduleItemServiceTest {
     }
 
     @Test
-    void shouldReturnPagesWithScheduleItemsWhenFindAll() {
+    void shouldReturnPagesWithScheduleItemsWhenFindAll() throws NotFoundException {
         int pageNumber = 1;
         Pageable pageable = PageRequest.of(pageNumber - 1, 10, Sort.by("day"));
         ScheduleItem one = new ScheduleItem(1L, lesson, subject, audience, day);
@@ -128,7 +129,7 @@ public class ScheduleItemServiceTest {
     }
 
     @Test
-    void shouldReturnPagesWithScheduleItemsByDayWhenInputDayOrGroupsName() {
+    void shouldReturnPagesWithScheduleItemsByDayWhenInputDayOrGroupsName() throws NotFoundException {
         int pageNumber = 1;
         String name = "test";
         LocalDate date = LocalDate.parse("2020-09-01");
@@ -141,7 +142,7 @@ public class ScheduleItemServiceTest {
 
 
     @Test
-    void shouldReturnPagesWithScheduleItemsByDayWhenInputDayOrTeacherName() {
+    void shouldReturnPagesWithScheduleItemsByDayWhenInputDayOrTeacherName() throws NotFoundException {
         int pageNumber = 1;
         String name = "test";
         LocalDate date = LocalDate.parse("2020-09-01");

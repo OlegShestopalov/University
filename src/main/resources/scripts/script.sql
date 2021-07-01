@@ -15,8 +15,8 @@ DROP TABLE IF EXISTS course;
 DROP TABLE IF EXISTS faculty;
 DROP TABLE IF EXISTS university;
 
-DROP SCHEMA IF EXISTS public;
-CREATE SCHEMA public AUTHORIZATION maintainer;
+-- DROP SCHEMA IF EXISTS public;
+-- CREATE SCHEMA public AUTHORIZATION maintainer;
 COMMENT
     ON SCHEMA public IS 'standard public schema';
 GRANT ALL
