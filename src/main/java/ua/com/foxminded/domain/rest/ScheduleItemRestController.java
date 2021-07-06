@@ -1,5 +1,11 @@
 package ua.com.foxminded.domain.rest;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import javassist.NotFoundException;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +23,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import ua.com.foxminded.domain.entity.ScheduleItem;
+import ua.com.foxminded.domain.model.FacultyDto;
 import ua.com.foxminded.domain.model.ScheduleItemDto;
 import ua.com.foxminded.domain.service.ScheduleItemService;
 import ua.com.foxminded.exception.AlreadyExistException;
@@ -39,6 +46,22 @@ public class ScheduleItemRestController {
         this.modelMapper = modelMapper;
     }
 
+    @Operation(summary = "Get a scheduleItem by its id")
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Found the scheduleItem",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = ScheduleItemDto.class))),
+            @ApiResponse(
+                    responseCode = "400",
+                    description = "Invalid id supplied",
+                    content = @Content),
+            @ApiResponse(
+                    responseCode = "404",
+                    description = "ScheduleItem not found",
+                    content = @Content)})
     @GetMapping("/{id}")
     public ResponseEntity findById(@PathVariable("id") Long id) {
         try {
@@ -51,6 +74,18 @@ public class ScheduleItemRestController {
         }
     }
 
+    @Operation(summary = "Create scheduleItem")
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Successfully created scheduleItem",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = ScheduleItemDto.class))),
+            @ApiResponse(
+                    responseCode = "400",
+                    description = "Unable to create scheduleItem",
+                    content = @Content)})
     @PostMapping
     public ResponseEntity save(@RequestBody @Valid ScheduleItemDto scheduleItemDto) {
         try {
@@ -64,6 +99,18 @@ public class ScheduleItemRestController {
         }
     }
 
+    @Operation(summary = "Update scheduleItem")
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Successfully updated scheduleItem",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = ScheduleItemDto.class))),
+            @ApiResponse(
+                    responseCode = "400",
+                    description = "Unable to update scheduleItem",
+                    content = @Content)})
     @PutMapping
     public ResponseEntity update(@RequestBody ScheduleItemDto scheduleItemDto) {
         try {
@@ -77,6 +124,20 @@ public class ScheduleItemRestController {
         }
     }
 
+    @Operation(summary = "Delete scheduleItem")
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "ScheduleItem deleted successfully"
+            ),
+            @ApiResponse(
+                    responseCode = "400",
+                    description = "Invalid scheduleItem id supplied",
+                    content = @Content),
+            @ApiResponse(
+                    responseCode = "404",
+                    description = "ScheduleItem not found",
+                    content = @Content)})
     @DeleteMapping("/{id}")
     public ResponseEntity delete(@PathVariable("id") Long id) {
         try {
@@ -89,6 +150,18 @@ public class ScheduleItemRestController {
         }
     }
 
+    @Operation(summary = "Get all scheduleItems")
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Found all scheduleItems",
+                    content = @Content(
+                            mediaType = "application/json",
+                            array = @ArraySchema(schema = @Schema(implementation = ScheduleItemDto.class)))),
+            @ApiResponse(
+                    responseCode = "404",
+                    description = "No scheduleItems found",
+                    content = @Content)})
     @GetMapping
     public ResponseEntity findAll() {
         try {
@@ -101,6 +174,18 @@ public class ScheduleItemRestController {
         }
     }
 
+    @Operation(summary = "Get all scheduleItems by pages")
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Found pages with scheduleItems",
+                    content = @Content(
+                            mediaType = "application/json",
+                            array = @ArraySchema(schema = @Schema(implementation = ScheduleItemDto.class)))),
+            @ApiResponse(
+                    responseCode = "404",
+                    description = "No pages with scheduleItems found",
+                    content = @Content)})
     @GetMapping("/pages/{pageNumber}")
     public ResponseEntity findAllOnPage(@PathVariable("pageNumber") int pageNumber,
                                         @RequestParam("day")
@@ -115,6 +200,18 @@ public class ScheduleItemRestController {
         }
     }
 
+    @Operation(summary = "Get scheduleItems on page by day")
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Found page with scheduleItems",
+                    content = @Content(
+                            mediaType = "application/json",
+                            array = @ArraySchema(schema = @Schema(implementation = ScheduleItemDto.class)))),
+            @ApiResponse(
+                    responseCode = "404",
+                    description = "No page with scheduleItems found",
+                    content = @Content)})
     @GetMapping("/pagesByDay/{pageNumber}")
     public ResponseEntity findByDayOnPage(@PathVariable("pageNumber") int pageNumber,
                                           @RequestParam("day")
@@ -129,6 +226,18 @@ public class ScheduleItemRestController {
         }
     }
 
+    @Operation(summary = "Get scheduleItems on page by group's name or day")
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Found page with scheduleItems",
+                    content = @Content(
+                            mediaType = "application/json",
+                            array = @ArraySchema(schema = @Schema(implementation = ScheduleItemDto.class)))),
+            @ApiResponse(
+                    responseCode = "404",
+                    description = "No page with scheduleItems found",
+                    content = @Content)})
     @GetMapping("/pagesForGroup/{pageNumber}")
     public ResponseEntity findByGroupNameOrDay(@PathVariable("pageNumber") int pageNumber,
                                                @RequestParam("day")
@@ -144,6 +253,18 @@ public class ScheduleItemRestController {
         }
     }
 
+    @Operation(summary = "Get scheduleItems on page by teacher's name or day")
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Found page with scheduleItems",
+                    content = @Content(
+                            mediaType = "application/json",
+                            array = @ArraySchema(schema = @Schema(implementation = ScheduleItemDto.class)))),
+            @ApiResponse(
+                    responseCode = "404",
+                    description = "No page with scheduleItems found",
+                    content = @Content)})
     @GetMapping("/pagesForTeacher/{pageNumber}")
     public ResponseEntity findByTeacherNameOrDay(@PathVariable("pageNumber") int pageNumber,
                                                  @RequestParam("day")
