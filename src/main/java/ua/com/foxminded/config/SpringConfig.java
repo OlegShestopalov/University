@@ -1,5 +1,10 @@
 package ua.com.foxminded.config;
 
+import io.swagger.v3.oas.models.Components;
+import io.swagger.v3.oas.models.OpenAPI;
+import io.swagger.v3.oas.models.info.Contact;
+import io.swagger.v3.oas.models.info.Info;
+import io.swagger.v3.oas.models.info.License;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
@@ -50,5 +55,18 @@ public class SpringConfig implements WebMvcConfigurer {
     @Bean
     public ModelMapper modelMapper() {
         return new ModelMapper();
+    }
+
+    @Bean
+    public OpenAPI customOpenApi() {
+        return new OpenAPI()
+                .components(new Components())
+                .info(new Info()
+                        .title("UniversitySchedule API")
+                        .description("Simple app for getting university schedule")
+                        .version("v0.0.1")
+                        .termsOfService("http://swagger.io/terms/")
+                        .license(new License().name("Apache 2.0").url("http://springdoc.org"))
+                        .contact(new Contact().name("OlegShestopalov").email("oleg.shestopalov93@gmail.com")));
     }
 }

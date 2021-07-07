@@ -1,5 +1,11 @@
 package ua.com.foxminded.domain.rest;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import javassist.NotFoundException;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,6 +43,22 @@ public class GroupRestController {
         this.modelMapper = modelMapper;
     }
 
+    @Operation(summary = "Get a group by its id")
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Found the group",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = GroupDto.class))),
+            @ApiResponse(
+                    responseCode = "400",
+                    description = "Invalid id supplied",
+                    content = @Content),
+            @ApiResponse(
+                    responseCode = "404",
+                    description = "Group not found",
+                    content = @Content)})
     @GetMapping("/{id}")
     public ResponseEntity findById(@PathVariable("id") Long id) {
         try {
@@ -49,6 +71,22 @@ public class GroupRestController {
         }
     }
 
+    @Operation(summary = "Get group by name")
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Successfully retrieved group by name.",
+                    content = @Content(
+                            mediaType = "application/json",
+                            array = @ArraySchema(schema = @Schema(implementation = GroupDto.class)))),
+            @ApiResponse(
+                    responseCode = "400",
+                    description = "Invalid group name supplied",
+                    content = @Content),
+            @ApiResponse(
+                    responseCode = "404",
+                    description = "Group not found",
+                    content = @Content)})
     @GetMapping("/name")
     public ResponseEntity findByName(@RequestParam String name) {
         try {
@@ -61,6 +99,18 @@ public class GroupRestController {
         }
     }
 
+    @Operation(summary = "Create group")
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Successfully created group",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = GroupDto.class))),
+            @ApiResponse(
+                    responseCode = "400",
+                    description = "Unable to create group",
+                    content = @Content)})
     @PostMapping
     public ResponseEntity save(@RequestBody @Valid GroupDto groupDto) {
         try {
@@ -74,6 +124,18 @@ public class GroupRestController {
         }
     }
 
+    @Operation(summary = "Update group")
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Successfully updated group",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = GroupDto.class))),
+            @ApiResponse(
+                    responseCode = "400",
+                    description = "Unable to update group",
+                    content = @Content)})
     @PutMapping
     public ResponseEntity update(@RequestBody GroupDto groupDto) {
         try {
@@ -87,6 +149,20 @@ public class GroupRestController {
         }
     }
 
+    @Operation(summary = "Delete group")
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Group deleted successfully"
+            ),
+            @ApiResponse(
+                    responseCode = "400",
+                    description = "Invalid group id supplied",
+                    content = @Content),
+            @ApiResponse(
+                    responseCode = "404",
+                    description = "Group not found",
+                    content = @Content)})
     @DeleteMapping("/{id}")
     public ResponseEntity delete(@PathVariable("id") Long id) {
         try {
@@ -99,6 +175,18 @@ public class GroupRestController {
         }
     }
 
+    @Operation(summary = "Get all groups")
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Found all groups",
+                    content = @Content(
+                            mediaType = "application/json",
+                            array = @ArraySchema(schema = @Schema(implementation = GroupDto.class)))),
+            @ApiResponse(
+                    responseCode = "404",
+                    description = "No groups found",
+                    content = @Content)})
     @GetMapping
     public ResponseEntity findAll() {
         try {
@@ -111,6 +199,18 @@ public class GroupRestController {
         }
     }
 
+    @Operation(summary = "Get all groups by pages")
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Found pages with groups",
+                    content = @Content(
+                            mediaType = "application/json",
+                            array = @ArraySchema(schema = @Schema(implementation = GroupDto.class)))),
+            @ApiResponse(
+                    responseCode = "404",
+                    description = "No pages with groups found",
+                    content = @Content)})
     @GetMapping("/pages/{pageNumber}")
     public ResponseEntity findAllOnPage(@PathVariable("pageNumber") int pageNumber) {
         try {

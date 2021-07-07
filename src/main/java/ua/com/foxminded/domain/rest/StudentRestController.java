@@ -1,5 +1,11 @@
 package ua.com.foxminded.domain.rest;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import javassist.NotFoundException;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,6 +43,22 @@ public class StudentRestController {
         this.modelMapper = modelMapper;
     }
 
+    @Operation(summary = "Get a student by its id")
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Found the student",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = StudentDto.class))),
+            @ApiResponse(
+                    responseCode = "400",
+                    description = "Invalid id supplied",
+                    content = @Content),
+            @ApiResponse(
+                    responseCode = "404",
+                    description = "Student not found",
+                    content = @Content)})
     @GetMapping("/{id}")
     public ResponseEntity findById(@PathVariable("id") Long id) {
         try {
@@ -49,6 +71,22 @@ public class StudentRestController {
         }
     }
 
+    @Operation(summary = "Get student by name")
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Successfully retrieved student by name.",
+                    content = @Content(
+                            mediaType = "application/json",
+                            array = @ArraySchema(schema = @Schema(implementation = StudentDto.class)))),
+            @ApiResponse(
+                    responseCode = "400",
+                    description = "Invalid student name supplied",
+                    content = @Content),
+            @ApiResponse(
+                    responseCode = "404",
+                    description = "Student not found",
+                    content = @Content)})
     @GetMapping("/name")
     public ResponseEntity findByName(@RequestParam String name) {
         try {
@@ -61,6 +99,18 @@ public class StudentRestController {
         }
     }
 
+    @Operation(summary = "Create student")
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Successfully created student",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = StudentDto.class))),
+            @ApiResponse(
+                    responseCode = "400",
+                    description = "Unable to create studnet",
+                    content = @Content)})
     @PostMapping
     public ResponseEntity save(@RequestBody @Valid StudentDto studentDto) {
         try {
@@ -74,6 +124,18 @@ public class StudentRestController {
         }
     }
 
+    @Operation(summary = "Update student")
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Successfully updated studnet",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = StudentDto.class))),
+            @ApiResponse(
+                    responseCode = "400",
+                    description = "Unable to update student",
+                    content = @Content)})
     @PutMapping
     public ResponseEntity update(@RequestBody StudentDto studentDto) {
         try {
@@ -87,6 +149,20 @@ public class StudentRestController {
         }
     }
 
+    @Operation(summary = "Delete student")
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Student deleted successfully"
+            ),
+            @ApiResponse(
+                    responseCode = "400",
+                    description = "Invalid student id supplied",
+                    content = @Content),
+            @ApiResponse(
+                    responseCode = "404",
+                    description = "Student not found",
+                    content = @Content)})
     @DeleteMapping("/{id}")
     public ResponseEntity delete(@PathVariable("id") Long id) {
         try {
@@ -99,6 +175,18 @@ public class StudentRestController {
         }
     }
 
+    @Operation(summary = "Get all students")
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Found all students",
+                    content = @Content(
+                            mediaType = "application/json",
+                            array = @ArraySchema(schema = @Schema(implementation = StudentDto.class)))),
+            @ApiResponse(
+                    responseCode = "404",
+                    description = "No students found",
+                    content = @Content)})
     @GetMapping
     public ResponseEntity findAll() {
         try {
@@ -111,6 +199,18 @@ public class StudentRestController {
         }
     }
 
+    @Operation(summary = "Get all students by pages")
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Found pages with students",
+                    content = @Content(
+                            mediaType = "application/json",
+                            array = @ArraySchema(schema = @Schema(implementation = StudentDto.class)))),
+            @ApiResponse(
+                    responseCode = "404",
+                    description = "No pages with students found",
+                    content = @Content)})
     @GetMapping("/pages/{pageNumber}")
     public ResponseEntity findAllOnPage(@PathVariable("pageNumber") int pageNumber) {
         try {
