@@ -91,11 +91,11 @@ public class StudentController {
     }
 
     @PostMapping("/{id}")
-    public String update(@Valid Student student, BindingResult bindingResult) throws AlreadyExistException {
+    public String update(@Valid Student student, BindingResult bindingResult) throws NotFoundException {
         if (bindingResult.hasErrors()) {
             return "students/edit";
         }
-        studentService.create(student);
+        studentService.update(student);
         return "redirect:/students/allStudents";
     }
 

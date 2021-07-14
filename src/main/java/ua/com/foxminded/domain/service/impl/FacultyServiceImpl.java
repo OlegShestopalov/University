@@ -28,7 +28,7 @@ public class FacultyServiceImpl implements FacultyService {
 
     @Override
     public void create(Faculty faculty) throws AlreadyExistException {
-        if (facultyRepository.findById(faculty.getId()) != null) {
+        if (!facultyRepository.findByName(faculty.getName()).isEmpty()) {
             throw new AlreadyExistException("Faculty with the same name already exists");
         }
         facultyRepository.save(faculty);
@@ -36,9 +36,6 @@ public class FacultyServiceImpl implements FacultyService {
 
     @Override
     public void update(Faculty faculty) throws NotFoundException {
-        if (facultyRepository.findByName(faculty.getName()) == null) {
-            throw new NotFoundException("Faculty with that name does not exists");
-        }
         facultyRepository.save(faculty);
     }
 

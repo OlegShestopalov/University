@@ -29,17 +29,11 @@ public class ScheduleItemServiceImpl implements ScheduleItemService {
 
     @Override
     public void create(ScheduleItem scheduleItem) throws AlreadyExistException {
-        if (scheduleItemRepository.findById(scheduleItem.getId()) != null) {
-            throw new AlreadyExistException("ScheduleItem with the same id already exists");
-        }
         scheduleItemRepository.save(scheduleItem);
     }
 
     @Override
     public void update(ScheduleItem scheduleItem) throws NotFoundException {
-        if (scheduleItemRepository.findById(scheduleItem.getId()) == null) {
-            throw new NotFoundException("ScheduleItem with that name does not exists");
-        }
         scheduleItemRepository.save(scheduleItem);
     }
 

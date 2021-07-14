@@ -118,11 +118,11 @@ public class ScheduleItemController {
     }
 
     @PostMapping("/{id}")
-    public String update(@Valid ScheduleItem scheduleItem, BindingResult bindingResult) throws AlreadyExistException {
+    public String update(@Valid ScheduleItem scheduleItem, BindingResult bindingResult) throws NotFoundException {
         if (bindingResult.hasErrors()) {
             return "scheduleItems/edit";
         }
-        scheduleItemService.create(scheduleItem);
+        scheduleItemService.update(scheduleItem);
         return "redirect:/scheduleItems/page/1";
     }
 

@@ -75,7 +75,7 @@ public class StudentRestController {
     @ApiResponses(value = {
             @ApiResponse(
                     responseCode = "200",
-                    description = "Successfully retrieved student by name.",
+                    description = "Successfully retrieved student by name",
                     content = @Content(
                             mediaType = "application/json",
                             array = @ArraySchema(schema = @Schema(implementation = StudentDto.class)))),
@@ -190,8 +190,8 @@ public class StudentRestController {
     @GetMapping
     public ResponseEntity findAll() {
         try {
-            List<StudentDto> stuedntsDto = mapList(studentService.findAll(), StudentDto.class);
-            return ResponseEntity.ok(stuedntsDto);
+            List<StudentDto> studentsDto = mapList(studentService.findAll(), StudentDto.class);
+            return ResponseEntity.ok(studentsDto);
         } catch (NotFoundException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         } catch (Exception e) {

@@ -89,11 +89,11 @@ public class TeacherController {
     }
 
     @PostMapping("/{id}")
-    public String update(@Valid Teacher teacher, BindingResult bindingResult) throws AlreadyExistException {
+    public String update(@Valid Teacher teacher, BindingResult bindingResult) throws NotFoundException {
         if (bindingResult.hasErrors()) {
             return "teachers/edit";
         }
-        teacherService.create(teacher);
+        teacherService.update(teacher);
         return "redirect:/teachers/allTeachers";
     }
 

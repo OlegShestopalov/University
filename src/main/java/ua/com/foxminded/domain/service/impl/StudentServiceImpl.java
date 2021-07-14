@@ -28,7 +28,7 @@ public class StudentServiceImpl implements StudentService {
 
     @Override
     public void create(Student student) throws AlreadyExistException {
-        if (studentRepository.findByNameOrSurnameOrGroup(student.getName()) != null) {
+        if (!studentRepository.findByNameOrSurnameOrGroup(student.getName()).isEmpty()) {
             throw new AlreadyExistException("Students with the same name already exists");
         }
         studentRepository.save(student);
@@ -36,9 +36,6 @@ public class StudentServiceImpl implements StudentService {
 
     @Override
     public void update(Student student) throws NotFoundException {
-        if (studentRepository.findByNameOrSurnameOrGroup(student.getName()) == null) {
-            throw new NotFoundException("Student with that name does not exists");
-        }
         studentRepository.save(student);
     }
 

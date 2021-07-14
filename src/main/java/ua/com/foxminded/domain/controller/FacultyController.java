@@ -91,11 +91,11 @@ public class FacultyController {
     }
 
     @PostMapping("/{id}")
-    public String update(@Valid Faculty faculty, BindingResult bindingResult) throws AlreadyExistException {
+    public String update(@Valid Faculty faculty, BindingResult bindingResult) throws NotFoundException {
         if (bindingResult.hasErrors()) {
             return "faculties/edit";
         }
-        facultyService.create(faculty);
+        facultyService.update(faculty);
         return "redirect:/faculties/allFaculties";
     }
 

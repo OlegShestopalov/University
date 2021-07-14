@@ -28,7 +28,7 @@ public class GroupServiceImpl implements GroupService {
 
     @Override
     public void create(Group group) throws AlreadyExistException {
-        if (groupRepository.findByNameOrFaculty(group.getName()) != null) {
+        if (!groupRepository.findByNameOrFaculty(group.getName()).isEmpty()) {
             throw new AlreadyExistException("Group with the same name already exists");
         }
         groupRepository.save(group);
@@ -36,9 +36,6 @@ public class GroupServiceImpl implements GroupService {
 
     @Override
     public void update(Group group) throws NotFoundException {
-        if (groupRepository.findByNameOrFaculty(group.getName()) == null) {
-            throw new NotFoundException("Group with that name does not exists");
-        }
         groupRepository.save(group);
     }
 

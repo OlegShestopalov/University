@@ -28,7 +28,7 @@ public class TeacherServiceImpl implements TeacherService {
 
     @Override
     public void create(Teacher teacher) throws AlreadyExistException {
-        if (teacherRepository.findByNameOrSurname(teacher.getName()) != null) {
+        if (!teacherRepository.findByNameOrSurname(teacher.getName()).isEmpty()) {
             throw new AlreadyExistException("Teacher with the same name already exists");
         }
         teacherRepository.save(teacher);
@@ -36,9 +36,6 @@ public class TeacherServiceImpl implements TeacherService {
 
     @Override
     public void update(Teacher teacher) throws NotFoundException {
-        if (teacherRepository.findByNameOrSurname(teacher.getName()) == null) {
-            throw new NotFoundException("Teacher with that name does not exists");
-        }
         teacherRepository.save(teacher);
     }
 

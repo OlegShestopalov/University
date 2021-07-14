@@ -89,11 +89,11 @@ public class GroupController {
     }
 
     @PostMapping("/{id}")
-    public String update(@Valid Group group, BindingResult bindingResult) throws AlreadyExistException {
+    public String update(@Valid Group group, BindingResult bindingResult) throws NotFoundException {
         if (bindingResult.hasErrors()) {
             return "groups/edit";
         }
-        groupService.create(group);
+        groupService.update(group);
         return "redirect:/groups/allGroups";
     }
 
