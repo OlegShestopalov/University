@@ -18,7 +18,6 @@ public class Course {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @NotNull(message = "{not.null}")
     @Min(value = 1, message = "{min.id}")
     @Max(value = 6, message = "Course should not be less than 6")
     private Long id;

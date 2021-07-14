@@ -1,8 +1,11 @@
 package ua.com.foxminded.domain.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import javax.validation.Valid;
 import javax.validation.constraints.Min;
+import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.util.Objects;
@@ -13,8 +16,7 @@ import java.util.Set;
 public class Group {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @NotNull(message = "{not.null}")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Min(value = 1, message = "{min.id}")
     private Long id;
 
@@ -31,6 +33,7 @@ public class Group {
     private Course course;
 
     @ManyToMany
+    @JsonIgnore
     @JoinTable(
             name = "group_scheduleitem",
             joinColumns = {@JoinColumn(name = "group_id")},

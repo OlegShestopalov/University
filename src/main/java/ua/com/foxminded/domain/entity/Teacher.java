@@ -1,5 +1,7 @@
 package ua.com.foxminded.domain.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -24,7 +26,6 @@ public class Teacher {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @NotNull(message = "{not.null}")
     @Min(value = 1, message = "{min.id}")
     private Long id;
 
@@ -44,6 +45,7 @@ public class Teacher {
     private String email;
 
     @ManyToMany
+    @JsonIgnore
     @JoinTable(
             name = "teacher_scheduleitem",
             joinColumns = {@JoinColumn(name = "teacher_id")},

@@ -1,14 +1,11 @@
 package ua.com.foxminded.domain.model;
 
-import ua.com.foxminded.domain.entity.Course;
-import ua.com.foxminded.domain.entity.Faculty;
-
 public class GroupDto {
 
     private Long id;
     private String name;
-    private Faculty faculty;
-    private Course course;
+    private FacultyDto faculty;
+    private CourseDto course;
 
     public GroupDto() {
     }
@@ -29,19 +26,19 @@ public class GroupDto {
         this.name = name;
     }
 
-    public Faculty getFaculty() {
+    public FacultyDto getFaculty() {
         return faculty;
     }
 
-    public void setFaculty(Faculty faculty) {
+    public void setFaculty(FacultyDto faculty) {
         this.faculty = faculty;
     }
 
-    public Course getCourse() {
+    public CourseDto getCourse() {
         return course;
     }
 
-    public void setCourse(Course course) {
+    public void setCourse(CourseDto course) {
         this.course = course;
     }
 }

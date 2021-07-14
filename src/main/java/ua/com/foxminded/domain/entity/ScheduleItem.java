@@ -1,5 +1,7 @@
 package ua.com.foxminded.domain.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -36,9 +38,11 @@ public class ScheduleItem {
     private Day day;
 
     @ManyToMany(mappedBy = "scheduleItems")
+    @JsonIgnore
     private Set<Group> groups;
 
     @ManyToMany(mappedBy = "scheduleItems")
+    @JsonIgnore
     private Set<Teacher> teachers;
 
     public ScheduleItem() {

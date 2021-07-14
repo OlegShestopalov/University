@@ -1,11 +1,9 @@
 package ua.com.foxminded.domain.model;
 
-import ua.com.foxminded.domain.entity.Group;
-
 public class StudentDto {
 
     private Long id;
-    private Group group;
+    private GroupDto group;
     private String name;
     private String surname;
     private String sex;
@@ -20,11 +18,11 @@ public class StudentDto {
         this.id = id;
     }
 
-    public Group getGroup() {
+    public GroupDto getGroup() {
         return group;
     }
 
-    public void setGroup(Group group) {
+    public void setGroup(GroupDto group) {
         this.group = group;
     }
 

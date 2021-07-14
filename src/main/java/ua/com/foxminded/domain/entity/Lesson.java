@@ -17,7 +17,6 @@ public class Lesson {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @NotNull(message = "{not.null}")
     @Min(value = 1, message = "{min.id}")
     private Long id;
 
