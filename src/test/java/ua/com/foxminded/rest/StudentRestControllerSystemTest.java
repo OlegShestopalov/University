@@ -2,7 +2,6 @@ package ua.com.foxminded.rest;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.Page;
@@ -10,9 +9,10 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import ua.com.foxminded.domain.entity.Faculty;
-import ua.com.foxminded.domain.rest.FacultyRestController;
-import ua.com.foxminded.domain.service.FacultyService;
+import org.springframework.web.context.WebApplicationContext;
+import ua.com.foxminded.domain.entity.Group;
+import ua.com.foxminded.domain.entity.Student;
+import ua.com.foxminded.domain.service.StudentService;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -37,33 +37,32 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
-public class FacultyRestControllerTest {
+public class StudentRestControllerSystemTest {
+
+    private final WebApplicationContext context;
+    private MockMvc mockMvc;
 
     @MockBean
-    private FacultyService facultyService;
+    private StudentService studentService;
 
-    private MockMvc mockMvc;
-    private final FacultyRestController facultyRestController;
+    private Group group;
 
-    @Autowired
-    public FacultyRestControllerTest(FacultyRestController facultyRestController) {
-        this.facultyRestController = facultyRestController;
+    public StudentRestControllerSystemTest(WebApplicationContext context) {
+        this.context = context;
     }
 
     @BeforeEach
     public void setUp() {
-        mockMvc = MockMvcBuilders
-                .standaloneSetup(facultyRestController)
-                .build();
+        mockMvc = MockMvcBuilders.webAppContextSetup(context).build();
     }
 
     @Test
-    public void shouldReturnListOfFaculties() throws Exception {
-        when(facultyService.findAll()).thenReturn(Arrays.asList(
-                new Faculty(1L, "test1"),
-                new Faculty(2L, "test2")));
+    public void shouldReturnListOfStudents() throws Exception {
+        when(studentService.findAll()).thenReturn(Arrays.asList(
+                new Student(1L, group, "test1", "test", "Male", 20, "test@gmail.com"),
+                new Student(2L, group, "test2", "test2", "Female", 18, "test2@gmail.com")));
 
-        mockMvc.perform(get("/api/v1/faculties"))
+        mockMvc.perform(get("/api/v1/students"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(2)))
                 .andExpect(jsonPath("$[*].id", containsInAnyOrder(1, 2)))
@@ -71,81 +70,81 @@ public class FacultyRestControllerTest {
     }
 
     @Test
-    public void shouldReturnFacultyById() throws Exception {
-        when(facultyService.findById(anyLong())).thenReturn(
-                new Faculty(1L, "test"));
+    public void shouldReturnStudentById() throws Exception {
+        when(studentService.findById(anyLong())).thenReturn(
+                new Student(1L, group, "test", "test", "Male", 20, "test@gmail.com"));
 
-        mockMvc.perform(get("/api/v1/faculties/1"))
+        mockMvc.perform(get("/api/v1/students/1"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id", equalTo(1)))
                 .andExpect(jsonPath("$.name", equalTo("test")));
     }
 
     @Test
-    public void shouldReturnFacultyByName() throws Exception {
-        when(facultyService.findByName("test")).thenReturn(Arrays.asList(
-                new Faculty(1L, "test")));
+    public void shouldReturnStudentByName() throws Exception {
+        when(studentService.findByPersonalData("test")).thenReturn(Arrays.asList(
+                new Student(1L, group, "test", "test", "Male", 20, "test@gmail.com")));
 
-        mockMvc.perform(get("/api/v1/faculties/name?name=test"))
+        mockMvc.perform(get("/api/v1/students/name?name=test"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[*].id", containsInAnyOrder(1)))
                 .andExpect(jsonPath("$[*].name", containsInAnyOrder("test")));
 
-        verify(facultyService, times(1)).findByName(anyString());
+        verify(studentService, times(1)).findByPersonalData(anyString());
     }
 
     @Test
-    public void shouldCreateNewFaculty() throws Exception {
-        mockMvc.perform(post("/api/v1/faculties")
+    public void shouldCreateNewStudent() throws Exception {
+        mockMvc.perform(post("/api/v1/students")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("{\"name\": \"test\"}"))
                 .andExpect(status().isOk());
 
-        verify(facultyService, times(1)).create(any(Faculty.class));
+        verify(studentService, times(1)).create(any(Student.class));
     }
 
     @Test
-    public void shouldUpdateFaculty() throws Exception {
-        mockMvc.perform(put("/api/v1/faculties")
+    public void shouldUpdateStudent() throws Exception {
+        mockMvc.perform(put("/api/v1/students")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("{\"name\": \"test\"}"))
                 .andExpect(status().isOk())
-                .andExpect(content().string("Faculty successfully updated"));
+                .andExpect(content().string("Student successfully updated"));
 
-        verify(facultyService, times(1)).update(any(Faculty.class));
+        verify(studentService, times(1)).update(any(Student.class));
     }
 
     @Test
-    public void facultyNameShouldBeValid() throws Exception {
-        Faculty faculty = new Faculty("");
+    public void studentNameShouldBeValid() throws Exception {
+        Student student = new Student(group, "", "", "Male", 20, "test@gmail.com");
 
-        mockMvc.perform(put("/api/v1/faculties")
+        mockMvc.perform(put("/api/v1/students")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(String.valueOf(faculty)))
+                .content(String.valueOf(student)))
                 .andExpect(status().isBadRequest());
 
-        verify(facultyService, times(0)).update(faculty);
+        verify(studentService, times(0)).update(student);
     }
 
     @Test
-    public void shouldDeleteFaculty() throws Exception {
-        mockMvc.perform(delete("/api/v1/faculties/1"))
+    public void shouldDeleteStudent() throws Exception {
+        mockMvc.perform(delete("/api/v1/students/1"))
                 .andExpect(status().isOk())
                 .andExpect(content().string("1"))
                 .andReturn();
 
-        verify(facultyService, times(1)).delete(anyLong());
+        verify(studentService, times(1)).delete(anyLong());
     }
 
     @Test
-    public void shouldReturnPageWithFaculties() throws Exception {
-        List<Faculty> faculties = new ArrayList<>();
-        faculties.add(new Faculty(1L, "test1"));
-        Page<Faculty> page = new PageImpl<>(faculties);
+    public void shouldReturnPageWithStudents() throws Exception {
+        List<Student> students = new ArrayList<>();
+        students.add(new Student(1L, group, "test1", "test", "Male", 20, "test@gmail.com"));
+        Page<Student> page = new PageImpl<>(students);
 
-        given(facultyService.findAll(1)).willReturn(page);
+        given(studentService.findAll(1)).willReturn(page);
 
-        mockMvc.perform(get("/api/v1/faculties/pages/1"))
+        mockMvc.perform(get("/api/v1/students/pages/1"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(1)))
                 .andExpect(jsonPath("$[*].id", containsInAnyOrder(1)))

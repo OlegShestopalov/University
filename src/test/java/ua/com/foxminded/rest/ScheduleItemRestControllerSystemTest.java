@@ -2,7 +2,6 @@ package ua.com.foxminded.rest;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.Page;
@@ -10,12 +9,12 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.web.context.WebApplicationContext;
 import ua.com.foxminded.domain.entity.Audience;
 import ua.com.foxminded.domain.entity.Day;
 import ua.com.foxminded.domain.entity.Lesson;
 import ua.com.foxminded.domain.entity.ScheduleItem;
 import ua.com.foxminded.domain.entity.Subject;
-import ua.com.foxminded.domain.rest.ScheduleItemRestController;
 import ua.com.foxminded.domain.service.ScheduleItemService;
 
 import java.time.LocalDate;
@@ -41,28 +40,26 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
-public class ScheduleItemRestControllerTest {
+public class ScheduleItemRestControllerSystemTest {
+
+    private final WebApplicationContext context;
+    private MockMvc mockMvc;
 
     @MockBean
     private ScheduleItemService scheduleItemService;
 
-    private MockMvc mockMvc;
-    private final ScheduleItemRestController scheduleItemRestController;
     private Lesson lesson = new Lesson(1L, "lesson");
     private Subject subject = new Subject(1L, "subject", "subject");
     private Audience audience = new Audience(1L, 1, 1);
     private Day day = new Day(1L, LocalDate.parse("2020-09-01"));
 
-    @Autowired
-    public ScheduleItemRestControllerTest(ScheduleItemRestController scheduleItemRestController) {
-        this.scheduleItemRestController = scheduleItemRestController;
+    public ScheduleItemRestControllerSystemTest(WebApplicationContext context) {
+        this.context = context;
     }
 
     @BeforeEach
     public void setUp() {
-        mockMvc = MockMvcBuilders
-                .standaloneSetup(scheduleItemRestController)
-                .build();
+        mockMvc = MockMvcBuilders.webAppContextSetup(context).build();
     }
 
     @Test
@@ -90,7 +87,7 @@ public class ScheduleItemRestControllerTest {
     public void shouldCreateNewScheduleItem() throws Exception {
         mockMvc.perform(post("/api/v1/scheduleItems")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content("{\"lesson\": \"lesson\"}"))
+                .content("{\"lesson\":{\"id\":1,\"name\":\"first\"}}"))
                 .andExpect(status().isOk());
 
         verify(scheduleItemService, times(1)).create(any(ScheduleItem.class));
@@ -100,7 +97,7 @@ public class ScheduleItemRestControllerTest {
     public void shouldUpdateScheduleItem() throws Exception {
         mockMvc.perform(put("/api/v1/scheduleItems")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content("{\"lesson\": \"lesson\"}"))
+                .content("{\"lesson\":{\"id\":2,\"name\":\"second\"},\"subject\":{\"id\":1,\"name\":\"Subject1\",\"description\":\"Subject1\"},\"audience\":{\"id\":1,\"number\":1,\"desk\":50},\"day\":{\"id\":2,\"day\":\"2020-09-02\"}}"))
                 .andExpect(status().isOk())
                 .andExpect(content().string("ScheduleItem successfully updated"));
 

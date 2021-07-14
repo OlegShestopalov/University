@@ -2,7 +2,6 @@ package ua.com.foxminded.rest;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.Page;
@@ -10,10 +9,10 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.web.context.WebApplicationContext;
 import ua.com.foxminded.domain.entity.Course;
 import ua.com.foxminded.domain.entity.Faculty;
 import ua.com.foxminded.domain.entity.Group;
-import ua.com.foxminded.domain.rest.GroupRestController;
 import ua.com.foxminded.domain.service.GroupService;
 
 import java.util.ArrayList;
@@ -39,26 +38,24 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
-public class GroupRestControllerTest {
+public class GroupRestControllerSystemTest {
+
+    private final WebApplicationContext context;
+    private MockMvc mockMvc;
 
     @MockBean
     private GroupService groupService;
 
-    private MockMvc mockMvc;
-    private final GroupRestController groupRestController;
     private Faculty faculty;
     private Course course;
 
-    @Autowired
-    public GroupRestControllerTest(GroupRestController groupRestController) {
-        this.groupRestController = groupRestController;
+    public GroupRestControllerSystemTest(WebApplicationContext context) {
+        this.context = context;
     }
 
     @BeforeEach
     public void setUp() {
-        mockMvc = MockMvcBuilders
-                .standaloneSetup(groupRestController)
-                .build();
+        mockMvc = MockMvcBuilders.webAppContextSetup(context).build();
     }
 
     @Test
